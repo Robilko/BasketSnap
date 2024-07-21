@@ -1,12 +1,14 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="100dp"
     android:height="100dp"
-    android:viewportWidth="297"
-    android:viewportHeight="297">
+    android:viewportWidth="500"
+    android:viewportHeight="500">
     <group
         android:name="rotationGroup"
-        android:pivotX="50"
-        android:pivotY="50"
+        android:pivotX="150"
+        android:pivotY="150"
+        android:translateX="100"
+        android:translateY="100"
         android:rotation="0">
 
         <path
