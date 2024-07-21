@@ -1,4 +1,4 @@
-package ru.robilko.basket_snap.ui.theme
+package ru.robilko.core_ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package ru.robilko.basket_snap.ui.theme
+package ru.robilko.core_ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package ru.robilko.basket_snap.ui.theme
+package ru.robilko.core_ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

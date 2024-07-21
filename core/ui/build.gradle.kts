@@ -1,25 +1,19 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
-    namespace = "ru.robilko.basket_snap"
+    namespace = "ru.robilko.core_ui"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = libs.versions.applicationId.get()
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = libs.versions.versionCode.get().toInt()
-        versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -44,20 +38,19 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtensionVersion.get()
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
-    //    modules
-    implementation(project(":core:base"))
-    implementation(project(":core:ui"))
+    //    compose
+    api(libs.androidx.activity.compose)
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.ui)
+    api(libs.androidx.ui.graphics)
+    api(libs.androidx.ui.tooling.preview)
+    api(libs.androidx.material3)
 
-    //    splashscreen
-    implementation(libs.androidx.core.splashscreen  )
+    //    material
+    api(libs.material)
 
     //    di
     implementation(libs.dagger.hilt.android)

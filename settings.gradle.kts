@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "BasketSnap"
 include(":app")
- 
+include(":core:base")
+include(":core:ui")

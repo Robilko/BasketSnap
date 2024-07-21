@@ -11,10 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ru.robilko.basket_snap.ui.theme.BasketSnapTheme
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import ru.robilko.core_ui.theme.BasketSnapTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
