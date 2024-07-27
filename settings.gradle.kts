@@ -23,3 +23,6 @@ rootProject.name = "BasketSnap"
 include(":app")
 include(":core:base")
 include(":core:ui")
+include(":feature:home")
+include(":feature:favourites")
+include(":feature:settings")
