@@ -57,6 +57,9 @@ dependencies {
     //    modules
     implementation(project(":core:base"))
     implementation(project(":core:ui"))
+    implementation(project(":core:remote"))
+    implementation(project(":core:local"))
+    implementation(project(":core:model"))
     implementation(project(":feature:home"))
     implementation(project(":feature:favourites"))
     implementation(project(":feature:settings"))

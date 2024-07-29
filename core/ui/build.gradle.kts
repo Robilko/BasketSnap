@@ -58,6 +58,5 @@ dependencies {
 
     //    di
     implementation(libs.dagger.hilt.android)
-    implementation(libs.androidx.hilt.compose)
     kapt(libs.dagger.hilt.android.compiler)
 }

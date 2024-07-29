@@ -6,7 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.robilko.home.presentation.CountriesRoute
-import ru.robilko.home.presentation.HomeRoute
+import ru.robilko.home.presentation.home.HomeRoute
 import ru.robilko.home.presentation.LeaguesRoute
 
 const val HOME_GRAPH_ROUTE = "home_graph"

@@ -45,14 +45,7 @@ class BasketSnapAppState(
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
     val topBarTitleId: Int?
-        @Composable get() = when (currentDestination?.route) {
-            HOME_ROUTE -> R.string.home_screen_title
-            COUNTRIES_ROUTE -> R.string.countries_screen_title
-            LEAGUES_ROUTE -> R.string.leagues_screen_title
-            FAVOURITES_ROUTE -> R.string.favourites_screen_title
-            SETTINGS_ROUTE -> R.string.settings_screen_title
-            else -> null
-        }
+        @Composable get() = getTopAppBarTitle(currentDestination)
 
     val needToShowTopBar: Boolean
         @Composable get() = currentDestination?.route != HOME_ROUTE
@@ -88,5 +81,16 @@ private fun NavigationLoggingSideEffect(navController: NavHostController) {
         onDispose {
             navController.removeOnDestinationChangedListener(listener)
         }
+    }
+}
+
+private fun getTopAppBarTitle(currentDestination: NavDestination?): Int? {
+    return when (currentDestination?.route) {
+        HOME_ROUTE -> R.string.home_screen_title
+        COUNTRIES_ROUTE -> R.string.countries_screen_title
+        LEAGUES_ROUTE -> R.string.leagues_screen_title
+        FAVOURITES_ROUTE -> R.string.favourites_screen_title
+        SETTINGS_ROUTE -> R.string.settings_screen_title
+        else -> null
     }
 }

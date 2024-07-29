@@ -41,6 +41,7 @@ dependencies {
     api(libs.androidx.core.ktx)
     api(libs.androidx.appcompat)
     api(libs.androidx.lifecycle.runtime.ktx)
+    api(libs.kotlinx.collections.immutable)
 
     //    di
     implementation(libs.dagger.hilt.android)
@@ -48,6 +49,7 @@ dependencies {
 
     //    navigation
     api(libs.androidx.navigation)
+    api(libs.androidx.hilt.compose)
 
     //    testing
     testImplementation(libs.junit)
