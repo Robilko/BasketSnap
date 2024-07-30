@@ -6,8 +6,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.robilko.home.presentation.CountriesRoute
-import ru.robilko.home.presentation.home.HomeRoute
 import ru.robilko.home.presentation.LeaguesRoute
+import ru.robilko.home.presentation.home.HomeRoute
 
 const val HOME_GRAPH_ROUTE = "home_graph"
 const val HOME_ROUTE = "home"
@@ -24,7 +24,7 @@ fun NavGraphBuilder.homeGraph(navHostController: NavHostController) {
         route = HOME_GRAPH_ROUTE,
         startDestination = HOME_ROUTE
     ) {
-        homeScreen(onNavigateToCountries = navHostController::navigateToCountries)
+        homeScreen()
         countriesScreen(onNavigateToLeagues = navHostController::navigateToLeagues)
         leaguesScreen()
     }
@@ -34,9 +34,9 @@ fun NavHostController.navigateToHome(navOptions: NavOptions? = null) {
     navigate(HOME_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.homeScreen(onNavigateToCountries: () -> Unit) {
+fun NavGraphBuilder.homeScreen() {
     composable(HOME_ROUTE) {
-        HomeRoute(onNavigateToCountries = onNavigateToCountries)
+        HomeRoute()
     }
 }
 
