@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="leagues_page_title">Leagues</string>
+    <string name="league_details_title">Details:</string>
+    <string name="league_name">Name:</string>
+    <string name="league_type">Type:</string>
+    <string name="league_country">Country:</string>
+    <string name="seasons_title">Seasons:</string>
+</resources>

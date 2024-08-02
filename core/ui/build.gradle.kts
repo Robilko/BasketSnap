@@ -50,8 +50,13 @@ dependencies {
     api(libs.androidx.ui.graphics)
     api(libs.androidx.ui.tooling.preview)
     api(libs.androidx.material3)
+    api(libs.accompanist.swiperefresh)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //    coil
+    api(libs.coil.compose)
+    api(libs.coil.svg)
 
     //    material
     api(libs.material)

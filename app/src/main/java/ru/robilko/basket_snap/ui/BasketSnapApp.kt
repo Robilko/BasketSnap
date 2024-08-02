@@ -1,8 +1,10 @@
 package ru.robilko.basket_snap.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,14 +21,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import ru.robilko.basket_snap.R
 import ru.robilko.basket_snap.navigation.AppNavHost
 import ru.robilko.basket_snap.navigation.TopLevelDestination
 
@@ -36,16 +44,14 @@ internal fun BasketSnapApp(
     appState: BasketSnapAppState
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var topBarTitle by rememberSaveable { mutableIntStateOf(R.string.app_name) }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = {
-                    appState.topBarTitleId?.let {
-                        Text(text = stringResource(id = it))
-                    }
-                },
+                title = { Text(text = stringResource(id = topBarTitle)) },
                 navigationIcon = {
                     if (appState.needToShowTopBar) {
                         IconButton(onClick = appState::navigateBack) {
@@ -54,7 +60,7 @@ internal fun BasketSnapApp(
                                 contentDescription = null
                             )
                         }
-                    }
+                    } else Spacer(modifier = Modifier.size(48.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -86,7 +92,8 @@ internal fun BasketSnapApp(
                             actionLabel = action,
                             duration = SnackbarDuration.Short
                         ) == SnackbarResult.ActionPerformed
-                    }
+                    },
+                    onTopBarTitleChange = { topBarTitle = it }
                 )
             }
         }

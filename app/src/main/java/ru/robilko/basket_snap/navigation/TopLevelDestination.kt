@@ -5,10 +5,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import ru.robilko.basket_snap.R
 import ru.robilko.favourites.navigation.FAVOURITES_GRAPH_ROUTE
-import ru.robilko.home.navigation.HOME_GRAPH_ROUTE
 import ru.robilko.settings.navigation.SETTINGS_GRAPH_ROUTE
 
 enum class TopLevelDestination(
@@ -24,7 +24,7 @@ enum class TopLevelDestination(
     FAVOURITES(
         route = FAVOURITES_GRAPH_ROUTE,
         titleResId = R.string.favourites_screen_title,
-        menuIcon = Icons.Default.Favorite
+        menuIcon = Icons.Default.Star
     ),
     SETTINGS(
         route = SETTINGS_GRAPH_ROUTE,

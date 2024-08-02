@@ -10,6 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.robilko.remote.ApiBasketballInterceptor
 import ru.robilko.remote.BuildConfig
+import ru.robilko.remote.data.BasketballApi
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -39,6 +40,12 @@ object ApiModule {
         .build()
 
     private const val API_BASKETBALL_BASE_URL = "https://api-basketball.p.rapidapi.com/"
+
+    @Singleton
+    @Provides
+    fun provideBasketballApi(
+        @RetrofitApiBasketball retrofit: Retrofit
+    ): BasketballApi = retrofit.create(BasketballApi::class.java)
 }
 
 @Qualifier

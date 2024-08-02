@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="getting_data_error">Ошибка получения данных.</string>
+    <string name="countries_title">Countries:</string>
+    <string name="continents_title">Continents:</string>
+    <string name="search_field_title">Search</string>
+    <string name="home_page_title">Home page</string>
 </resources>

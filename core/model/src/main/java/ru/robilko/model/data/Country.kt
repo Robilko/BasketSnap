@@ -1,8 +1,8 @@
 package ru.robilko.model.data
 
 data class Country(
-    val id: String,
+    val id: Int,
     val name: String,
     val code: String,
-    val flag: String
+    val flagUrl: String
 )

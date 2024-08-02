@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:favourites"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:leagues"))
 
     //    splashscreen
     implementation(libs.androidx.core.splashscreen  )

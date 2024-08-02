@@ -6,15 +6,15 @@ import ru.robilko.model.data.Country
 
 @Entity(tableName = "country_entity")
 data class CountryEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey val id: Int,
     val name: String,
     val code: String,
-    val flag: String
+    val flagUrl: String
 )
 
 fun CountryEntity.asDomainModel() = Country(
     id = id,
     name = name,
     code = code,
-    flag = flag
+    flagUrl = flagUrl
 )

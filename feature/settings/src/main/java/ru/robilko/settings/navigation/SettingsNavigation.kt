@@ -14,12 +14,12 @@ fun NavHostController.navigateToSettingsGraph(navOptions: NavOptions? = null) {
     navigate(SETTINGS_GRAPH_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
+fun NavGraphBuilder.settingsGraph(navController: NavHostController, onTopBarTitleChange: (resId: Int) -> Unit) {
     navigation(
         route = SETTINGS_GRAPH_ROUTE,
         startDestination = SETTINGS_ROUTE
     ) {
-        settingsScreen()
+        settingsScreen(onTopBarTitleChange)
     }
 }
 
@@ -27,8 +27,8 @@ fun NavHostController.navigateToSettings(navOptions: NavOptions? = null) {
     navigate(SETTINGS_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.settingsScreen() {
+fun NavGraphBuilder.settingsScreen(onTopBarTitleChange: (resId: Int) -> Unit,) {
     composable(SETTINGS_ROUTE) {
-        SettingsRoute()
+        SettingsRoute(onTopBarTitleChange)
     }
 }

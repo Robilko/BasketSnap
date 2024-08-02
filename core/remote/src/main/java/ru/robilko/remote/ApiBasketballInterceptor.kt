@@ -1,5 +1,6 @@
 package ru.robilko.remote
 
+import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -7,8 +8,12 @@ class ApiBasketballInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val requestWithHeaders = originalRequest.newBuilder()
-            .addHeader(RAPID_API_KEY_NAME, RAPID_API_KEY_VALUE)
-            .addHeader(RAPID_API_HOST_NAME, RAPID_API_HOST_VALUE)
+            .headers(
+                Headers.Builder()
+                    .add(RAPID_API_KEY_NAME, RAPID_API_KEY_VALUE)
+                    .add(RAPID_API_HOST_NAME, RAPID_API_HOST_VALUE)
+                    .build()
+            )
             .build()
         return chain.proceed(requestWithHeaders)
     }

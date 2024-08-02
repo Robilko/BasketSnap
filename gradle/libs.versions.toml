@@ -10,6 +10,9 @@ jvmTarget = "1.8"
 kotlinCompilerExtensionVersion = "1.5.14"
 
 #libs and plugins
+coilCompose = "2.6.0"
+coilSvg = "2.6.0"
+accompanistSwiperefresh = "0.24.13-rc"
 converterGson = "2.9.0"
 retrofit = "2.11.0"
 okhttp = "4.12.0"
@@ -68,6 +71,9 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coilSvg" }
+accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -14,12 +14,15 @@ fun NavHostController.navigateToFavouritesGraph(navOptions: NavOptions? = null) 
     navigate(FAVOURITES_GRAPH_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.favouritesGraph(navHostController: NavHostController) {
+fun NavGraphBuilder.favouritesGraph(
+    navHostController: NavHostController,
+    onTopBarTitleChange: (resId: Int) -> Unit,
+) {
     navigation(
         route = FAVOURITES_GRAPH_ROUTE,
         startDestination = FAVOURITES_ROUTE
     ) {
-        favouritesScreen()
+        favouritesScreen(onTopBarTitleChange)
     }
 }
 
@@ -27,8 +30,8 @@ fun NavHostController.navigateToFavourites(navOptions: NavOptions? = null) {
     navigate(FAVOURITES_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.favouritesScreen() {
+fun NavGraphBuilder.favouritesScreen(onTopBarTitleChange: (resId: Int) -> Unit) {
     composable(FAVOURITES_ROUTE) {
-        FavouritesRoute()
+        FavouritesRoute(onTopBarTitleChange)
     }
 }
