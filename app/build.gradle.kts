@@ -60,13 +60,14 @@ dependencies {
     implementation(project(":core:remote"))
     implementation(project(":core:local"))
     implementation(project(":core:model"))
+    implementation(project(":base:favourites"))
     implementation(project(":feature:home"))
     implementation(project(":feature:favourites"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:leagues"))
 
     //    splashscreen
-    implementation(libs.androidx.core.splashscreen  )
+    implementation(libs.androidx.core.splashscreen)
 
     //    di
     implementation(libs.dagger.hilt.android)

@@ -10,8 +10,8 @@ import ru.robilko.local.model.CountryEntity
 @Dao
 interface CountryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCountries(countries: List<CountryEntity>)
+    suspend fun insertCountries(entities: List<CountryEntity>)
 
-    @Query("SELECT * FROM country_entity")
+    @Query("SELECT * FROM countries")
     fun getAllCountries(): Flow<List<CountryEntity>>
 }

@@ -6,4 +6,5 @@
     <string name="league_type">Type:</string>
     <string name="league_country">Country:</string>
     <string name="seasons_title">Seasons:</string>
+    <string name="country_title">Country:</string>
 </resources>

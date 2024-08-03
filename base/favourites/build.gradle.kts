@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.leagues"
+    namespace = "ru.robilko.base_favourites"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -32,31 +32,20 @@ android {
     kotlinOptions {
         jvmTarget = libs.versions.jvmTarget.get()
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtensionVersion.get()
-    }
 }
 
 dependencies {
-//    modules
+    //   Modules
     implementation(project(":core:base"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:remote"))
     implementation(project(":core:local"))
     implementation(project(":core:model"))
-    implementation(project(":base:favourites"))
 
     //    di
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.android.compiler)
 
-    //    testing
+    // test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 }

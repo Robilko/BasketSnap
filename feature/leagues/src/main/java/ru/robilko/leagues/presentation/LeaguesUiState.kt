@@ -8,6 +8,7 @@ import ru.robilko.model.data.League
 data class LeaguesUiState(
     val dataState: LeaguesDataState,
     val leagues: PersistentList<League> = persistentListOf(),
+    val favouriteLeaguesIds: PersistentList<Int> = persistentListOf(),
     val selectedLeague: League? = null
 ) : UiState
 

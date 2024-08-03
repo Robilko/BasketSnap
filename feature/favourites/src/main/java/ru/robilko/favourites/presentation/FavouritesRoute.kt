@@ -1,15 +1,56 @@
 package ru.robilko.favourites.presentation
 
+import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.coroutines.launch
+import ru.robilko.core_ui.presentation.components.AppCard
+import ru.robilko.core_ui.presentation.components.AppText
+import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.favourites.R
+import ru.robilko.model.data.League
+import ru.robilko.core_ui.R as R_core_ui
 
 @Composable
 internal fun FavouritesRoute(
@@ -31,7 +72,174 @@ private fun FavouritesScreen(
     onEvent: (FavouritesUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Favourites")
+    val pagerState = rememberPagerState { FavouritesTabs.entries.size }
+    val scope = rememberCoroutineScope()
+
+    Column(modifier = modifier.fillMaxSize()) {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+//            contentColor = Color.White,
+            containerColor = Color.Transparent,
+            indicator = { tabPositions ->
+                SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = Color.White
+                )
+            }
+        ) {
+            FavouritesTabs.entries.forEachIndexed { index, tabItem ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                    content = {
+                        AppText(
+                            text = stringResource(id = tabItem.titleResId),
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
+                )
+            }
+        }
+
+        HorizontalPager(state = pagerState, userScrollEnabled = true) { pageIndex ->
+            when (pageIndex) {
+                FavouritesTabs.LEAGUES.ordinal -> {
+                    LeaguesPage(
+                        isLoading = uiState.isLeaguesLoading,
+                        data = uiState.leagues,
+                        onClick = { onEvent(FavouritesUiEvent.LeagueCardClick(it)) },
+                        onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteLeagueIconClick(it)) }
+                    )
+                }
+
+                FavouritesTabs.TEAMS.ordinal -> {
+                    TeamsPage(
+                        isLoading = uiState.isTeamsLoading,
+                        data = uiState.teams,
+                        onClick = { onEvent(FavouritesUiEvent.TeamCardClick(it)) },
+                        onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteTeamIconClick(it)) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LeaguesPage(
+    isLoading: Boolean,
+    data: PersistentList<League>,
+    onClick: (League) -> Unit,
+    onDeleteIconClick: (League) -> Unit
+) {
+    when {
+        isLoading -> LoadingIndicator()
+        data.isEmpty() -> EmptyList(textResId = R.string.empty_favourite_leagues)
+        else -> LeaguesList(data = data, onClick = onClick, onDeleteIconClick = onDeleteIconClick)
+    }
+}
+
+@Composable
+private fun TeamsPage(
+    isLoading: Boolean,
+    data: PersistentList<String>,
+    onClick: (String) -> Unit,
+    onDeleteIconClick: (String) -> Unit
+) {
+    when {
+        isLoading -> LoadingIndicator()
+        data.isEmpty() -> EmptyList(textResId = R.string.empty_favourite_leagues)
+        else -> {
+            //todo
+        }
+    }
+}
+
+@Composable
+private fun LoadingIndicator() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) { CircularProgressIndicator() }
+}
+
+@Composable
+private fun EmptyList(@StringRes textResId: Int) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                imageVector = Icons.AutoMirrored.Filled.List,
+                contentDescription = null,
+                modifier = Modifier.size(100.dp),
+                colorFilter = ColorFilter.tint(BasketSnapTheme.colors.primaryText)
+            )
+            AppText(text = stringResource(id = textResId))
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun LeaguesList(
+    data: PersistentList<League>,
+    onClick: (League) -> Unit,
+    onDeleteIconClick: (League) -> Unit
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(data, key = { it.id }) { league ->
+            AppCard(
+                contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp),
+                onClick = { onClick(league) }) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AsyncImage(
+                        model = ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(league.logoUrl)
+                            .error(R_core_ui.drawable.ic_league_placeholder)
+                            .placeholder(R_core_ui.drawable.ic_league_placeholder)
+                            .build(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .size(64.dp)
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        AppText(text = league.name)
+                        HorizontalDivider(Modifier.padding(vertical = 4.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            AppText(
+                                text = stringResource(id = R.string.country_title),
+                                color = BasketSnapTheme.colors.secondaryText,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                            AppText(text = league.country.name, fontSize = 12.sp)
+                        }
+                    }
+
+                    IconButton(onClick = { onDeleteIconClick(league) }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            tint = BasketSnapTheme.colors.secondaryText,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        }
     }
 }

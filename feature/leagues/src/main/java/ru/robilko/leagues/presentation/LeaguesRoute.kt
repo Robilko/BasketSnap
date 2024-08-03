@@ -29,11 +29,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -56,6 +56,7 @@ import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.leagues.R
 import ru.robilko.model.data.League
 import ru.robilko.model.data.Season
+import ru.robilko.core_ui.R as R_core_ui
 
 @Composable
 internal fun LeaguesRoute(
@@ -92,9 +93,12 @@ private fun LeaguesScreen(
 
             LeaguesDataState.Leagues -> {
                 LeaguesList(
+                    favouriteLeaguesIds = uiState.favouriteLeaguesIds,
                     leagues = uiState.leagues,
                     onClick = { onEvent(LeaguesUiEvent.LeagueCardClick(it)) },
-                    onStarIconClick = { onEvent(LeaguesUiEvent.StarIconClick(it))}
+                    onStarIconClick = { league, isFavourite ->
+                        onEvent(LeaguesUiEvent.StarIconClick(league, isFavourite))
+                    }
                 )
                 uiState.selectedLeague?.let { league ->
                     LeagueDetailsDialog(
@@ -108,11 +112,13 @@ private fun LeaguesScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun LeaguesList(
+    favouriteLeaguesIds: PersistentList<Int>,
     leagues: PersistentList<League>,
     onClick: (League) -> Unit,
-    onStarIconClick: (League) -> Unit
+    onStarIconClick: (league: League, isFavourite: Boolean) -> Unit
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
@@ -121,6 +127,7 @@ private fun LeaguesList(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(leagues, key = { it.id }) { league ->
+            val isFavourite = favouriteLeaguesIds.any { it == league.id }
             AppCard(
                 contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp),
                 onClick = { onClick(league) }) {
@@ -132,19 +139,32 @@ private fun LeaguesList(
                         model = ImageRequest
                             .Builder(LocalContext.current)
                             .data(league.logoUrl)
-                            .error(R.drawable.ic_league_placeholder)
-                            .placeholder(R.drawable.ic_league_placeholder)
+                            .error(R_core_ui.drawable.ic_league_placeholder)
+                            .placeholder(R_core_ui.drawable.ic_league_placeholder)
                             .build(),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(vertical = 4.dp)
                             .size(64.dp)
                     )
-                    Text(text = league.name, modifier = Modifier.weight(1f))
-                    IconButton(onClick = { onStarIconClick(league) }) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        AppText(text = league.name)
+                        HorizontalDivider(Modifier.padding(vertical = 4.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            AppText(
+                                text = stringResource(id = R.string.country_title),
+                                color = BasketSnapTheme.colors.secondaryText,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                            AppText(text = league.country.name, fontSize = 12.sp,)
+                        }
+                    }
+                    IconButton(onClick = { onStarIconClick(league, isFavourite) }) {
                         Icon(
                             imageVector = Icons.Outlined.Star,
-                            tint = BasketSnapTheme.colors.secondaryText,
+                            tint = if (isFavourite) Color.Yellow
+                            else BasketSnapTheme.colors.secondaryText,
                             contentDescription = null
                         )
                     }
@@ -193,8 +213,8 @@ private fun LeagueDetailsDialog(league: League, onDismiss: () -> Unit, onClick: 
                         model = ImageRequest
                             .Builder(LocalContext.current)
                             .data(league.logoUrl)
-                            .error(R.drawable.ic_league_placeholder)
-                            .placeholder(R.drawable.ic_league_placeholder)
+                            .error(R_core_ui.drawable.ic_league_placeholder)
+                            .placeholder(R_core_ui.drawable.ic_league_placeholder)
                             .build(),
                         contentDescription = null,
                         modifier = Modifier

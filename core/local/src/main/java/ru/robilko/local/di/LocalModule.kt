@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.robilko.local.BasketSnapDatabase
 import ru.robilko.local.dao.CountryDao
+import ru.robilko.local.dao.LeagueDao
 import javax.inject.Singleton
 
 @Module
@@ -30,4 +31,9 @@ internal object LocalModule {
     fun providesCountryDao(
         database: BasketSnapDatabase
     ): CountryDao = database.countryDao()
+
+    @Provides
+    fun providesLeagueDao(
+        database: BasketSnapDatabase
+    ): LeagueDao = database.leagueDao()
 }
