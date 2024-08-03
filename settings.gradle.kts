@@ -21,4 +21,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "BasketSnap"
 include(":app")
- 
+include(":core:base")
+include(":core:ui")
+include(":core:remote")
+include(":core:local")
+include(":core:model")
+include(":base:favourites")
+include(":feature:home")
+include(":feature:favourites")
+include(":feature:settings")
+include(":feature:leagues")
