@@ -15,10 +15,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import kotlinx.coroutines.CoroutineScope
 import ru.robilko.basket_snap.navigation.TopLevelDestination
+import ru.robilko.basket_snap.navigation.navigateToFavouritesGraph
 import ru.robilko.basket_snap.navigation.navigateToHomeGraph
-import ru.robilko.favourites.navigation.navigateToFavouritesGraph
+import ru.robilko.basket_snap.navigation.navigateToSettingsGraph
 import ru.robilko.home.navigation.HOME_ROUTE
-import ru.robilko.settings.navigation.navigateToSettingsGraph
 
 @Composable
 fun rememberBasketSnapAppState(

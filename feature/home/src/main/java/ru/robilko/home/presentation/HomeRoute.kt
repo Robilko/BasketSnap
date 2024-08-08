@@ -39,6 +39,7 @@ import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
+import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.components.AppCard
 import ru.robilko.core_ui.presentation.components.AppText
 import ru.robilko.core_ui.presentation.components.ErrorScreen
@@ -73,10 +74,10 @@ private fun HomeScreen(
 ) {
     Box(modifier = modifier) {
         when (uiState.dataState) {
-            HomeDataState.Loading ->
+            DataState.Loading ->
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
 
-            is HomeDataState.Error -> {
+            is DataState.Error -> {
                 ErrorScreen(
                     text = uiState.dataState.message,
                     modifier = Modifier.fillMaxSize(),
@@ -84,7 +85,7 @@ private fun HomeScreen(
                 )
             }
 
-            is HomeDataState.Success -> {
+            is DataState.Success -> {
                 LazyColumn(
                     contentPadding = PaddingValues(
                         top = 8.dp,
@@ -147,7 +148,7 @@ private fun LazyListScope.countriesList(
     onClick: (Country) -> Unit
 ) {
     item { ListTitle(text = stringResource(R.string.countries_title)) }
-    items(countries) { country ->
+    items(countries, key = { it.name }) { country ->
         AppCard(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(8.dp),

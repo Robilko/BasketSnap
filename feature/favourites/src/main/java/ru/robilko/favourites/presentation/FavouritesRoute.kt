@@ -55,6 +55,7 @@ import ru.robilko.core_ui.R as R_core_ui
 @Composable
 internal fun FavouritesRoute(
     onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToLeagueDetails: (League) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FavouritesViewModel = hiltViewModel<FavouritesViewModel>()
 ) {
@@ -62,6 +63,7 @@ internal fun FavouritesRoute(
     FavouritesScreen(
         uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
         onEvent = viewModel::onEvent,
+        onNavigateToLeagueDetails = onNavigateToLeagueDetails,
         modifier = modifier
     )
 }
@@ -70,6 +72,7 @@ internal fun FavouritesRoute(
 private fun FavouritesScreen(
     uiState: FavouritesUiState,
     onEvent: (FavouritesUiEvent) -> Unit,
+    onNavigateToLeagueDetails: (League) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState { FavouritesTabs.entries.size }
@@ -107,7 +110,7 @@ private fun FavouritesScreen(
                     LeaguesPage(
                         isLoading = uiState.isLeaguesLoading,
                         data = uiState.leagues,
-                        onClick = { onEvent(FavouritesUiEvent.LeagueCardClick(it)) },
+                        onClick = onNavigateToLeagueDetails,
                         onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteLeagueIconClick(it)) }
                     )
                 }

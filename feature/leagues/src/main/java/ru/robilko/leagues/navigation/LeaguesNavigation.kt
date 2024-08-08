@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ru.robilko.leagues.presentation.LeaguesRoute
+import ru.robilko.model.data.League
 
 const val COUNTRY_ID_ARG = "countryId"
 const val LEAGUES_ROUTE_BASE = "leagues"
@@ -17,7 +18,10 @@ fun NavHostController.navigateToLeagues(countryId: Int, navOptions: NavOptions? 
     navigate("$LEAGUES_ROUTE_BASE/$countryId", navOptions)
 }
 
-fun NavGraphBuilder.leaguesScreen(onTopBarTitleChange: (resId: Int) -> Unit) {
+fun NavGraphBuilder.leaguesScreen(
+    onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToLeagueDetails: (League) -> Unit
+) {
     composable(
         route = LEAGUES_ROUTE,
         arguments = listOf(navArgument(COUNTRY_ID_ARG) {
@@ -26,6 +30,9 @@ fun NavGraphBuilder.leaguesScreen(onTopBarTitleChange: (resId: Int) -> Unit) {
         }
         )
     ) {
-        LeaguesRoute(onTopBarTitleChange)
+        LeaguesRoute(
+            onTopBarTitleChange = onTopBarTitleChange,
+            onNavigateToLeagueDetails = onNavigateToLeagueDetails
+        )
     }
 }

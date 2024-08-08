@@ -1,7 +1,6 @@
 package ru.robilko.leagues.presentation
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +18,7 @@ import ru.robilko.base_favourites.domain.useCases.AddLeagueToFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.DeleteLeagueFromFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.GetFavouriteLeaguesUseCase
 import ru.robilko.core_ui.presentation.BaseAppViewModel
+import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.leagues.domain.useCases.GetLeaguesByCountryUseCase
 import ru.robilko.leagues.navigation.COUNTRY_ID_ARG
 import ru.robilko.model.data.League
@@ -35,24 +35,16 @@ class LeaguesViewModel @Inject constructor(
     private val getLeaguesByCountryUseCase: GetLeaguesByCountryUseCase
 ) : BaseAppViewModel<LeaguesUiState, LeaguesUiEvent>() {
     private val _uiState: MutableStateFlow<LeaguesUiState> =
-        MutableStateFlow(LeaguesUiState(LeaguesDataState.Loading))
+        MutableStateFlow(LeaguesUiState(DataState.Loading))
     override val uiState: StateFlow<LeaguesUiState> = _uiState
     private val countryId = checkNotNull<String>(savedStateHandle[COUNTRY_ID_ARG]).toInt()
 
     override fun onEvent(event: LeaguesUiEvent) {
         when (event) {
-            is LeaguesUiEvent.LeagueCardClick -> _uiState.update { it.copy(selectedLeague = event.league) }
-            LeaguesUiEvent.DismissDetailsDialog -> _uiState.update { it.copy(selectedLeague = null) }
-            is LeaguesUiEvent.SeasonClick -> {
-                //todo
-                Toast.makeText(
-                    context,
-                    "${event.league.name}, season ${event.season.season}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            is LeaguesUiEvent.StarIconClick -> makeActionOnStarIconClick(event.league, event.isFavourite)
+            is LeaguesUiEvent.StarIconClick -> makeActionOnStarIconClick(
+                event.league,
+                event.isFavourite
+            )
         }
     }
 
@@ -74,11 +66,11 @@ class LeaguesViewModel @Inject constructor(
 
     private fun getLeagues(countryId: Int) {
         viewModelScope.launch {
-            _uiState.update { it.copy(dataState = LeaguesDataState.Loading) }
+            _uiState.update { it.copy(dataState = DataState.Loading) }
             getLeaguesByCountryUseCase(countryId).apply {
                 onFailure {
                     _uiState.update {
-                        it.copy(dataState = LeaguesDataState.Error(
+                        it.copy(dataState = DataState.Error(
                             message = context.getString(
                                 R_core_ui.string.getting_data_error
                             ),
@@ -90,7 +82,7 @@ class LeaguesViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             leagues = response.data.toPersistentList(),
-                            dataState = LeaguesDataState.Leagues
+                            dataState = DataState.Success
                         )
                     }
                 }

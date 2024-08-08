@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.robilko.base.util.Response
 import ru.robilko.core_ui.presentation.BaseAppViewModel
+import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.home.domain.useCases.GetCountriesUseCase
 import ru.robilko.model.data.Country
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCountriesUseCase: GetCountriesUseCase,
 ) : BaseAppViewModel<HomeUiState, HomeUiEvent>() {
-    private val _uiState = MutableStateFlow(HomeUiState(HomeDataState.Loading))
+    private val _uiState = MutableStateFlow(HomeUiState(DataState.Loading))
     override val uiState: StateFlow<HomeUiState> = _uiState
     private var originalCountries: List<Country> = emptyList()
 
@@ -43,11 +44,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getCountriesUseCase().collect { response ->
                 when (response) {
-                    Response.Loading -> _uiState.update { it.copy(dataState = HomeDataState.Loading) }
+                    Response.Loading -> _uiState.update { it.copy(dataState = DataState.Loading) }
                     is Response.Failure -> {
                         _uiState.update {
                             it.copy(
-                                dataState = HomeDataState.Error(
+                                dataState = DataState.Error(
                                     message = context.getString(
                                         R_core_ui.string.getting_data_error
                                     ),
@@ -83,7 +84,7 @@ class HomeViewModel @Inject constructor(
             state.copy(
                 countries = countries,
                 continents = continents,
-                dataState = HomeDataState.Success
+                dataState = DataState.Success
             )
         }
     }

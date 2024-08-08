@@ -2,14 +2,11 @@ package ru.robilko.basket_snap.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import ru.robilko.basket_snap.R
-import ru.robilko.favourites.navigation.FAVOURITES_GRAPH_ROUTE
-import ru.robilko.settings.navigation.SETTINGS_GRAPH_ROUTE
 
 enum class TopLevelDestination(
     val route: String,
