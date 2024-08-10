@@ -32,10 +32,6 @@ class FavouritesViewModel @Inject constructor(
             is FavouritesUiEvent.DeleteLeagueIconClick ->
                 viewModelScope.launch { deleteLeagueFromFavouritesUseCase(event.league.id) }
 
-            is FavouritesUiEvent.LeagueCardClick -> {
-                //todo
-            }
-
             is FavouritesUiEvent.DeleteTeamIconClick -> {
                 //todo
             }

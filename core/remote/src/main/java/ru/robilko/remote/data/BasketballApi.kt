@@ -12,6 +12,7 @@ interface BasketballApi {
 
     @GET("leagues/")
     suspend fun getLeagues(
-        @Query("country_id") countryId: Int
-    ):DefaultResponseDto<List<LeagueDto>>
+        @Query("id") id: Int? = null,
+        @Query("country_id") countryId: Int? = null
+    ): DefaultResponseDto<List<LeagueDto>>
 }

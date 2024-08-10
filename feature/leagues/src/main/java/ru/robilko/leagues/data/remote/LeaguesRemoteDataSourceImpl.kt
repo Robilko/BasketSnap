@@ -9,6 +9,6 @@ class LeaguesRemoteDataSourceImpl @Inject constructor(
 ) : LeaguesRemoteDataSource {
 
     override suspend fun getLeagues(countryId: Int): List<LeagueDto> {
-        return basketballApi.getLeagues(countryId).response.orEmpty()
+        return basketballApi.getLeagues(countryId = countryId).response.orEmpty()
     }
 }

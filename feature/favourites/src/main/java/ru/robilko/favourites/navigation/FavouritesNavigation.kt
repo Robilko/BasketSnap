@@ -4,34 +4,23 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import ru.robilko.favourites.presentation.FavouritesRoute
+import ru.robilko.model.data.League
 
-const val FAVOURITES_GRAPH_ROUTE = "favourites_graph"
 const val FAVOURITES_ROUTE = "favourites"
-
-fun NavHostController.navigateToFavouritesGraph(navOptions: NavOptions? = null) {
-    navigate(FAVOURITES_GRAPH_ROUTE, navOptions)
-}
-
-fun NavGraphBuilder.favouritesGraph(
-    navHostController: NavHostController,
-    onTopBarTitleChange: (resId: Int) -> Unit,
-) {
-    navigation(
-        route = FAVOURITES_GRAPH_ROUTE,
-        startDestination = FAVOURITES_ROUTE
-    ) {
-        favouritesScreen(onTopBarTitleChange)
-    }
-}
 
 fun NavHostController.navigateToFavourites(navOptions: NavOptions? = null) {
     navigate(FAVOURITES_ROUTE, navOptions)
 }
 
-fun NavGraphBuilder.favouritesScreen(onTopBarTitleChange: (resId: Int) -> Unit) {
+fun NavGraphBuilder.favouritesScreen(
+    onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToLeagueDetails: (League) -> Unit
+) {
     composable(FAVOURITES_ROUTE) {
-        FavouritesRoute(onTopBarTitleChange)
+        FavouritesRoute(
+            onTopBarTitleChange = onTopBarTitleChange,
+            onNavigateToLeagueDetails = onNavigateToLeagueDetails
+        )
     }
 }
