@@ -16,15 +16,21 @@ fun NavHostController.navigateToLeagueDetails(leagueId: Int, navOptions: NavOpti
     navigate("$LEAGUE_DETAILS_ROUTE_BASE/$leagueId", navOptions)
 }
 
-fun NavGraphBuilder.leagueDetailsScreen(onTopBarTitleChange: (resId: Int) -> Unit) {
+fun NavGraphBuilder.leagueDetailsScreen(
+    onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToTeams: (leagueId: Int, season: String) -> Unit
+) {
     composable(
         route = LEAGUE_DETAILS_ROUTE,
         arguments = listOf(navArgument(LEAGUE_ID_ARG) {
             nullable = false
-            type = NavType.StringType
+            type = NavType.IntType
         }
         )
     ) {
-        LeagueDetailsRoute(onTopBarTitleChange = onTopBarTitleChange)
+        LeagueDetailsRoute(
+            onTopBarTitleChange = onTopBarTitleChange,
+            onNavigateToTeams = onNavigateToTeams
+        )
     }
 }

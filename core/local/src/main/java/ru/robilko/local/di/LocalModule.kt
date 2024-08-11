@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import ru.robilko.local.BasketSnapDatabase
 import ru.robilko.local.dao.CountryDao
 import ru.robilko.local.dao.LeagueDao
+import ru.robilko.local.dao.TeamInfoDao
 import javax.inject.Singleton
 
 @Module
@@ -36,4 +37,9 @@ internal object LocalModule {
     fun providesLeagueDao(
         database: BasketSnapDatabase
     ): LeagueDao = database.leagueDao()
+
+    @Provides
+    fun providesTeamDao(
+        database: BasketSnapDatabase
+    ): TeamInfoDao = database.teamInfoDao()
 }

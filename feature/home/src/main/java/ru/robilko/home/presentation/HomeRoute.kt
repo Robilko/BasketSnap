@@ -2,7 +2,6 @@ package ru.robilko.home.presentation
 
 import AppOutlinedTextField
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +43,7 @@ import ru.robilko.core_ui.presentation.components.AppCard
 import ru.robilko.core_ui.presentation.components.AppText
 import ru.robilko.core_ui.presentation.components.ErrorScreen
 import ru.robilko.core_ui.theme.BasketSnapTheme
+import ru.robilko.core_ui.utils.bounceClick
 import ru.robilko.home.R
 import ru.robilko.model.data.Continent
 import ru.robilko.model.data.Country
@@ -127,7 +127,7 @@ private fun LazyListScope.searchField(query: String, onChange: (String) -> Unit)
                     Image(
                         imageVector = Icons.Default.Clear,
                         contentDescription = null,
-                        modifier = Modifier.clickable { onChange("") },
+                        modifier = Modifier.bounceClick { onChange("") },
                         colorFilter = ColorFilter.tint(BasketSnapTheme.colors.primaryText)
                     )
                 } else {

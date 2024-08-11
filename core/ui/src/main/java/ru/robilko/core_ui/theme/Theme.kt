@@ -37,7 +37,8 @@ private val LightColorScheme = lightColorScheme(
 
 data class BasketSnapColors(
     val primaryText: Color,
-    val secondaryText: Color
+    val secondaryText: Color,
+    val favouriteIcon: Color = Yellow700
 )
 
 private val LightColorPalette = BasketSnapColors(

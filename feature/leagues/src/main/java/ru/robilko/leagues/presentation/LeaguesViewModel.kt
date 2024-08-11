@@ -30,14 +30,15 @@ class LeaguesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val getFavouriteLeaguesUseCase: GetFavouriteLeaguesUseCase,
-    private val addFavouriteLeaguesUseCase: AddLeagueToFavouritesUseCase,
+    private val addLeagueToFavouritesUseCase: AddLeagueToFavouritesUseCase,
     private val deleteLeagueFromFavouritesUseCase: DeleteLeagueFromFavouritesUseCase,
     private val getLeaguesByCountryUseCase: GetLeaguesByCountryUseCase
 ) : BaseAppViewModel<LeaguesUiState, LeaguesUiEvent>() {
+    private val countryId = checkNotNull<Int>(savedStateHandle[COUNTRY_ID_ARG])
+
     private val _uiState: MutableStateFlow<LeaguesUiState> =
         MutableStateFlow(LeaguesUiState(DataState.Loading))
     override val uiState: StateFlow<LeaguesUiState> = _uiState
-    private val countryId = checkNotNull<String>(savedStateHandle[COUNTRY_ID_ARG]).toInt()
 
     override fun onEvent(event: LeaguesUiEvent) {
         when (event) {
@@ -93,7 +94,7 @@ class LeaguesViewModel @Inject constructor(
     private fun makeActionOnStarIconClick(league: League, isFavourite: Boolean) {
         viewModelScope.launch {
             if (isFavourite) deleteLeagueFromFavouritesUseCase(league.id)
-            else addFavouriteLeaguesUseCase(league)
+            else addLeagueToFavouritesUseCase(league)
         }
     }
 }

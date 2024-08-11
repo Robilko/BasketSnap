@@ -66,6 +66,8 @@ dependencies {
     implementation(project(":feature:settings"))
     implementation(project(":feature:leagues"))
     implementation(project(":feature:league_details"))
+    implementation(project(":feature:teams"))
+    implementation(project(":feature:team_details"))
 
     //    splashscreen
     implementation(libs.androidx.core.splashscreen)

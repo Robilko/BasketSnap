@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -102,15 +101,15 @@ private fun LeaguesList(
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(leagues, key = { it.id }) { league ->
             val isFavourite = favouriteLeaguesIds.any { it == league.id }
             AppCard(
                 contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp),
-                onClick = { onClick(league) }) {
+                onClick = { onClick(league) }
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -119,8 +118,8 @@ private fun LeaguesList(
                         model = ImageRequest
                             .Builder(LocalContext.current)
                             .data(league.logoUrl)
-                            .error(R_core_ui.drawable.ic_league_placeholder)
-                            .placeholder(R_core_ui.drawable.ic_league_placeholder)
+                            .error(R_core_ui.drawable.ic_no_image_placeholder)
+                            .placeholder(R_core_ui.drawable.ic_image_loader)
                             .build(),
                         contentDescription = null,
                         modifier = Modifier
@@ -143,7 +142,7 @@ private fun LeaguesList(
                     IconButton(onClick = { onStarIconClick(league, isFavourite) }) {
                         Icon(
                             imageVector = Icons.Outlined.Star,
-                            tint = if (isFavourite) Color.Yellow
+                            tint = if (isFavourite) BasketSnapTheme.colors.favouriteIcon
                             else BasketSnapTheme.colors.secondaryText,
                             contentDescription = null
                         )
