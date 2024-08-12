@@ -11,5 +11,6 @@ data class TeamDetailsUiState(
     val seasons: PersistentList<String> = persistentListOf(),
     val selectedSeason: String? = null,
     val isFavourite: Boolean = false,
+    val isLoadingStatistics: Boolean = false,
     val teamStatistics: TeamStatistics? = null
 ) : UiState

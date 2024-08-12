@@ -83,12 +83,12 @@ fun GamesResultsDto.asDomainModel() = GamesResults(
 
 data class TotalResultDto(
     @SerializedName("total") val total: Int,
-    @SerializedName("percentage") val percentage: String
+    @SerializedName("percentage") val percentage: String?
 )
 
 fun TotalResultDto.asDomainModel() = TotalResult(
     total = total,
-    percentage = percentage
+    percentage = percentage.orEmpty()
 )
 
 data class PercentByPlaceOfPlayDto(
