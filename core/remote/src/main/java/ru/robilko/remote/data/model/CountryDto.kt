@@ -1,14 +1,16 @@
 package ru.robilko.remote.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import ru.robilko.local.model.CountryEntity
 import ru.robilko.model.data.Country
 
+@Serializable
 data class CountryDto(
-    @SerializedName("id") val id: Int?,
-    @SerializedName("name") val name: String?,
-    @SerializedName("code") val code: String?,
-    @SerializedName("flag") val flagUrl: String?
+    @SerialName("id") val id: Int?,
+    @SerialName("name") val name: String?,
+    @SerialName("code") val code: String?,
+    @SerialName("flag") val flagUrl: String?
 )
 
 fun CountryDto.asDomainModel() = Country(

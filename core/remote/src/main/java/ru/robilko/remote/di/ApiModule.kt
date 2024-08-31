@@ -1,13 +1,17 @@
 package ru.robilko.remote.di
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import ru.robilko.remote.ApiBasketballInterceptor
 import ru.robilko.remote.BuildConfig
 import ru.robilko.remote.data.BasketballApi
@@ -28,15 +32,27 @@ object ApiModule {
             )
             .build()
 
+    @OptIn(ExperimentalSerializationApi::class)
+    @Singleton
+    @Provides
+    fun provideJsonConverterFactory(): Converter.Factory {
+        val json = Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        }
+        return json.asConverterFactory("application/json".toMediaType())
+    }
+
     @Singleton
     @Provides
     @RetrofitApiBasketball
     fun provideApiBasketballRetrofit(
+        jsonConverterFactory: Converter.Factory,
         okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
         .baseUrl(API_BASKETBALL_BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(jsonConverterFactory)
         .build()
 
     private const val API_BASKETBALL_BASE_URL = "https://api-basketball.p.rapidapi.com/"

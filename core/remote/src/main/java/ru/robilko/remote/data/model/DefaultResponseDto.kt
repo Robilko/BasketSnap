@@ -1,8 +1,10 @@
 package ru.robilko.remote.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DefaultResponseDto<T>(
-    @SerializedName("results") val results: Int?,
-    @SerializedName("response") val response: T?
+    @SerialName("results") val results: Int?,
+    @SerialName("response") val response: T?
 )

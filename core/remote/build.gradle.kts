@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -35,7 +36,7 @@ dependencies {
 
     // retrofit2
     api(libs.retrofit)
-    api(libs.converter.gson)
+    implementation(libs.jakewharton.retrofit2.kotlinx.serialization.converter)
     implementation(libs.okhttp.logging)
 
     //    di

@@ -1,6 +1,7 @@
 package ru.robilko.remote.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import ru.robilko.model.data.CountByPlaceOfPlay
 import ru.robilko.model.data.GamesInfo
 import ru.robilko.model.data.GamesResults
@@ -10,13 +11,15 @@ import ru.robilko.model.data.Points
 import ru.robilko.model.data.PointsStatistics
 import ru.robilko.model.data.TeamStatistics
 import ru.robilko.model.data.TotalResult
+import java.util.Locale
 
+@Serializable
 data class TeamStatisticsResponse(
-    @SerializedName("country") val country: CountryDto,
-    @SerializedName("league") val league: LeagueShortInfoDto,
-    @SerializedName("team") val team: TeamDto,
-    @SerializedName("games") val games: GamesInfoDto,
-    @SerializedName("points") val points: PointsDto
+    @SerialName("country") val country: CountryDto,
+    @SerialName("league") val league: LeagueShortInfoDto,
+    @SerialName("team") val team: TeamDto,
+    @SerialName("games") val games: GamesInfoDto,
+    @SerialName("points") val points: PointsDto
 )
 
 fun TeamStatisticsResponse.asDomainModel() = TeamStatistics(
@@ -29,11 +32,12 @@ fun TeamStatisticsResponse.asDomainModel() = TeamStatistics(
     points = points.asDomainModel()
 )
 
+@Serializable
 data class LeagueShortInfoDto(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("type") val type: String,
-    @SerializedName("logo") val logoUrl: String
+    @SerialName("id") val id: Int,
+    @SerialName("name") val name: String,
+    @SerialName("type") val type: String,
+    @SerialName("logo") val logoUrl: String
 )
 
 fun LeagueShortInfoDto.asDomainModel() = LeagueShortInfo(
@@ -43,11 +47,12 @@ fun LeagueShortInfoDto.asDomainModel() = LeagueShortInfo(
     logoUrl = logoUrl
 )
 
+@Serializable
 data class GamesInfoDto(
-    @SerializedName("played") val played: CountByPlaceOfPlayDto,
-    @SerializedName("wins") val wins: GamesResultsDto,
-    @SerializedName("draws") val draws: GamesResultsDto,
-    @SerializedName("loses") val loses: GamesResultsDto
+    @SerialName("played") val played: CountByPlaceOfPlayDto,
+    @SerialName("wins") val wins: GamesResultsDto,
+    @SerialName("draws") val draws: GamesResultsDto,
+    @SerialName("loses") val loses: GamesResultsDto
 )
 
 fun GamesInfoDto.asDomainModel() = GamesInfo(
@@ -57,10 +62,11 @@ fun GamesInfoDto.asDomainModel() = GamesInfo(
     loses = loses.asDomainModel()
 )
 
+@Serializable
 data class CountByPlaceOfPlayDto(
-    @SerializedName("home") val home: Int,
-    @SerializedName("away") val away: Int,
-    @SerializedName("all") val all: Int
+    @SerialName("home") val home: Int,
+    @SerialName("away") val away: Int,
+    @SerialName("all") val all: Int
 )
 
 fun CountByPlaceOfPlayDto.asDomainModel() = CountByPlaceOfPlay(
@@ -69,10 +75,11 @@ fun CountByPlaceOfPlayDto.asDomainModel() = CountByPlaceOfPlay(
     all = all
 )
 
+@Serializable
 data class GamesResultsDto(
-    @SerializedName("home") val home: TotalResultDto,
-    @SerializedName("away") val away: TotalResultDto,
-    @SerializedName("all") val all: TotalResultDto
+    @SerialName("home") val home: TotalResultDto,
+    @SerialName("away") val away: TotalResultDto,
+    @SerialName("all") val all: TotalResultDto
 )
 
 fun GamesResultsDto.asDomainModel() = GamesResults(
@@ -81,20 +88,29 @@ fun GamesResultsDto.asDomainModel() = GamesResults(
     all = all.asDomainModel()
 )
 
+@Serializable
 data class TotalResultDto(
-    @SerializedName("total") val total: Int,
-    @SerializedName("percentage") val percentage: String?
+    @SerialName("total") val total: Int,
+    @SerialName("percentage") val percentage: String?
 )
 
 fun TotalResultDto.asDomainModel() = TotalResult(
     total = total,
-    percentage = percentage.orEmpty()
+    percentage = getFormattedPercentage(percentage)
 )
 
+private fun getFormattedPercentage(percentage: String?): String =
+    percentage?.toDoubleOrNull()?.let { percent ->
+        String.format(Locale.ROOT, "%.1f", percent * 100).let {
+            if (it.endsWith(".0")) it.dropLast(2) else it
+        }
+    } ?: "0"
+
+@Serializable
 data class PercentByPlaceOfPlayDto(
-    @SerializedName("home") val home: String,
-    @SerializedName("away") val away: String,
-    @SerializedName("all") val all: String
+    @SerialName("home") val home: String,
+    @SerialName("away") val away: String,
+    @SerialName("all") val all: String
 )
 
 fun PercentByPlaceOfPlayDto.asDomainModel() = PercentByPlaceOfPlay(
@@ -103,9 +119,10 @@ fun PercentByPlaceOfPlayDto.asDomainModel() = PercentByPlaceOfPlay(
     all = all
 )
 
+@Serializable
 data class PointsDto(
-    @SerializedName("for") val forTeam: PointsStatisticsDto,
-    @SerializedName("against") val againstTeam: PointsStatisticsDto
+    @SerialName("for") val forTeam: PointsStatisticsDto,
+    @SerialName("against") val againstTeam: PointsStatisticsDto
 )
 
 fun PointsDto.asDomainModel() = Points(
@@ -113,9 +130,10 @@ fun PointsDto.asDomainModel() = Points(
     againstTeam = againstTeam.asDomainModel()
 )
 
+@Serializable
 data class PointsStatisticsDto(
-    @SerializedName("total") val total: CountByPlaceOfPlayDto,
-    @SerializedName("average") val average: PercentByPlaceOfPlayDto
+    @SerialName("total") val total: CountByPlaceOfPlayDto,
+    @SerialName("average") val average: PercentByPlaceOfPlayDto
 )
 
 fun PointsStatisticsDto.asDomainModel() = PointsStatistics(
