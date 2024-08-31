@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="retry_btn">Повторить запрос</string>
+    <string name="getting_data_error">Ошибка получения данных</string>
+</resources>

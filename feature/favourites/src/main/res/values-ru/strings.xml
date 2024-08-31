@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favourites_title">Избранное</string>
+    <string name="leagues_tab_title">Лиги</string>
+    <string name="teams_tab_title">Команды</string>
+    <string name="empty_favourite_leagues">У Вас нет избранных лиг</string>
+    <string name="empty_favourite_teams">У Вас нет избранных команд</string>
+    <string name="country_title">Страна:</string>
+</resources>

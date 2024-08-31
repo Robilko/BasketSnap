@@ -1,6 +1,7 @@
 package ru.robilko.team_details.presentation
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +30,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,13 +46,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import kotlinx.collections.immutable.PersistentList
 import ru.robilko.core_ui.presentation.DataState
+import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.components.AppCard
+import ru.robilko.core_ui.presentation.components.AppSelectableOutlinedTextField
 import ru.robilko.core_ui.presentation.components.AppText
 import ru.robilko.core_ui.presentation.components.ErrorScreen
 import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.core_ui.utils.ShimmerCard
+import ru.robilko.core_ui.utils.bounceClick
+import ru.robilko.model.data.Country
 import ru.robilko.model.data.GamesInfo
+import ru.robilko.model.data.LeagueShortInfo
 import ru.robilko.model.data.Points
 import ru.robilko.model.data.TeamStatistics
 import ru.robilko.team_details.R
@@ -55,6 +66,8 @@ import ru.robilko.team_details.R
 @Composable
 internal fun TeamDetailsRoute(
     onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToLeagueDetails: (leagueId: Int) -> Unit,
+    onNavigateToLeagues: (countryId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TeamDetailsViewModel = hiltViewModel<TeamDetailsViewModel>()
 ) {
@@ -62,7 +75,9 @@ internal fun TeamDetailsRoute(
     TeamDetailsScreen(
         uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
         onEvent = viewModel::onEvent,
-        modifier = modifier.fillMaxSize()
+        onFlagClick = { onNavigateToLeagues(it.id) },
+        onLeagueClick = { onNavigateToLeagueDetails(it.id) },
+        modifier = modifier.fillMaxSize(),
     )
 }
 
@@ -70,6 +85,8 @@ internal fun TeamDetailsRoute(
 private fun TeamDetailsScreen(
     uiState: TeamDetailsUiState,
     onEvent: (TeamDetailsUiEvent) -> Unit,
+    onFlagClick: (Country) -> Unit,
+    onLeagueClick: (LeagueShortInfo) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -86,15 +103,19 @@ private fun TeamDetailsScreen(
             }
 
             DataState.Success -> {
-                uiState.teamStatistics?.let {
+                uiState.teamStatistics?.let { statistics ->
                     Details(
                         isLoadingStatistics = uiState.isLoadingStatistics,
-                        teamStatistics = it,
-                        selectedSeason = uiState.selectedSeason.orEmpty(),
+                        showStatistics = uiState.showStatistics,
+                        showDraws = uiState.showDraws,
+                        teamStatistics = statistics,
+                        selectedSeason = uiState.selectedSeason,
                         seasons = uiState.seasons,
                         isFavourite = uiState.isFavourite,
                         onSeasonClick = { onEvent(TeamDetailsUiEvent.SeasonClick(it)) },
-                        onStarIconClick = { onEvent(TeamDetailsUiEvent.StarIconClick) }
+                        onStarIconClick = { onEvent(TeamDetailsUiEvent.StarIconClick) },
+                        onFlagClick = onFlagClick,
+                        onLeagueClick = onLeagueClick
                     )
                 }
             }
@@ -105,12 +126,16 @@ private fun TeamDetailsScreen(
 @Composable
 private fun Details(
     isLoadingStatistics: Boolean,
+    showStatistics: Boolean,
+    showDraws: Boolean,
     teamStatistics: TeamStatistics,
-    selectedSeason: String,
-    seasons: List<String>,
+    selectedSeason: Selectable?,
+    seasons: PersistentList<Selectable>,
     isFavourite: Boolean,
-    onSeasonClick: (String) -> Unit,
-    onStarIconClick: () -> Unit
+    onSeasonClick: (Selectable) -> Unit,
+    onStarIconClick: () -> Unit,
+    onFlagClick: (Country) -> Unit,
+    onLeagueClick: (LeagueShortInfo) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -123,18 +148,33 @@ private fun Details(
             countryFlagUrl = teamStatistics.country.flagUrl,
             leagueLogoUrl = teamStatistics.league.logoUrl,
             isFavourite = isFavourite,
-            onStarIconClick = onStarIconClick
+            onStarIconClick = onStarIconClick,
+            onFlagClick = { onFlagClick(teamStatistics.country) },
+            onLeagueClick = { onLeagueClick(teamStatistics.league) }
         )
 
-        GamesStatisticsSchedule(
-            isLoading = isLoadingStatistics,
-            games = teamStatistics.games
+        AppSelectableOutlinedTextField(
+            title = stringResource(R.string.seasons_selectable_title),
+            selected = selectedSeason,
+            choices = seasons,
+            onSelectionChange = onSeasonClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
 
-        PointsStatisticsSchedule(
-            isLoading = isLoadingStatistics,
-            points = teamStatistics.points
-        )
+        if (isLoadingStatistics || showStatistics) {
+            GamesStatisticsSchedule(
+                isLoading = isLoadingStatistics,
+                games = teamStatistics.games,
+                showDraws = showDraws
+            )
+
+            PointsStatisticsSchedule(
+                isLoading = isLoadingStatistics,
+                points = teamStatistics.points
+            )
+        } else NoPlayedGamesInfo()
     }
 }
 
@@ -145,7 +185,9 @@ private fun GeneralTeamInfoBlock(
     countryFlagUrl: String,
     leagueLogoUrl: String,
     isFavourite: Boolean,
-    onStarIconClick: () -> Unit
+    onStarIconClick: () -> Unit,
+    onFlagClick: () -> Unit,
+    onLeagueClick: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Surface(
@@ -182,6 +224,7 @@ private fun GeneralTeamInfoBlock(
                     elevation = 20.dp,
                     contentPadding = PaddingValues(),
                     border = BorderStroke(1.dp, Color.Black),
+                    modifier = Modifier.bounceClick { onFlagClick() }
                 ) {
                     AsyncImage(
                         model = ImageRequest
@@ -243,6 +286,7 @@ private fun GeneralTeamInfoBlock(
                     contentPadding = PaddingValues(),
                     backgroundColor = Color.White,
                     border = BorderStroke(1.dp, Color.Black),
+                    modifier = Modifier.bounceClick { onLeagueClick() }
                 ) {
                     AsyncImage(
                         model = ImageRequest
@@ -262,97 +306,126 @@ private fun GeneralTeamInfoBlock(
 }
 
 @Composable
-private fun GamesStatisticsSchedule(isLoading: Boolean, games: GamesInfo) {
+private fun GamesStatisticsSchedule(isLoading: Boolean, games: GamesInfo, showDraws: Boolean) {
     Column(
         verticalArrangement = Arrangement.spacedBy(2.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        ScheduleHeader(title = "Games played")
+        ScheduleHeader(title = stringResource(R.string.games_played_title))
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Home:",
+            firstCellText = stringResource(R.string.home_cell_title),
             secondCellText = games.played.home.toString()
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Away:",
+            firstCellText = stringResource(R.string.away_cell_title),
             secondCellText = games.played.away.toString()
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "All:",
+            firstCellText = stringResource(R.string.all_cell_title),
             secondCellText = games.played.all.toString()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ScheduleHeader(title = "Wins")
-        ScheduleSubHeaders(firstHeaderText = "total", secondHeaderText = "percentage")
+        ScheduleHeader(title = stringResource(R.string.wins_title))
+        ScheduleSubHeaders(thirdCellText = stringResource(R.string.percentage_cell_title))
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Home:",
+            firstCellText = stringResource(R.string.home_cell_title),
             secondCellText = games.wins.home.total.toString(),
-            thirdCellText = games.wins.home.percentage
+            thirdCellText = stringResource(
+                R.string.value_with_percent_char,
+                games.wins.home.percentage
+            )
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Away:",
+            firstCellText = stringResource(R.string.away_cell_title),
             secondCellText = games.wins.away.total.toString(),
-            thirdCellText = games.wins.away.percentage
+            thirdCellText = stringResource(
+                R.string.value_with_percent_char,
+                games.wins.away.percentage
+            )
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "All:",
+            firstCellText = stringResource(R.string.all_cell_title),
             secondCellText = games.wins.all.total.toString(),
-            thirdCellText = games.wins.all.percentage
+            thirdCellText = stringResource(
+                R.string.value_with_percent_char,
+                games.wins.all.percentage
+            )
         )
+
+        if (isLoading || showDraws) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ScheduleHeader(title = stringResource(R.string.draws_title))
+            ScheduleSubHeaders(thirdCellText = stringResource(id = R.string.percentage_cell_title))
+            ScheduleRow(
+                isLoading = isLoading,
+                firstCellText = stringResource(R.string.home_cell_title),
+                secondCellText = games.draws.home.total.toString(),
+                thirdCellText = stringResource(
+                    R.string.value_with_percent_char,
+                    games.draws.home.percentage
+                )
+            )
+            ScheduleRow(
+                isLoading = isLoading,
+                firstCellText = stringResource(R.string.away_cell_title),
+                secondCellText = games.draws.away.total.toString(),
+                thirdCellText = stringResource(
+                    R.string.value_with_percent_char,
+                    games.draws.away.percentage
+                )
+            )
+            ScheduleRow(
+                isLoading = isLoading,
+                firstCellText = stringResource(R.string.all_cell_title),
+                secondCellText = games.draws.all.total.toString(),
+                thirdCellText = stringResource(
+                    R.string.value_with_percent_char,
+                    games.draws.all.percentage
+                )
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ScheduleHeader(title = "Draws")
-        ScheduleSubHeaders(firstHeaderText = "total", secondHeaderText = "percentage")
+        ScheduleHeader(title = stringResource(R.string.loses_header_title))
+        ScheduleSubHeaders(thirdCellText = stringResource(id = R.string.percentage_cell_title))
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Home:",
-            secondCellText = games.draws.home.total.toString(),
-            thirdCellText = games.draws.home.percentage
-        )
-        ScheduleRow(
-            isLoading = isLoading,
-            firstCellText = "Away:",
-            secondCellText = games.draws.away.total.toString(),
-            thirdCellText = games.draws.away.percentage
-        )
-        ScheduleRow(
-            isLoading = isLoading,
-            firstCellText = "All:",
-            secondCellText = games.draws.all.total.toString(),
-            thirdCellText = games.draws.all.percentage
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ScheduleHeader(title = "Loses")
-        ScheduleSubHeaders(firstHeaderText = "total", secondHeaderText = "percentage")
-        ScheduleRow(
-            isLoading = isLoading,
-            firstCellText = "Home:",
+            firstCellText = stringResource(R.string.home_cell_title),
             secondCellText = games.loses.home.total.toString(),
-            thirdCellText = games.loses.home.percentage
+            thirdCellText = stringResource(
+                R.string.value_with_percent_char,
+                games.loses.home.percentage
+            )
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Away:",
+            firstCellText = stringResource(R.string.away_cell_title),
             secondCellText = games.loses.away.total.toString(),
-            thirdCellText = games.loses.away.percentage
+            thirdCellText = stringResource(
+                R.string.value_with_percent_char,
+                games.loses.away.percentage
+            )
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "All:",
+            firstCellText = stringResource(R.string.all_cell_title),
             secondCellText = games.loses.all.total.toString(),
-            thirdCellText = games.loses.all.percentage
+            thirdCellText = stringResource(
+                R.string.value_with_percent_char,
+                games.loses.all.percentage
+            )
         )
     }
 }
@@ -365,46 +438,46 @@ private fun PointsStatisticsSchedule(isLoading: Boolean, points: Points) {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        ScheduleHeader(title = "Points for")
-        ScheduleSubHeaders(firstHeaderText = "total", secondHeaderText = "average")
+        ScheduleHeader(title = stringResource(R.string.points_for_header_title))
+        ScheduleSubHeaders(thirdCellText = stringResource(R.string.average_cell_title))
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Home:",
+            firstCellText = stringResource(id = R.string.home_cell_title),
             secondCellText = points.forTeam.total.home.toString(),
             thirdCellText = points.forTeam.average.home
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Away:",
+            firstCellText = stringResource(id = R.string.away_cell_title),
             secondCellText = points.forTeam.total.away.toString(),
             thirdCellText = points.forTeam.average.away
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "All:",
+            firstCellText = stringResource(id = R.string.all_cell_title),
             secondCellText = points.forTeam.total.all.toString(),
             thirdCellText = points.forTeam.average.all
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ScheduleHeader(title = "Points against")
-        ScheduleSubHeaders(firstHeaderText = "total", secondHeaderText = "average")
+        ScheduleHeader(title = stringResource(R.string.points_against_header_title))
+        ScheduleSubHeaders(thirdCellText = stringResource(id = R.string.average_cell_title))
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Home:",
+            firstCellText = stringResource(id = R.string.home_cell_title),
             secondCellText = points.againstTeam.total.home.toString(),
             thirdCellText = points.againstTeam.average.home
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "Away:",
+            firstCellText = stringResource(id = R.string.away_cell_title),
             secondCellText = points.againstTeam.total.away.toString(),
             thirdCellText = points.againstTeam.average.away
         )
         ScheduleRow(
             isLoading = isLoading,
-            firstCellText = "All:",
+            firstCellText = stringResource(id = R.string.all_cell_title),
             secondCellText = points.againstTeam.total.all.toString(),
             thirdCellText = points.againstTeam.average.all
         )
@@ -425,32 +498,34 @@ private fun ScheduleHeader(title: String) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
         )
     }
 }
 
 @Composable
-private fun ScheduleSubHeaders(
-    firstHeaderText: String,
-    secondHeaderText: String
-) {
+private fun ScheduleSubHeaders(thirdCellText: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Spacer(modifier = Modifier.fillMaxWidth(0.25f))
         ScheduleCell(
-            text = firstHeaderText,
-            modifier = Modifier.weight(1f),
-            fontStyle = FontStyle.Italic
+            text = "",
+            modifier = Modifier.fillMaxWidth(0.25f),
+            containerColor = Color.Gray
         )
         ScheduleCell(
-            text = secondHeaderText,
+            text = stringResource(R.string.total_cell_title),
             modifier = Modifier.weight(1f),
-            fontStyle = FontStyle.Italic
+            fontStyle = FontStyle.Italic,
+            containerColor = Color.Gray
+        )
+        ScheduleCell(
+            text = thirdCellText,
+            modifier = Modifier.weight(1f),
+            fontStyle = FontStyle.Italic,
+            containerColor = Color.Gray
         )
     }
 }
@@ -472,17 +547,23 @@ private fun ScheduleRow(
             ShimmerCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(42.dp),
+                    .height(21.dp),
                 shape = RoundedCornerShape(20)
             )
         } else {
             ScheduleCell(
                 text = firstCellText,
                 modifier = Modifier.fillMaxWidth(0.25f),
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
+                containerColor = Color.Gray
             )
-            ScheduleCell(text = secondCellText, modifier = Modifier.weight(1f))
-            thirdCellText?.let { ScheduleCell(text = it, modifier = Modifier.weight(1f)) }
+            ScheduleCell(
+                text = secondCellText,
+                modifier = Modifier.weight(1f),
+            )
+            thirdCellText?.let {
+                ScheduleCell(text = it, modifier = Modifier.weight(1f))
+            }
         }
     }
 }
@@ -491,21 +572,44 @@ private fun ScheduleRow(
 private fun ScheduleCell(
     text: String,
     modifier: Modifier = Modifier,
-    fontStyle: FontStyle = FontStyle.Normal
+    fontStyle: FontStyle = FontStyle.Normal,
+    fontWeight: FontWeight? = null,
+    contentPaddings: PaddingValues = PaddingValues(),
+    containerColor: Color = Color.LightGray
 ) {
     Card(
         shape = RoundedCornerShape(20),
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
         modifier = modifier
     ) {
         AppText(
             text = text,
             fontSize = 14.sp,
             fontStyle = fontStyle,
+            fontWeight = fontWeight,
             modifier = Modifier
-                .padding(16.dp)
+                .padding(contentPaddings)
                 .align(Alignment.CenterHorizontally),
-            color = Color.Gray
+            color = Color.Black
         )
+    }
+}
+
+@Composable
+private fun NoPlayedGamesInfo() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_no_games),
+            contentDescription = null,
+            modifier = Modifier.size(100.dp),
+            colorFilter = ColorFilter.tint(BasketSnapTheme.colors.primaryText)
+        )
+        AppText(text = stringResource(R.string.the_team_has_not_played_this_season_yet))
     }
 }

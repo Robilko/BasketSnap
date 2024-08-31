@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="league_details_page_title">Лига</string>
+    <string name="seasons_title">Сезоны:</string>
+    <string name="league_name">Название:</string>
+    <string name="league_type">Тип:</string>
+    <string name="league_country">Страна:</string>
+    <string name="teams_dialog_title">Команды</string>
+    <string name="games_dialog_title">Игры</string>
+</resources>
