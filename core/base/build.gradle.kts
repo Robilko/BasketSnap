@@ -24,6 +24,9 @@ android {
     kotlinOptions {
         jvmTarget = libs.versions.jvmTarget.get()
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -32,6 +35,7 @@ dependencies {
     api(libs.androidx.appcompat)
     api(libs.androidx.lifecycle.runtime.ktx)
     api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.serialization.json)
 
     //    di
     implementation(libs.dagger.hilt.android)

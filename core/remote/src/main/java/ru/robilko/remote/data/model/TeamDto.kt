@@ -1,9 +1,11 @@
 package ru.robilko.remote.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TeamDto(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("logo") val logoUrl: String
+    @SerialName("id") val id: Int,
+    @SerialName("name") val name: String,
+    @SerialName("logo") val logoUrl: String
 )

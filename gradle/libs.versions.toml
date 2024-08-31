@@ -13,7 +13,8 @@ kotlinCompilerExtensionVersion = "1.5.14"
 coilCompose = "2.6.0"
 coilSvg = "2.6.0"
 accompanistSwiperefresh = "0.24.13-rc"
-converterGson = "2.9.0"
+kotlinxSerializationJson = "1.6.0"
+jakewhartonRetrofit2KotlinxSerializationConverter = "1.0.0"
 retrofit = "2.11.0"
 okhttp = "4.12.0"
 javapoet = "1.13.0"
@@ -42,9 +43,10 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+jakewharton-retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "jakewhartonRetrofit2KotlinxSerializationConverter" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
