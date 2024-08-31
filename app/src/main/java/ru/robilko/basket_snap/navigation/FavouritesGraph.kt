@@ -8,6 +8,7 @@ import ru.robilko.favourites.navigation.FAVOURITES_ROUTE
 import ru.robilko.favourites.navigation.favouritesScreen
 import ru.robilko.league_details.navigation.leagueDetailsScreen
 import ru.robilko.league_details.navigation.navigateToLeagueDetails
+import ru.robilko.leagues.navigation.navigateToLeagues
 import ru.robilko.team_details.navigation.navigateToTeamDetails
 import ru.robilko.team_details.navigation.teamDetailsScreen
 import ru.robilko.teams.navigation.navigateToTeams
@@ -44,6 +45,12 @@ fun NavGraphBuilder.favouritesGraph(
                 navHostController.navigateToTeamDetails(teamInfo = teamInfo, season = season)
             }
         )
-        teamDetailsScreen(onTopBarTitleChange = onTopBarTitleChange)
+        teamDetailsScreen(
+            onTopBarTitleChange = onTopBarTitleChange,
+            onNavigateToLeagues = { countryId -> navHostController.navigateToLeagues(countryId) },
+            onNavigateToLeagueDetails = { leagueId ->
+                navHostController.navigateToLeagueDetails(leagueId)
+            }
+        )
     }
 }

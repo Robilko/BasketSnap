@@ -19,6 +19,8 @@ import ru.robilko.base_favourites.domain.useCases.GetFavouriteTeamsUseCase
 import ru.robilko.core_ui.R
 import ru.robilko.core_ui.presentation.BaseAppViewModel
 import ru.robilko.core_ui.presentation.DataState
+import ru.robilko.core_ui.presentation.Selectable
+import ru.robilko.core_ui.presentation.asSelectableData
 import ru.robilko.model.data.TeamInfo
 import ru.robilko.team_details.domain.useCases.GetLeagueSeasonsUseCase
 import ru.robilko.team_details.domain.useCases.GetTeamStatisticsUseCase
@@ -87,11 +89,14 @@ class TeamDetailsViewModel @Inject constructor(
                     }
                 }
                 onSuccess { response ->
+                    val selectedSeason = season ?: response.data.firstOrNull()?.season
+                    val seasonChoices =
+                        response.data.map { season -> season.season.asSelectableData() }
                     _uiState.update {
                         it.copy(
-                            seasons = response.data
-                                .map { season -> season.season }.toPersistentList(),
-                            selectedSeason = season ?: response.data.first().season
+                            dataState = DataState.Success,
+                            seasons = seasonChoices.toPersistentList(),
+                            selectedSeason = selectedSeason?.asSelectableData()
                         )
                     }
                     getTeamStatistics()
@@ -102,11 +107,11 @@ class TeamDetailsViewModel @Inject constructor(
 
     private fun getTeamStatistics() {
         val selectedSeason = _uiState.value.selectedSeason ?: return
-        _uiState.update { it.copy(dataState = DataState.Loading) }
+        _uiState.update { it.copy(isLoadingStatistics = true) }
 
         viewModelScope.launch {
             getTeamStatisticsUseCase(
-                season = selectedSeason,
+                season = selectedSeason.value,
                 leagueId = leagueId,
                 teamId = teamId
             ).apply {
@@ -123,10 +128,15 @@ class TeamDetailsViewModel @Inject constructor(
                     }
                 }
                 onSuccess { response ->
+                    val hasPlayedGames = response.data?.let { it.games.played.all > 0 } ?: false
+                    val showDraws = response.data?.let { it.games.draws.all.total > 0 } ?: false
                     _uiState.update {
                         it.copy(
                             dataState = DataState.Success,
-                            teamStatistics = response.data
+                            isLoadingStatistics = false,
+                            teamStatistics = response.data,
+                            showStatistics = hasPlayedGames,
+                            showDraws = showDraws
                         )
                     }
                 }
@@ -134,9 +144,7 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun makeActionOnSeasonClick(season: String) {
-        if (_uiState.value.selectedSeason == season) return
-
+    private fun makeActionOnSeasonClick(season: Selectable) {
         _uiState.update { it.copy(selectedSeason = season) }
         getTeamStatistics()
     }

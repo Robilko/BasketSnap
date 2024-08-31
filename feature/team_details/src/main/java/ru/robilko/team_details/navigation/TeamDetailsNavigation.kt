@@ -24,7 +24,11 @@ fun NavHostController.navigateToTeamDetails(
     navigate("$TEAM_DETAILS_ROUTE_BASE/${teamInfo.id}/${teamInfo.leagueId}/$season", navOptions)
 }
 
-fun NavGraphBuilder.teamDetailsScreen(onTopBarTitleChange: (resId: Int) -> Unit) {
+fun NavGraphBuilder.teamDetailsScreen(
+    onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToLeagueDetails: (leagueId: Int) -> Unit,
+    onNavigateToLeagues: (countryId: Int) -> Unit,
+) {
     composable(
         route = TEAM_DETAILS_ROUTE,
         arguments = listOf(navArgument(TEAM_ID_ARG) {
@@ -41,6 +45,10 @@ fun NavGraphBuilder.teamDetailsScreen(onTopBarTitleChange: (resId: Int) -> Unit)
             }
         )
     ) {
-        TeamDetailsRoute(onTopBarTitleChange = onTopBarTitleChange)
+        TeamDetailsRoute(
+            onTopBarTitleChange = onTopBarTitleChange,
+            onNavigateToLeagues = onNavigateToLeagues,
+            onNavigateToLeagueDetails = onNavigateToLeagueDetails
+        )
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="countries_title">Страны:</string>
+    <string name="continents_title">Континенты:</string>
+    <string name="search_field_title">Поиск</string>
+    <string name="home_page_title">Главная</string>
+</resources>

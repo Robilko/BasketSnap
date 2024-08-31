@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="team_details_page_title">Team details</string>
+    <string name="team_details_page_title">Team</string>
+    <string name="value_with_percent_char" translatable="false">%1$s%%</string>
+    <string name="games_played_title">Games played</string>
+    <string name="home_cell_title">Home:</string>
+    <string name="away_cell_title">Away:</string>
+    <string name="all_cell_title">All:</string>
+    <string name="wins_title">Wins</string>
+    <string name="percentage_cell_title">Percentage</string>
+    <string name="draws_title">Draws</string>
+    <string name="loses_header_title">Loses</string>
+    <string name="points_for_header_title">Points for</string>
+    <string name="average_cell_title">Average</string>
+    <string name="points_against_header_title">Points against</string>
+    <string name="total_cell_title">Total</string>
+    <string name="the_team_has_not_played_this_season_yet">The team has not played this season yet</string>
+    <string name="seasons_selectable_title">Choose a season</string>
 </resources>

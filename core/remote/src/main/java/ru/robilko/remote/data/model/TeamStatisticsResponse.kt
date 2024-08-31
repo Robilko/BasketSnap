@@ -101,10 +101,10 @@ fun TotalResultDto.asDomainModel() = TotalResult(
 
 private fun getFormattedPercentage(percentage: String?): String =
     percentage?.toDoubleOrNull()?.let { percent ->
-        String.format(Locale.ROOT, "%.1f", percent * 100).let {
-            if (it.endsWith(".0")) it.dropLast(2) else it
-        }
+        String.format(Locale.ROOT, "%.1f", percent * 100).dropLastDotZero()
     } ?: "0"
+
+private fun String.dropLastDotZero(): String = if (endsWith(".0")) dropLast(2) else this
 
 @Serializable
 data class PercentByPlaceOfPlayDto(
@@ -114,9 +114,9 @@ data class PercentByPlaceOfPlayDto(
 )
 
 fun PercentByPlaceOfPlayDto.asDomainModel() = PercentByPlaceOfPlay(
-    home = home,
-    away = away,
-    all = all
+    home = home.dropLastDotZero(),
+    away = away.dropLastDotZero(),
+    all = all.dropLastDotZero()
 )
 
 @Serializable

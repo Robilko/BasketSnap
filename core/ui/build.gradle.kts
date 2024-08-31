@@ -43,6 +43,7 @@ dependencies {
     api(libs.accompanist.swiperefresh)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.kotlinx.collections.immutable)
 
     //    coil
     api(libs.coil.compose)

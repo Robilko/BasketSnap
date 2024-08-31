@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="team_details_page_title">Команда</string>
+    <string name="games_played_title">Игр сыграно</string>
+    <string name="home_cell_title">Дома:</string>
+    <string name="away_cell_title">В гостях:</string>
+    <string name="all_cell_title">Все:</string>
+    <string name="wins_title">Победа</string>
+    <string name="percentage_cell_title">Процент</string>
+    <string name="draws_title">Ничья</string>
+    <string name="loses_header_title">Поражение</string>
+    <string name="points_for_header_title">Набрано очков</string>
+    <string name="average_cell_title">В среднем</string>
+    <string name="points_against_header_title">Пропущено очков</string>
+    <string name="total_cell_title">Всего</string>
+    <string name="the_team_has_not_played_this_season_yet">Команда еще не играла в этом сезоне</string>
+    <string name="seasons_selectable_title">Выберите сезон</string>
+</resources>
