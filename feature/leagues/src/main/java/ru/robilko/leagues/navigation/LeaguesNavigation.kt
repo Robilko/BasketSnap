@@ -26,7 +26,7 @@ fun NavGraphBuilder.leaguesScreen(
         route = LEAGUES_ROUTE,
         arguments = listOf(navArgument(COUNTRY_ID_ARG) {
             nullable = false
-            type = NavType.StringType
+            type = NavType.IntType
         }
         )
     ) {

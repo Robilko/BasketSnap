@@ -10,6 +10,7 @@ import ru.robilko.base_favourites.domain.repo.BaseFavouritesRepository
 import ru.robilko.local.model.asDomainModel
 import ru.robilko.local.model.toEntity
 import ru.robilko.model.data.League
+import ru.robilko.model.data.TeamInfo
 import javax.inject.Inject
 
 class BaseFavouritesRepositoryImpl @Inject constructor(
@@ -29,5 +30,17 @@ class BaseFavouritesRepositoryImpl @Inject constructor(
 
     override suspend fun deleteLeagueFromFavourites(id: Int) {
         localDataSource.deleteLeagueById(id)
+    }
+
+    override suspend fun addTeamInfoToFavourites(teamInfo: TeamInfo) {
+        localDataSource.insertTeamInfo(teamInfo.toEntity())
+    }
+
+    override fun getFavouritesTeamInfos(): Flow<List<TeamInfo>> {
+        return localDataSource.getAllTeamsInfo().map { it.map { entity -> entity.asDomainModel() } }
+    }
+
+    override suspend fun deleteTeamInfoFromFavourites(id: Int) {
+        localDataSource.deleteTeamInfoById(id)
     }
 }

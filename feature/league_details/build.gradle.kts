@@ -13,18 +13,8 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -47,6 +37,7 @@ dependencies {
     implementation(project(":core:remote"))
     implementation(project(":core:local"))
     implementation(project(":core:model"))
+    implementation(project(":base:favourites"))
 
     //    di
     implementation(libs.dagger.hilt.android)

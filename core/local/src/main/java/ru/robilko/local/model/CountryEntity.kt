@@ -7,7 +7,7 @@ import ru.robilko.model.data.Country
 
 @Entity(tableName = "countries")
 data class CountryEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     val name: String,
     val code: String,
     @ColumnInfo(name = "flag_url") val flagUrl: String

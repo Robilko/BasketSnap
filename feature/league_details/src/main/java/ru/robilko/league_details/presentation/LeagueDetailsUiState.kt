@@ -6,5 +6,7 @@ import ru.robilko.model.data.League
 
 data class LeagueDetailsUiState(
     val dataState: DataState,
-    val league: League? = null
+    val league: League? = null,
+    val selectedSeason: String? = null,
+    val isFavourite: Boolean = false
 ) : UiState

@@ -5,4 +5,6 @@
     <string name="league_name">Name:</string>
     <string name="league_type">Type:</string>
     <string name="league_country">Country:</string>
+    <string name="teams_dialog_title">Teams</string>
+    <string name="games_dialog_title">Games</string>
 </resources>

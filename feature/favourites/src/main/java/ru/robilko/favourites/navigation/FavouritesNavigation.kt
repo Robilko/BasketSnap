@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import ru.robilko.favourites.presentation.FavouritesRoute
 import ru.robilko.model.data.League
+import ru.robilko.model.data.TeamInfo
 
 const val FAVOURITES_ROUTE = "favourites"
 
@@ -15,12 +16,14 @@ fun NavHostController.navigateToFavourites(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.favouritesScreen(
     onTopBarTitleChange: (resId: Int) -> Unit,
-    onNavigateToLeagueDetails: (League) -> Unit
+    onNavigateToLeagueDetails: (League) -> Unit,
+    onNavigateToTeamDetails: (TeamInfo) -> Unit
 ) {
     composable(FAVOURITES_ROUTE) {
         FavouritesRoute(
             onTopBarTitleChange = onTopBarTitleChange,
-            onNavigateToLeagueDetails = onNavigateToLeagueDetails
+            onNavigateToLeagueDetails = onNavigateToLeagueDetails,
+            onNavigateToTeamDetails = onNavigateToTeamDetails
         )
     }
 }

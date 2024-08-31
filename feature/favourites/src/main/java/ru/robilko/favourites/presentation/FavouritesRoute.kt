@@ -50,12 +50,14 @@ import ru.robilko.core_ui.presentation.components.AppText
 import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.favourites.R
 import ru.robilko.model.data.League
+import ru.robilko.model.data.TeamInfo
 import ru.robilko.core_ui.R as R_core_ui
 
 @Composable
 internal fun FavouritesRoute(
     onTopBarTitleChange: (resId: Int) -> Unit,
     onNavigateToLeagueDetails: (League) -> Unit,
+    onNavigateToTeamDetails: (TeamInfo) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FavouritesViewModel = hiltViewModel<FavouritesViewModel>()
 ) {
@@ -64,6 +66,7 @@ internal fun FavouritesRoute(
         uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
         onEvent = viewModel::onEvent,
         onNavigateToLeagueDetails = onNavigateToLeagueDetails,
+        onNavigateToTeamDetails = onNavigateToTeamDetails,
         modifier = modifier
     )
 }
@@ -73,6 +76,7 @@ private fun FavouritesScreen(
     uiState: FavouritesUiState,
     onEvent: (FavouritesUiEvent) -> Unit,
     onNavigateToLeagueDetails: (League) -> Unit,
+    onNavigateToTeamDetails: (TeamInfo) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState { FavouritesTabs.entries.size }
@@ -81,12 +85,11 @@ private fun FavouritesScreen(
     Column(modifier = modifier.fillMaxSize()) {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
-//            contentColor = Color.White,
             containerColor = Color.Transparent,
             indicator = { tabPositions ->
                 SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                    color = Color.White
+                    color = BasketSnapTheme.colors.primaryText
                 )
             }
         ) {
@@ -119,7 +122,7 @@ private fun FavouritesScreen(
                     TeamsPage(
                         isLoading = uiState.isTeamsLoading,
                         data = uiState.teams,
-                        onClick = { onEvent(FavouritesUiEvent.TeamCardClick(it)) },
+                        onClick = onNavigateToTeamDetails,
                         onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteTeamIconClick(it)) }
                     )
                 }
@@ -145,16 +148,14 @@ private fun LeaguesPage(
 @Composable
 private fun TeamsPage(
     isLoading: Boolean,
-    data: PersistentList<String>,
-    onClick: (String) -> Unit,
-    onDeleteIconClick: (String) -> Unit
+    data: PersistentList<TeamInfo>,
+    onClick: (TeamInfo) -> Unit,
+    onDeleteIconClick: (TeamInfo) -> Unit
 ) {
     when {
         isLoading -> LoadingIndicator()
         data.isEmpty() -> EmptyList(textResId = R.string.empty_favourite_leagues)
-        else -> {
-            //todo
-        }
+        else -> TeamsList(data = data, onClick = onClick, onDeleteIconClick = onDeleteIconClick)
     }
 }
 
@@ -212,8 +213,8 @@ private fun LeaguesList(
                         model = ImageRequest
                             .Builder(LocalContext.current)
                             .data(league.logoUrl)
-                            .error(R_core_ui.drawable.ic_league_placeholder)
-                            .placeholder(R_core_ui.drawable.ic_league_placeholder)
+                            .error(R_core_ui.drawable.ic_no_image_placeholder)
+                            .placeholder(R_core_ui.drawable.ic_image_loader)
                             .build(),
                         contentDescription = null,
                         modifier = Modifier
@@ -223,18 +224,82 @@ private fun LeaguesList(
                     Column(modifier = Modifier.weight(1f)) {
                         AppText(text = league.name)
                         HorizontalDivider(Modifier.padding(vertical = 4.dp))
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            AppText(
-                                text = stringResource(id = R.string.country_title),
-                                color = BasketSnapTheme.colors.secondaryText,
-                                fontSize = 12.sp,
-                                fontStyle = FontStyle.Italic
-                            )
-                            AppText(text = league.country.name, fontSize = 12.sp)
+                        if (league.country.name.isNotEmpty()) {
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                AppText(
+                                    text = stringResource(id = R.string.country_title),
+                                    color = BasketSnapTheme.colors.secondaryText,
+                                    fontSize = 12.sp,
+                                    fontStyle = FontStyle.Italic
+                                )
+                                AppText(text = league.country.name, fontSize = 12.sp)
+                            }
                         }
                     }
 
                     IconButton(onClick = { onDeleteIconClick(league) }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            tint = BasketSnapTheme.colors.secondaryText,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun TeamsList(
+    data: PersistentList<TeamInfo>,
+    onClick: (TeamInfo) -> Unit,
+    onDeleteIconClick: (TeamInfo) -> Unit
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(data, key = { it.id }) { teamInfo ->
+            AppCard(
+                contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp),
+                onClick = { onClick(teamInfo) }) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AsyncImage(
+                        model = ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(teamInfo.logoUrl)
+                            .error(R_core_ui.drawable.ic_no_image_placeholder)
+                            .placeholder(R_core_ui.drawable.ic_image_loader)
+                            .build(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .size(64.dp)
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        AppText(text = teamInfo.name)
+                        HorizontalDivider(Modifier.padding(vertical = 4.dp))
+                        if (teamInfo.country.name.isNotEmpty()) {
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                AppText(
+                                    text = stringResource(id = R.string.country_title),
+                                    color = BasketSnapTheme.colors.secondaryText,
+                                    fontSize = 12.sp,
+                                    fontStyle = FontStyle.Italic
+                                )
+                                AppText(text = teamInfo.country.name, fontSize = 12.sp)
+                            }
+                        }
+                    }
+
+                    IconButton(onClick = { onDeleteIconClick(teamInfo) }) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
                             tint = BasketSnapTheme.colors.secondaryText,
