@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Настройки</string>
+    <string name="follow_system_theme_title">Как в системе</string>
+    <string name="light_theme_title">Светлая тема</string>
+    <string name="dark_theme_title">Темная тема</string>
+    <string name="change_theme_setting_title">Изменить тему приложения</string>
 </resources>

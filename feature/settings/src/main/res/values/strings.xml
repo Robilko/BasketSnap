@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Settings</string>
+    <string name="follow_system_theme_title">Follow system theme</string>
+    <string name="light_theme_title">Light theme</string>
+    <string name="dark_theme_title">Dark theme</string>
+    <string name="change_theme_setting_title">Change the app theme</string>
 </resources>
