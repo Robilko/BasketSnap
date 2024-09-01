@@ -15,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -74,7 +75,15 @@ private fun SettingsScreen(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+
+        SettingsItemWithSwitch(
+            iconResId = R.drawable.ic_top_bar,
+            text = stringResource(R.string.show_top_bar_title),
+            checked = uiState.needToShowTopBar == true,
+            enabled = uiState.needToShowTopBar != null,
+            onCheckedChange = { onEvent(SettingsUiEvent.CheckedChangeShowTopBar(it)) }
+        )
         SettingsItem(
             iconResId = R.drawable.ic_theme_mode,
             text = stringResource(R.string.change_theme_setting_title),
@@ -107,6 +116,41 @@ private fun SettingsItem(@DrawableRes iconResId: Int, text: String, onClick: () 
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
                 tint = BasketSnapTheme.colors.primaryText
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsItemWithSwitch(
+    @DrawableRes iconResId: Int,
+    text: String,
+    enabled: Boolean,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    AppCard(onClick = { if (enabled) onCheckedChange(!checked) }) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = iconResId),
+                contentDescription = null,
+                tint = BasketSnapTheme.colors.primaryText
+            )
+            AppText(
+                text = text,
+                fontStyle = FontStyle.Italic,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp)
+            )
+            Switch(
+                checked = checked,
+                enabled = enabled,
+                onCheckedChange = onCheckedChange
             )
         }
     }

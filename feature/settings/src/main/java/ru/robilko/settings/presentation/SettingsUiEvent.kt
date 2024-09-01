@@ -7,4 +7,5 @@ sealed class SettingsUiEvent : UiEvent {
     data object ClickAppThemeSetting : SettingsUiEvent()
     data object DismissSelectableDialog : SettingsUiEvent()
     data class SelectNewChoice(val selectable: Selectable): SettingsUiEvent()
+    data class CheckedChangeShowTopBar(val value: Boolean) : SettingsUiEvent()
 }
