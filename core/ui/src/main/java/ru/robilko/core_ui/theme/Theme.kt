@@ -53,15 +53,11 @@ private val DarkColorPalette = BasketSnapColors(
 
 @Composable
 fun BasketSnapTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
-    val colorPalette = if (darkTheme) DarkColorPalette else LightColorPalette
+    val colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme
+    val colorPalette = if (isDarkTheme) DarkColorPalette else LightColorPalette
 
     CompositionLocalProvider(
         LocalBasketSnapColors provides colorPalette

@@ -34,6 +34,7 @@ dependencies {
     //    modules
     implementation(project(":core:base"))
     implementation(project(":core:ui"))
+    implementation(project(":core:local"))
 
     //    di
     implementation(libs.dagger.hilt.android)
