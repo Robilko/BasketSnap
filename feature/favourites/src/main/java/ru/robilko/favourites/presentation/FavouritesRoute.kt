@@ -109,21 +109,20 @@ private fun FavouritesScreen(
 
         HorizontalPager(state = pagerState, userScrollEnabled = true) { pageIndex ->
             when (pageIndex) {
-                FavouritesTabs.LEAGUES.ordinal -> {
-                    LeaguesPage(
-                        isLoading = uiState.isLeaguesLoading,
-                        data = uiState.leagues,
-                        onClick = onNavigateToLeagueDetails,
-                        onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteLeagueIconClick(it)) }
-                    )
-                }
-
                 FavouritesTabs.TEAMS.ordinal -> {
                     TeamsPage(
                         isLoading = uiState.isTeamsLoading,
                         data = uiState.teams,
                         onClick = onNavigateToTeamDetails,
                         onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteTeamIconClick(it)) }
+                    )
+                }
+                FavouritesTabs.LEAGUES.ordinal -> {
+                    LeaguesPage(
+                        isLoading = uiState.isLeaguesLoading,
+                        data = uiState.leagues,
+                        onClick = onNavigateToLeagueDetails,
+                        onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteLeagueIconClick(it)) }
                     )
                 }
             }

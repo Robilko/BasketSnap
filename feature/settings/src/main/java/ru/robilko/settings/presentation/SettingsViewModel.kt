@@ -35,6 +35,7 @@ class SettingsViewModel @Inject constructor(
                 _uiState.update { it.copy(selectableDialogState = null) }
 
             is SettingsUiEvent.SelectNewChoice -> onNewChoiceSelected(event.selectable)
+            is SettingsUiEvent.CheckedChangeShowTopBar -> changeShowTopBarConfig(event.value)
         }
     }
 
@@ -45,7 +46,12 @@ class SettingsViewModel @Inject constructor(
     private fun observeAppConfigData() {
         viewModelScope.launch {
             appConfigRepository.getSettingsData().collectLatest { data ->
-                _uiState.update { it.copy(darkThemeConfig = data.darkThemeConfig.asSelectable()) }
+                _uiState.update {
+                    it.copy(
+                        darkThemeConfig = data.darkThemeConfig.asSelectable(),
+                        needToShowTopBar = data.needToShowTopBar
+                    )
+                }
             }
         }
     }
@@ -88,5 +94,10 @@ class SettingsViewModel @Inject constructor(
             null -> {}
         }
         _uiState.update { it.copy(selectableDialogState = null) }
+    }
+
+    private fun changeShowTopBarConfig(value: Boolean) {
+        if (_uiState.value.needToShowTopBar == value) return
+        appConfigRepository.setShowTopBar(value)
     }
 }

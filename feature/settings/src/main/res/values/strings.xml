@@ -5,4 +5,5 @@
     <string name="light_theme_title">Light theme</string>
     <string name="dark_theme_title">Dark theme</string>
     <string name="change_theme_setting_title">Change the app theme</string>
+    <string name="show_top_bar_title">Show top bar</string>
 </resources>

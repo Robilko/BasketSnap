@@ -16,7 +16,8 @@ class AppConfigRepositoryImpl @Inject constructor(
 
     private val appConfigData: MutableStateFlow<AppConfigData> = MutableStateFlow(
         AppConfigData(
-            darkThemeConfig = getDarkThemeConfig()
+            darkThemeConfig = getDarkThemeConfig(),
+            needToShowTopBar = preferences.getBoolean(SHOW_TOP_BAR_KEY, true)
         )
     )
 
@@ -36,7 +37,13 @@ class AppConfigRepositoryImpl @Inject constructor(
         appConfigData.update { it.copy(darkThemeConfig = darkThemeConfig) }
     }
 
+    override fun setShowTopBar(value: Boolean) {
+        preferences.edit().putBoolean(SHOW_TOP_BAR_KEY, value).apply()
+        appConfigData.update { it.copy(needToShowTopBar = value) }
+    }
+
     private companion object {
         const val DARK_THEME_CONFIG_KEY = "dark_theme_config_key"
+        const val SHOW_TOP_BAR_KEY = "show_top_bar_key"
     }
 }

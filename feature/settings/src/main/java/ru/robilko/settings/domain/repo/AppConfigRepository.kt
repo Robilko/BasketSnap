@@ -7,4 +7,5 @@ import ru.robilko.settings.domain.model.DarkThemeConfig
 interface AppConfigRepository {
     fun getSettingsData(): StateFlow<AppConfigData>
     fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig)
+    fun setShowTopBar(value: Boolean)
 }

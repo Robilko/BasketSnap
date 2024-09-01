@@ -46,6 +46,9 @@ class BasketSnapAppState(
     val isDarkTheme: Boolean
         @Composable get() = shouldUseDarkTheme(darkThemeConfig = appConfigData.darkThemeConfig)
 
+    val needToShowTopBar: Boolean
+        @Composable get() = appConfigData.needToShowTopBar
+
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 

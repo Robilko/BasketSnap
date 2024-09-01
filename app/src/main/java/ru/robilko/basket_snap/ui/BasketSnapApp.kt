@@ -48,24 +48,26 @@ internal fun BasketSnapApp(
         containerColor = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = topBarTitle)) },
-                navigationIcon = {
-                    if (appState.needToShowTopBarBackButton) {
-                        IconButton(onClick = appState::navigateBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-                    } else Spacer(modifier = Modifier.size(48.dp))
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    navigationIconContentColor = Color.White,
-                    titleContentColor = Color.White
+            if (appState.needToShowTopBar) {
+                TopAppBar(
+                    title = { Text(text = stringResource(id = topBarTitle)) },
+                    navigationIcon = {
+                        if (appState.needToShowTopBarBackButton) {
+                            IconButton(onClick = appState::navigateBack) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        } else Spacer(modifier = Modifier.size(48.dp))
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        navigationIconContentColor = Color.White,
+                        titleContentColor = Color.White
+                    )
                 )
-            )
+            }
         },
         bottomBar = {
             AppBottomBar(
