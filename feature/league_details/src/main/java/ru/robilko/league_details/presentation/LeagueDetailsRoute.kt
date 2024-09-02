@@ -204,11 +204,12 @@ private fun InfoTextBlock(@StringRes titleResId: Int, value: String) {
 
 @Composable
 private fun SeasonItem(season: Season, onClick: () -> Unit) {
-    AppCard(contentPadding = PaddingValues(horizontal = 8.dp)) {
+    AppCard(
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        modifier = Modifier.bounceClick { onClick() }
+    ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .bounceClick { onClick() },
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             AppText(

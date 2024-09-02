@@ -39,6 +39,7 @@ object ApiModule {
         val json = Json {
             ignoreUnknownKeys = true
             explicitNulls = false
+            isLenient = true
         }
         return json.asConverterFactory("application/json".toMediaType())
     }
