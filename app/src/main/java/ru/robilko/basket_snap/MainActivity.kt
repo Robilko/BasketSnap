@@ -1,9 +1,12 @@
 package ru.robilko.basket_snap
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.DisposableEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import ru.robilko.basket_snap.ui.BasketSnapApp
@@ -20,9 +23,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             val appState = rememberBasketSnapAppState(appConfigRepository)
+
+            val darkTheme = appState.isDarkTheme
+            DisposableEffect(darkTheme) {
+                enableEdgeToEdge(
+                    statusBarStyle =
+                    SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { darkTheme },
+                    navigationBarStyle = SystemBarStyle.auto(lightScrim, darkScrim) { darkTheme }
+                )
+                onDispose {}
+            }
 
             BasketSnapTheme(isDarkTheme = appState.isDarkTheme) {
                 BasketSnapApp(appState)
@@ -30,3 +42,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+private val lightScrim = android.graphics.Color.argb(0xe6, 0xFF, 0xFF, 0xFF)
+private val darkScrim = android.graphics.Color.argb(0x80, 0x1b, 0x1b, 0x1b)
