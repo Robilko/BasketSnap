@@ -41,7 +41,7 @@ class TeamDetailsViewModel @Inject constructor(
 ) : BaseAppViewModel<TeamDetailsUiState, TeamDetailsUiEvent>() {
     private val teamId = checkNotNull<Int>(savedStateHandle[TEAM_ID_ARG])
     private val leagueId = checkNotNull<Int>(savedStateHandle[LEAGUE_ID_ARG])
-    private val season = savedStateHandle.get<String>(SEASON_ARG)
+    private var initialSeason = savedStateHandle.get<String>(SEASON_ARG)
 
     private val _uiState = MutableStateFlow(TeamDetailsUiState())
     override val uiState: StateFlow<TeamDetailsUiState> = _uiState
@@ -89,12 +89,12 @@ class TeamDetailsViewModel @Inject constructor(
                     }
                 }
                 onSuccess { response ->
-                    val selectedSeason = season ?: response.data.firstOrNull()?.season
+                    val selectedSeason = initialSeason ?: response.data.firstOrNull()?.season
                     val seasonChoices =
                         response.data.map { season -> season.season.asSelectableData() }
                     _uiState.update {
                         it.copy(
-                            dataState = DataState.Success,
+                            dataState = if (initialSeason == null) DataState.Loading else DataState.Success,
                             seasons = seasonChoices.toPersistentList(),
                             selectedSeason = selectedSeason?.asSelectableData()
                         )
@@ -129,6 +129,15 @@ class TeamDetailsViewModel @Inject constructor(
                 }
                 onSuccess { response ->
                     val hasPlayedGames = response.data?.let { it.games.played.all > 0 } ?: false
+
+                    with(_uiState.value){
+                        if (!hasPlayedGames && initialSeason == null && selectedSeason == seasons.firstOrNull()) {
+                            val previousSeason = seasons.getOrNull(1) ?: return@with
+                            makeActionOnSeasonClick(previousSeason)
+                            return@onSuccess
+                        }
+                    }
+
                     val showDraws = response.data?.let { it.games.draws.all.total > 0 } ?: false
                     _uiState.update {
                         it.copy(
@@ -145,6 +154,7 @@ class TeamDetailsViewModel @Inject constructor(
     }
 
     private fun makeActionOnSeasonClick(season: Selectable) {
+        if (initialSeason == null) initialSeason = season.value
         _uiState.update { it.copy(selectedSeason = season) }
         getTeamStatistics()
     }

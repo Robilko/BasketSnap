@@ -14,6 +14,6 @@
     <string name="average_cell_title">Average</string>
     <string name="points_against_header_title">Points against</string>
     <string name="total_cell_title">Total</string>
-    <string name="the_team_has_not_played_this_season_yet">The team has not played this season yet</string>
+    <string name="the_team_has_not_played_this_season_yet">The team has not played this season</string>
     <string name="seasons_selectable_title">Choose a season</string>
 </resources>

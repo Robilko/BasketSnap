@@ -225,7 +225,9 @@ private fun GeneralTeamInfoBlock(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Column(
-                    modifier = Modifier.weight(1f).padding(top = 8.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AppCard(
@@ -298,7 +300,9 @@ private fun GeneralTeamInfoBlock(
                 }
 
                 Column(
-                    modifier = Modifier.weight(1f).padding(top = 8.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AppCard(

@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -104,7 +105,7 @@ private fun LeagueDetailsScreen(
                         },
                         onGamesClick = {
                             onEvent(LeagueDetailsUiEvent.DismissSeasonDialog)
-                            // todo navigateToGames
+                            //todo add games navigation
                         }
                     )
                 }
@@ -251,9 +252,9 @@ private fun SeasonDialog(
                 AppText(
                     text = stringResource(id = R.string.games_dialog_title),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .bounceClick { onGamesClick() }
+                    modifier = Modifier.fillMaxWidth(),
+//                        .bounceClick { onGamesClick() } //todo add games
+                    color = Color.LightGray,
                 )
             }
         }
