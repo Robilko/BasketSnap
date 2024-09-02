@@ -153,7 +153,7 @@ private fun TeamsPage(
 ) {
     when {
         isLoading -> LoadingIndicator()
-        data.isEmpty() -> EmptyList(textResId = R.string.empty_favourite_leagues)
+        data.isEmpty() -> EmptyList(textResId = R.string.empty_favourite_teams)
         else -> TeamsList(data = data, onClick = onClick, onDeleteIconClick = onDeleteIconClick)
     }
 }

@@ -145,7 +145,9 @@ private fun Details(
         GeneralTeamInfoBlock(
             teamName = teamStatistics.name,
             teamLogoUrl = teamStatistics.logoUrl,
+            countryName = teamStatistics.country.name,
             countryFlagUrl = teamStatistics.country.flagUrl,
+            leagueName = teamStatistics.league.name,
             leagueLogoUrl = teamStatistics.league.logoUrl,
             isFavourite = isFavourite,
             onStarIconClick = onStarIconClick,
@@ -182,7 +184,9 @@ private fun Details(
 private fun GeneralTeamInfoBlock(
     teamName: String,
     teamLogoUrl: String,
+    countryName: String,
     countryFlagUrl: String,
+    leagueName: String,
     leagueLogoUrl: String,
     isFavourite: Boolean,
     onStarIconClick: () -> Unit,
@@ -194,7 +198,7 @@ private fun GeneralTeamInfoBlock(
             shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(90.dp)
+                .height(140.dp)
                 .align(Alignment.TopCenter),
             shadowElevation = 20.dp,
             color = MaterialTheme.colorScheme.primary,
@@ -204,6 +208,7 @@ private fun GeneralTeamInfoBlock(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
             AppText(
                 text = teamName,
                 fontWeight = FontWeight.Bold,
@@ -219,24 +224,36 @@ private fun GeneralTeamInfoBlock(
                     .padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                AppCard(
-                    shape = CircleShape,
-                    elevation = 20.dp,
-                    contentPadding = PaddingValues(),
-                    border = BorderStroke(1.dp, Color.Black),
-                    modifier = Modifier.bounceClick { onFlagClick() }
+                Column(
+                    modifier = Modifier.weight(1f).padding(top = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    AsyncImage(
-                        model = ImageRequest
-                            .Builder(LocalContext.current)
-                            .data(countryFlagUrl)
-                            .decoderFactory(SvgDecoder.Factory())
-                            .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
-                            .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
-                            .build(),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp)
+                    AppCard(
+                        shape = CircleShape,
+                        elevation = 20.dp,
+                        contentPadding = PaddingValues(),
+                        border = BorderStroke(1.dp, Color.Black),
+                        modifier = Modifier.bounceClick { onFlagClick() }
+                    ) {
+                        AsyncImage(
+                            model = ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(countryFlagUrl)
+                                .decoderFactory(SvgDecoder.Factory())
+                                .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
+                                .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
+                                .build(),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                    AppText(
+                        text = countryName,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp
                     )
                 }
 
@@ -280,24 +297,36 @@ private fun GeneralTeamInfoBlock(
                     }
                 }
 
-                AppCard(
-                    shape = CircleShape,
-                    elevation = 20.dp,
-                    contentPadding = PaddingValues(),
-                    backgroundColor = Color.White,
-                    border = BorderStroke(1.dp, Color.Black),
-                    modifier = Modifier.bounceClick { onLeagueClick() }
+                Column(
+                    modifier = Modifier.weight(1f).padding(top = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    AsyncImage(
-                        model = ImageRequest
-                            .Builder(LocalContext.current)
-                            .data(leagueLogoUrl)
-                            .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
-                            .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
-                            .build(),
-                        contentScale = ContentScale.Inside,
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp)
+                    AppCard(
+                        shape = CircleShape,
+                        elevation = 20.dp,
+                        contentPadding = PaddingValues(),
+                        backgroundColor = Color.White,
+                        border = BorderStroke(1.dp, Color.Black),
+                        modifier = Modifier.bounceClick { onLeagueClick() }
+                    ) {
+                        AsyncImage(
+                            model = ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(leagueLogoUrl)
+                                .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
+                                .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
+                                .build(),
+                            contentScale = ContentScale.Inside,
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                    AppText(
+                        text = leagueName,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp
                     )
                 }
             }

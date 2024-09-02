@@ -1,5 +1,11 @@
 package ru.robilko.basket_snap.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +42,8 @@ import ru.robilko.basket_snap.R
 import ru.robilko.basket_snap.navigation.AppNavHost
 import ru.robilko.basket_snap.navigation.TopLevelDestination
 
+private const val TOP_BAR_ANIM_DURATION = 1000
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BasketSnapApp(
@@ -48,7 +56,15 @@ internal fun BasketSnapApp(
         containerColor = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            if (appState.needToShowTopBar) {
+            AnimatedVisibility(
+                visible = appState.needToShowTopBar,
+                enter = expandVertically(
+                    tween(durationMillis = TOP_BAR_ANIM_DURATION),
+                    initialHeight = { it / 3 }) + fadeIn(tween(TOP_BAR_ANIM_DURATION)),
+                exit = shrinkVertically(
+                    tween(durationMillis = TOP_BAR_ANIM_DURATION),
+                    targetHeight = { it / 3 }) + fadeOut(tween(TOP_BAR_ANIM_DURATION))
+            ) {
                 TopAppBar(
                     title = { Text(text = stringResource(id = topBarTitle)) },
                     navigationIcon = {
