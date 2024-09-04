@@ -36,8 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import ru.robilko.basket_snap.R
 import ru.robilko.basket_snap.navigation.AppNavHost
 import ru.robilko.basket_snap.navigation.TopLevelDestination
@@ -87,7 +85,8 @@ internal fun BasketSnapApp(
         },
         bottomBar = {
             AppBottomBar(
-                currentDestination = appState.currentDestination,
+                topLevelDestinations = appState.topLevelDestinations,
+                currentTopLevelDestination = appState.currentTopLevelDestination,
                 onClick = { appState.navigateToTopLevelDestination(it) }
             )
         },
@@ -118,18 +117,17 @@ internal fun BasketSnapApp(
 
 @Composable
 private fun AppBottomBar(
-    currentDestination: NavDestination?,
+    topLevelDestinations: List<TopLevelDestination>,
+    currentTopLevelDestination: TopLevelDestination,
     onClick: (TopLevelDestination) -> Unit
 ) {
-    val items = remember { TopLevelDestination.entries }
-
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = Color.White
     ) {
-        items.forEach { topLevelDestination ->
+        topLevelDestinations.forEach { topLevelDestination ->
             NavigationBarItem(
-                selected = currentDestination?.hierarchy?.any { it.route == topLevelDestination.route } == true,
+                selected = currentTopLevelDestination == topLevelDestination,
                 onClick = { onClick(topLevelDestination) },
                 icon = {
                     Icon(

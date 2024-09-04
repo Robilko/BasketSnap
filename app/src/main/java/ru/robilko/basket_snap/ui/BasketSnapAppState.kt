@@ -7,7 +7,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -49,11 +52,15 @@ class BasketSnapAppState(
     val needToShowTopBar: Boolean
         @Composable get() = appConfigData.needToShowTopBar
 
-    val currentDestination: NavDestination?
+    private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
     val needToShowTopBarBackButton: Boolean
         @Composable get() = currentDestination?.route != HOME_ROUTE
+
+    var currentTopLevelDestination by mutableStateOf(TopLevelDestination.HOME)
+
+    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 
     fun navigateBack() {
         navController.popBackStack()
@@ -72,6 +79,7 @@ class BasketSnapAppState(
             TopLevelDestination.FAVOURITES -> navController.navigateToFavouritesGraph(navOptions)
             TopLevelDestination.SETTINGS -> navController.navigateToSettingsGraph(navOptions)
         }
+        currentTopLevelDestination = topLevelDestination
     }
 }
 
