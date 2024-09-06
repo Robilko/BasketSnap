@@ -12,7 +12,7 @@ class TeamsDetailsRemoteDataSourceImpl @Inject constructor(
     override suspend fun getLeagueSeasons(leagueId: Int): List<SeasonDto> {
         return basketballApi.getLeagues(id = leagueId).response
             ?.firstOrNull()?.seasons
-            ?.sortedByDescending { it.season }
+            ?.sortedByDescending { it.getSeasonAsString() }
             .orEmpty()
     }
 
