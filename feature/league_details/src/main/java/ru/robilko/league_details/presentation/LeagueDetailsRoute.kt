@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -122,7 +123,9 @@ private fun Details(
     onStarIconClick: () -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("LeagueDetails"),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -206,7 +209,9 @@ private fun InfoTextBlock(@StringRes titleResId: Int, value: String) {
 private fun SeasonItem(season: Season, onClick: () -> Unit) {
     AppCard(
         contentPadding = PaddingValues(horizontal = 8.dp),
-        modifier = Modifier.bounceClick { onClick() }
+        modifier = Modifier
+            .bounceClick { onClick() }
+            .testTag("SeasonItemCard")
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -236,7 +241,9 @@ private fun SeasonDialog(
     onGamesClick: () -> Unit
 ) {
     BasicAlertDialog(onDismissRequest = onDismissRequest) {
-        AppCard(modifier = Modifier.padding(48.dp)) {
+        AppCard(modifier = Modifier
+            .padding(48.dp)
+            .testTag("SeasonDialog")) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,

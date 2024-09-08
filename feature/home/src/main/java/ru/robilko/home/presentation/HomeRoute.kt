@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -120,6 +121,7 @@ private fun LazyListScope.searchField(query: String, onChange: (String) -> Unit)
     item {
         AppOutlinedTextField(
             title = stringResource(id = R.string.search_field_title),
+            modifier = Modifier.testTag("HomeSearchField"),
             value = query,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
             trailingIcon = {
@@ -150,7 +152,9 @@ private fun LazyListScope.countriesList(
     item { ListTitle(text = stringResource(R.string.countries_title)) }
     items(countries, key = { it.name }) { country ->
         AppCard(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("CountryCard"),
             contentPadding = PaddingValues(8.dp),
             onClick = { onClick(country) }) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

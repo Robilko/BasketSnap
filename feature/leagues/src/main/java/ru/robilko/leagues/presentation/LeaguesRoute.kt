@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -101,7 +102,9 @@ private fun LeaguesList(
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("LeaguesList"),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(leagues, key = { it.id }) { league ->
