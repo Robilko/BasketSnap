@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
@@ -345,6 +346,7 @@ private fun GamesStatisticsSchedule(isLoading: Boolean, games: GamesInfo, showDr
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .testTag("GamesStatisticsSchedule")
     ) {
         ScheduleHeader(title = stringResource(R.string.games_played_title))
         ScheduleRow(

@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -100,14 +101,17 @@ private fun TeamsList(
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("TeamsList"),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(teams, key = { it.id }) { team ->
             val isFavourite = favouriteTeamsIds.any { it == team.id }
             AppCard(
                 contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp),
-                onClick = { onClick(team) }
+                onClick = { onClick(team) },
+                modifier = Modifier.testTag("TeamCard")
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
