@@ -23,7 +23,7 @@ android {
     kotlinOptions {
         jvmTarget = libs.versions.jvmTarget.get()
     }
-    buildFeatures{
+    buildFeatures {
         buildConfig = true
     }
 }
@@ -46,5 +46,4 @@ dependencies {
     //    testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 }
