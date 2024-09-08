@@ -3,6 +3,7 @@ package ru.robilko.team_details.data.remote
 import ru.robilko.remote.data.BasketballApi
 import ru.robilko.remote.data.model.SeasonDto
 import ru.robilko.remote.data.model.TeamStatisticsResponse
+import ru.robilko.remote.util.asString
 import java.util.Date
 import javax.inject.Inject
 
@@ -12,7 +13,7 @@ class TeamsDetailsRemoteDataSourceImpl @Inject constructor(
     override suspend fun getLeagueSeasons(leagueId: Int): List<SeasonDto> {
         return basketballApi.getLeagues(id = leagueId).response
             ?.firstOrNull()?.seasons
-            ?.sortedByDescending { it.getSeasonAsString() }
+            ?.sortedByDescending { it.season.asString() }
             .orEmpty()
     }
 

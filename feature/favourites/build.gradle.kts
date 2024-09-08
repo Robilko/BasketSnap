@@ -40,11 +40,4 @@ dependencies {
     //    di
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.android.compiler)
-
-    //    testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 }
