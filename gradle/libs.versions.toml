@@ -10,6 +10,7 @@ jvmTarget = "1.8"
 kotlinCompilerExtensionVersion = "1.5.14"
 
 #libs and plugins
+mockk = "1.13.12"
 coilCompose = "2.6.0"
 coilSvg = "2.6.0"
 accompanistSwiperefresh = "0.24.13-rc"
@@ -25,7 +26,6 @@ kotlinxCollectionsImmutable = "0.3.7"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.5"
 activityCompose = "1.9.2"
 composeBom = "2024.09.00"
@@ -59,9 +59,9 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 #testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 #UI
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

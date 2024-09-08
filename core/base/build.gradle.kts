@@ -44,11 +44,4 @@ dependencies {
     //    navigation
     api(libs.androidx.navigation)
     api(libs.androidx.hilt.compose)
-
-    //    testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 }
