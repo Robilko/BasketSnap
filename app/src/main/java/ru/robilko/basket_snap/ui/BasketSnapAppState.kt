@@ -7,17 +7,17 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import ru.robilko.basket_snap.navigation.FAVOURITES_GRAPH_ROUTE
+import ru.robilko.basket_snap.navigation.HOME_GRAPH_ROUTE
+import ru.robilko.basket_snap.navigation.SETTINGS_GRAPH_ROUTE
 import ru.robilko.basket_snap.navigation.TopLevelDestination
 import ru.robilko.basket_snap.navigation.navigateToFavouritesGraph
 import ru.robilko.basket_snap.navigation.navigateToHomeGraph
@@ -52,13 +52,19 @@ class BasketSnapAppState(
     val needToShowTopBar: Boolean
         @Composable get() = appConfigData.needToShowTopBar
 
-    private val currentDestination: NavDestination?
-        @Composable get() = navController.currentBackStackEntryAsState().value?.destination
+    private val navBackStackEntry: NavBackStackEntry?
+        @Composable get() = navController.currentBackStackEntryAsState().value
 
     val needToShowTopBarBackButton: Boolean
-        @Composable get() = currentDestination?.route != HOME_ROUTE
+        @Composable get() = navBackStackEntry?.destination?.route != HOME_ROUTE
 
-    var currentTopLevelDestination by mutableStateOf(TopLevelDestination.HOME)
+    val currentTopLevelDestination: TopLevelDestination?
+        @Composable get() = when (navBackStackEntry?.destination?.parent?.route) {
+            HOME_GRAPH_ROUTE -> TopLevelDestination.HOME
+            FAVOURITES_GRAPH_ROUTE -> TopLevelDestination.FAVOURITES
+            SETTINGS_GRAPH_ROUTE -> TopLevelDestination.SETTINGS
+            else -> null
+        }
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 
@@ -79,7 +85,6 @@ class BasketSnapAppState(
             TopLevelDestination.FAVOURITES -> navController.navigateToFavouritesGraph(navOptions)
             TopLevelDestination.SETTINGS -> navController.navigateToSettingsGraph(navOptions)
         }
-        currentTopLevelDestination = topLevelDestination
     }
 }
 

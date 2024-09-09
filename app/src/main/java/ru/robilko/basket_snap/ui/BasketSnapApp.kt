@@ -118,7 +118,7 @@ internal fun BasketSnapApp(
 @Composable
 private fun AppBottomBar(
     topLevelDestinations: List<TopLevelDestination>,
-    currentTopLevelDestination: TopLevelDestination,
+    currentTopLevelDestination: TopLevelDestination?,
     onClick: (TopLevelDestination) -> Unit
 ) {
     NavigationBar(
