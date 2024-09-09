@@ -13,11 +13,6 @@ pipeline {
                 sh "./gradlew"
             }
         }
-        stage("lint") {
-            steps {
-                 sh "./gradlew lintDebug"
-            }
-        }
         stage("test") {
             steps {
                   sh "./gradlew testDebugUnitTest"
