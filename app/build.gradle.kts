@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.basket_snap"
+    namespace = libs.versions.namespace.app.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -18,7 +18,7 @@ android {
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -54,19 +54,19 @@ android {
 
 dependencies {
     //    modules
-    implementation(project(":core:base"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:remote"))
-    implementation(project(":core:local"))
-    implementation(project(":core:model"))
-    implementation(project(":base:favourites"))
-    implementation(project(":feature:home"))
-    implementation(project(":feature:favourites"))
-    implementation(project(":feature:settings"))
-    implementation(project(":feature:leagues"))
-    implementation(project(":feature:league_details"))
-    implementation(project(":feature:teams"))
-    implementation(project(":feature:team_details"))
+    implementation(projects.core.base)
+    implementation(projects.core.ui)
+    implementation(projects.core.remote)
+    implementation(projects.core.local)
+    implementation(projects.core.model)
+    implementation(projects.base.favourites)
+    implementation(projects.feature.home)
+    implementation(projects.feature.favourites)
+    implementation(projects.feature.settings)
+    implementation(projects.feature.leagues)
+    implementation(projects.feature.leagueDetails)
+    implementation(projects.feature.teams)
+    implementation(projects.feature.teamDetails)
 
     //    splashscreen
     implementation(libs.androidx.core.splashscreen)

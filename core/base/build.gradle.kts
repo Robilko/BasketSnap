@@ -8,13 +8,13 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.core_base"
+    namespace = libs.versions.namespace.core.base.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
     }
 
     compileOptions {

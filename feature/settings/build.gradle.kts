@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.settings"
+    namespace = libs.versions.namespace.feature.settings.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
     }
 
     compileOptions {
@@ -32,9 +32,9 @@ android {
 
 dependencies {
     //    modules
-    implementation(project(":core:base"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:local"))
+    implementation(projects.core.base)
+    implementation(projects.core.ui)
+    implementation(projects.core.local)
 
     //    di
     implementation(libs.dagger.hilt.android)

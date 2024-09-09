@@ -48,7 +48,7 @@ import ru.robilko.core_ui.presentation.components.AppText
 import ru.robilko.core_ui.presentation.components.ErrorScreen
 import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.core_ui.utils.bounceClick
-import ru.robilko.country.R
+import ru.robilko.league_details.R
 import ru.robilko.model.data.League
 import ru.robilko.model.data.Season
 import ru.robilko.core_ui.R as R_core_ui

@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.remote"
+    namespace = libs.versions.namespace.core.remote.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
     }
 
     compileOptions {
@@ -30,9 +30,9 @@ android {
 
 dependencies {
     // Modules
-    implementation(project(":core:base"))
-    implementation(project(":core:model"))
-    implementation(project(":core:local"))
+    implementation(projects.core.base)
+    implementation(projects.core.model)
+    implementation(projects.core.local)
 
     // retrofit2
     api(libs.retrofit)

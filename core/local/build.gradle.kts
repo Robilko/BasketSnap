@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.local"
+    namespace = libs.versions.namespace.core.local.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
     }
 
     compileOptions {
@@ -27,8 +27,8 @@ android {
 
 dependencies {
     // Modules
-    implementation(project(":core:base"))
-    implementation(project(":core:model"))
+    implementation(projects.core.base)
+    implementation(projects.core.model)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)

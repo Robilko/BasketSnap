@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.teams"
+    namespace = libs.versions.namespace.feature.teams.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
     }
 
     compileOptions {
@@ -32,12 +32,12 @@ android {
 
 dependencies {
 //    modules
-    implementation(project(":core:base"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:remote"))
-    implementation(project(":core:local"))
-    implementation(project(":core:model"))
-    implementation(project(":base:favourites"))
+    implementation(projects.core.base)
+    implementation(projects.core.ui)
+    implementation(projects.core.remote)
+    implementation(projects.core.local)
+    implementation(projects.core.model)
+    implementation(projects.base.favourites)
 
     //    di
     implementation(libs.dagger.hilt.android)

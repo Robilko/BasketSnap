@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.favourites"
+    namespace = libs.versions.namespace.feature.favourites.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
     }
 
     compileOptions {
@@ -32,10 +32,10 @@ android {
 
 dependencies {
     //    modules
-    implementation(project(":core:base"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:model"))
-    implementation(project(":base:favourites"))
+    implementation(projects.core.base)
+    implementation(projects.core.ui)
+    implementation(projects.core.model)
+    implementation(projects.base.favourites)
 
     //    di
     implementation(libs.dagger.hilt.android)
