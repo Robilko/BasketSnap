@@ -8,17 +8,15 @@ plugins {
 }
 
 android {
-    namespace = libs.versions.namespace.app.get()
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    namespace = "ru.robilko.basket_snap"
 
     defaultConfig {
-        applicationId = libs.versions.applicationId.get()
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        applicationId = "ru.robilko.basket_snap"
+        targetSdk = 34
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
 
-        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }

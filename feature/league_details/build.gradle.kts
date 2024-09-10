@@ -6,14 +6,7 @@ plugins {
 }
 
 android {
-    namespace = libs.versions.namespace.feature.leagueDetails.get()
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-
-        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
-    }
+    namespace = "ru.robilko.league_details"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

@@ -19,6 +19,15 @@ dependencyResolutionManagement {
     }
 }
 
+plugins {
+    id("com.android.settings") version "8.5.2"
+}
+
+android {
+    compileSdk = 34
+    minSdk = 28
+}
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "BasketSnap"
 include(":app")

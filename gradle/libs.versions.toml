@@ -1,29 +1,9 @@
 [versions]
 #app_configs
-applicationId = "ru.robilko.basket_snap"
-compileSdk = "34"
-targetSdk = "34"
-minSdk = "28"
 versionCode = "1"
 versionName = "1.0"
 jvmTarget = "1.8"
-testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 kotlinCompilerExtensionVersion = "1.5.14"
-
-namespace-app = "ru.robilko.basket_snap"
-namespace-core-base = "ru.robilko.core_base"
-namespace-core-ui = "ru.robilko.core_ui"
-namespace-core-local = "ru.robilko.local"
-namespace-core-remote = "ru.robilko.remote"
-namespace-core-model = "ru.robilko.model"
-namespace-base-favourites = "ru.robilko.base_favourites"
-namespace-feature-home = "ru.robilko.home"
-namespace-feature-favourites = "ru.robilko.favourites"
-namespace-feature-settings = "ru.robilko.settings"
-namespace-feature-leagues = "ru.robilko.leagues"
-namespace-feature-leagueDetails = "ru.robilko.league_details"
-namespace-feature-teams = "ru.robilko.teams"
-namespace-feature-teamDetails = "ru.robilko.team_details"
 
 #libs and plugins
 mockk = "1.13.12"
@@ -97,7 +77,6 @@ accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiper
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

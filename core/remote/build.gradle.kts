@@ -7,14 +7,7 @@ plugins {
 }
 
 android {
-    namespace = libs.versions.namespace.core.remote.get()
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-
-        testInstrumentationRunner = libs.versions.testInstrumentationRunner.get()
-    }
+    namespace = "ru.robilko.remote"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
