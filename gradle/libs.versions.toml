@@ -2,8 +2,7 @@
 #app_configs
 versionCode = "1"
 versionName = "1.0"
-jvmTarget = "1.8"
-kotlinCompilerExtensionVersion = "1.5.14"
+jvmTarget = "17"
 
 #libs and plugins
 mockk = "1.13.12"
@@ -16,15 +15,15 @@ retrofit = "2.11.0"
 okhttp = "4.12.0"
 javapoet = "1.13.0"
 agp = "8.5.2"
-kotlin = "1.9.24"
-ksp = "1.9.24-1.0.20"
+kotlin = "2.0.20"
+ksp = "2.0.20-1.0.25"
 kotlinxCollectionsImmutable = "0.3.7"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 lifecycleRuntimeKtx = "2.8.5"
 activityCompose = "1.9.2"
-composeBom = "2024.09.00"
+composeBom = "2024.09.01"
 appcompat = "1.7.0"
 material = "1.12.0"
 dagger = "2.51.1"
@@ -81,5 +80,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 
