@@ -1,10 +1,11 @@
 [versions]
 #app_configs
-versionCode = "1"
-versionName = "1.0"
+versionCode = "5"
+versionName = "1.1.0"
 jvmTarget = "17"
 
 #libs and plugins
+triplet = "3.11.0"
 mockk = "1.13.12"
 coilCompose = "2.6.0"
 coilSvg = "2.6.0"
@@ -81,5 +82,5 @@ dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "da
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+triplet-play = { id = "com.github.triplet.play", version.ref = "triplet"}
 

@@ -1,3 +1,7 @@
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -6,10 +10,24 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.triplet.play)
+}
+
+val localProperties = Properties().apply {
+    load(FileInputStream(rootProject.file("local.properties")))
 }
 
 android {
     namespace = "ru.robilko.basket_snap"
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProperties["keystorePath"] as String)
+            storePassword = localProperties["keystorePassword"] as String
+            keyAlias = localProperties["keyAlias"] as String
+            keyPassword = localProperties["keyPassword"] as String
+        }
+    }
 
     defaultConfig {
         applicationId = "ru.robilko.basket_snap"
@@ -20,10 +38,17 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
         ksp { arg("room.schemaLocation", "$projectDir/schemas") }
+
+        playConfigs {
+            create("release") {
+                enabled.set(true)
+            }
+        }
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -40,11 +65,23 @@ android {
     kotlinOptions {
         jvmTarget = libs.versions.jvmTarget.get()
     }
+    buildFeatures {
+        buildConfig = true
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+play {
+    enabled.set(false)
+    track.set("production")
+    userFraction.set(1.0) // 100%
+    defaultToAppBundles.set(true)
+    releaseStatus.set(ReleaseStatus.DRAFT)
+    serviceAccountCredentials.set(file(localProperties["credentialsGoogleCloudPath"] as String))
 }
 
 dependencies {
@@ -74,4 +111,9 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
+}
+
+tasks.register("bundleAndPublishGoogleRelease") {
+    dependsOn("bundleRelease")
+    finalizedBy("publishReleaseBundle")
 }
