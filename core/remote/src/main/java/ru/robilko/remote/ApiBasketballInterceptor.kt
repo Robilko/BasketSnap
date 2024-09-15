@@ -10,7 +10,7 @@ class ApiBasketballInterceptor : Interceptor {
         val requestWithHeaders = originalRequest.newBuilder()
             .headers(
                 Headers.Builder()
-                    .add(RAPID_API_KEY_NAME, RAPID_API_KEY_VALUE)
+                    .add(RAPID_API_KEY_NAME, getBasketApiKey())
                     .add(RAPID_API_HOST_NAME, RAPID_API_HOST_VALUE)
                     .build()
             )
@@ -18,9 +18,10 @@ class ApiBasketballInterceptor : Interceptor {
         return chain.proceed(requestWithHeaders)
     }
 
+    private fun getBasketApiKey(): String = BuildConfig.RAPID_API_KEY
+
     private companion object {
         const val RAPID_API_KEY_NAME = "x-rapidapi-key"
-        const val RAPID_API_KEY_VALUE = "78b606e390msh7f5d28cfd25c5aep1304b9jsn3cbb681bff94"
         const val RAPID_API_HOST_NAME = "x-rapidapi-host"
         const val RAPID_API_HOST_VALUE = "api-basketball.p.rapidapi.com"
     }

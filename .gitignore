@@ -8,3 +8,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/basket_snap.jks
+/app/basket-snap-credentials.json

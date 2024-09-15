@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -6,12 +9,32 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+val localProperties = Properties().apply {
+    load(FileInputStream(rootProject.file("local.properties")))
+}
+
 android {
     namespace = "ru.robilko.remote"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    buildTypes{
+        release {
+            buildConfigField(
+                "String",
+                "RAPID_API_KEY",
+                "\"${localProperties["rapidApiKey"]}\""
+            )
+        }
+        debug {
+            buildConfigField(
+                "String",
+                "RAPID_API_KEY",
+                "\"${localProperties["rapidApiKey"]}\""
+            )
+        }
     }
     kotlinOptions {
         jvmTarget = libs.versions.jvmTarget.get()
