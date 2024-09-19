@@ -6,4 +6,5 @@
     <string name="dark_theme_title">Темная тема</string>
     <string name="change_theme_setting_title">Изменить тему приложения</string>
     <string name="show_top_bar_title">Отобразить верхнее меню</string>
+    <string name="app_version_title">Версия: %1$s</string>
 </resources>

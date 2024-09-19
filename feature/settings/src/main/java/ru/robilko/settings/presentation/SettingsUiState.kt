@@ -8,7 +8,8 @@ import ru.robilko.core_ui.presentation.UiState
 data class SettingsUiState(
     val darkThemeConfig: Selectable? = null,
     val needToShowTopBar: Boolean? = null,
-    val selectableDialogState: SelectableDialogState? = null
+    val selectableDialogState: SelectableDialogState? = null,
+    val appVersionName: String
 ) : UiState
 
 sealed class SelectableDialogState(open val data: SelectableDialogData) {

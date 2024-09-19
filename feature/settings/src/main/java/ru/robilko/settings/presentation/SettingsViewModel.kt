@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import ru.robilko.core_ui.presentation.BaseAppViewModel
 import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.SelectableData
+import ru.robilko.settings.BuildConfig
 import ru.robilko.settings.R
 import ru.robilko.settings.domain.model.DarkThemeConfig
 import ru.robilko.settings.domain.repo.AppConfigRepository
@@ -24,7 +25,8 @@ class SettingsViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val appConfigRepository: AppConfigRepository
 ) : BaseAppViewModel<SettingsUiState, SettingsUiEvent>() {
-    private val _uiState: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())
+    private val _uiState: MutableStateFlow<SettingsUiState> =
+        MutableStateFlow(SettingsUiState(appVersionName = BuildConfig.APP_VERSION_NAME))
     override val uiState: StateFlow<SettingsUiState> = _uiState
 
     override fun onEvent(event: SettingsUiEvent) {

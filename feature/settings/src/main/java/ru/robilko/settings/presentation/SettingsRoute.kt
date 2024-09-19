@@ -73,7 +73,8 @@ private fun SettingsScreen(
 
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -88,6 +89,14 @@ private fun SettingsScreen(
             iconResId = R.drawable.ic_theme_mode,
             text = stringResource(R.string.change_theme_setting_title),
             onClick = { onEvent(SettingsUiEvent.ClickAppThemeSetting) }
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        AppText(
+            text = stringResource(R.string.app_version_title, uiState.appVersionName),
+            fontStyle = FontStyle.Italic,
+            fontSize = 10.sp,
+            color = BasketSnapTheme.colors.secondaryText,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
 }
@@ -197,7 +206,8 @@ private fun SettingsPreview() {
                 darkThemeConfig = SelectableData(
                     DarkThemeConfig.FOLLOW_SYSTEM.name,
                     "Как в системе"
-                )
+                ),
+                appVersionName = "1.0.1"
             ),
             onEvent = {},
             modifier = Modifier.fillMaxSize()

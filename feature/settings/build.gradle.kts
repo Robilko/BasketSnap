@@ -9,12 +9,22 @@ plugins {
 android {
     namespace = "ru.robilko.settings"
 
+    defaultConfig{
+        buildConfigField(
+            "String",
+            "APP_VERSION_NAME",
+            "\"${libs.versions.versionName.get()}\""
+        )
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = libs.versions.jvmTarget.get()
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

@@ -6,4 +6,5 @@
     <string name="dark_theme_title">Dark theme</string>
     <string name="change_theme_setting_title">Change the app theme</string>
     <string name="show_top_bar_title">Show top bar</string>
+    <string name="app_version_title">Version: %1$s</string>
 </resources>

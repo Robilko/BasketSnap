@@ -20,21 +20,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    buildTypes{
-        release {
-            buildConfigField(
-                "String",
-                "RAPID_API_KEY",
-                "\"${localProperties["rapidApiKey"]}\""
-            )
-        }
-        debug {
-            buildConfigField(
-                "String",
-                "RAPID_API_KEY",
-                "\"${localProperties["rapidApiKey"]}\""
-            )
-        }
+
+    defaultConfig{
+        buildConfigField(
+            "String",
+            "RAPID_API_KEY",
+            "\"${localProperties["rapidApiKey"]}\""
+        )
     }
     kotlinOptions {
         jvmTarget = libs.versions.jvmTarget.get()
