@@ -4,6 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.robilko.remote.data.model.CountryDto
 import ru.robilko.remote.data.model.DefaultResponseDto
+import ru.robilko.remote.data.model.GameResultsDto
 import ru.robilko.remote.data.model.LeagueDto
 import ru.robilko.remote.data.model.TeamInfoDto
 import ru.robilko.remote.data.model.TeamStatisticsResponse
@@ -41,4 +42,14 @@ interface BasketballApi {
         @Query("team") teamId: Int,
         @Query("date") date: Date? = null
     ): DefaultResponseDto<TeamStatisticsResponse>
+
+    @GET("games/")
+    suspend fun getGames(
+        @Query("season") season: String,
+        @Query("league") leagueId: Int,
+        @Query("date") date: String?,
+        @Query("id") id: Int? = null,
+        @Query("team") teamId: Int? = null,
+        @Query("timezone") timezone: String = "UTC",
+    ): DefaultResponseDto<List<GameResultsDto>>
 }

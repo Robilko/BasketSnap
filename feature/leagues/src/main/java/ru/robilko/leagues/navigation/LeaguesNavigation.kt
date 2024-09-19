@@ -9,9 +9,9 @@ import androidx.navigation.navArgument
 import ru.robilko.leagues.presentation.LeaguesRoute
 import ru.robilko.model.data.League
 
-const val COUNTRY_ID_ARG = "countryId"
-const val LEAGUES_ROUTE_BASE = "leagues"
-const val LEAGUES_ROUTE = "$LEAGUES_ROUTE_BASE/{$COUNTRY_ID_ARG}"
+internal const val COUNTRY_ID_ARG = "countryId"
+private const val LEAGUES_ROUTE_BASE = "leagues"
+private const val LEAGUES_ROUTE = "$LEAGUES_ROUTE_BASE/{$COUNTRY_ID_ARG}"
 
 
 fun NavHostController.navigateToLeagues(countryId: Int, navOptions: NavOptions? = null) {

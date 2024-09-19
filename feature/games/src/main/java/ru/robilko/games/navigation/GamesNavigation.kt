@@ -1,4 +1,4 @@
-package ru.robilko.teams.navigation
+package ru.robilko.games.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -6,29 +6,27 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import ru.robilko.model.data.TeamInfo
-import ru.robilko.teams.presentation.TeamsRoute
+import ru.robilko.games.presentation.GamesRoute
 
 internal const val LEAGUE_ID_ARG = "leagueId"
 internal const val SEASON_ARG = "season"
-private const val TEAMS_ROUTE_BASE = "teams"
-private const val TEAMS_ROUTE = "$TEAMS_ROUTE_BASE/{$LEAGUE_ID_ARG}/{$SEASON_ARG}"
+private const val GAMES_ROUTE_BASE = "games"
+private const val GAMES_ROUTE = "$GAMES_ROUTE_BASE/{$LEAGUE_ID_ARG}/{$SEASON_ARG}"
 
 
-fun NavHostController.navigateToTeams(
+fun NavHostController.navigateToGames(
     leagueId: Int,
     season: String,
     navOptions: NavOptions? = null
 ) {
-    navigate("$TEAMS_ROUTE_BASE/$leagueId/$season", navOptions)
+    navigate("$GAMES_ROUTE_BASE/$leagueId/$season", navOptions)
 }
 
-fun NavGraphBuilder.teamsScreen(
-    onTopBarTitleChange: (resId: Int) -> Unit,
-    onNavigateToTeamDetails: (TeamInfo, season: String?) -> Unit
+fun NavGraphBuilder.gamesScreen(
+    onTopBarTitleChange: (resId: Int) -> Unit
 ) {
     composable(
-        route = TEAMS_ROUTE,
+        route = GAMES_ROUTE,
         arguments = listOf(
             navArgument(LEAGUE_ID_ARG) {
                 nullable = false
@@ -42,9 +40,6 @@ fun NavGraphBuilder.teamsScreen(
     ) { backStackEntry ->
         val season = backStackEntry.arguments?.getString(SEASON_ARG)
 
-        TeamsRoute(
-            onTopBarTitleChange = onTopBarTitleChange,
-            onNavigateToTeamDetails = { onNavigateToTeamDetails(it, season) }
-        )
+        GamesRoute(onTopBarTitleChange = onTopBarTitleChange)
     }
 }

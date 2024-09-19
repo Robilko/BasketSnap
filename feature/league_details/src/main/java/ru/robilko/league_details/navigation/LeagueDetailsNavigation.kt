@@ -8,9 +8,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ru.robilko.league_details.presentation.LeagueDetailsRoute
 
-const val LEAGUE_ID_ARG = "leagueId"
-const val LEAGUE_DETAILS_ROUTE_BASE = "league_details"
-const val LEAGUE_DETAILS_ROUTE = "$LEAGUE_DETAILS_ROUTE_BASE/{$LEAGUE_ID_ARG}"
+internal const val LEAGUE_ID_ARG = "leagueId"
+private const val LEAGUE_DETAILS_ROUTE_BASE = "league_details"
+private const val LEAGUE_DETAILS_ROUTE = "$LEAGUE_DETAILS_ROUTE_BASE/{$LEAGUE_ID_ARG}"
 
 fun NavHostController.navigateToLeagueDetails(leagueId: Int, navOptions: NavOptions? = null) {
     navigate("$LEAGUE_DETAILS_ROUTE_BASE/$leagueId", navOptions)
@@ -18,7 +18,8 @@ fun NavHostController.navigateToLeagueDetails(leagueId: Int, navOptions: NavOpti
 
 fun NavGraphBuilder.leagueDetailsScreen(
     onTopBarTitleChange: (resId: Int) -> Unit,
-    onNavigateToTeams: (leagueId: Int, season: String) -> Unit
+    onNavigateToTeams: (leagueId: Int, season: String) -> Unit,
+    onNavigateToGames: (leagueId: Int, season: String) -> Unit
 ) {
     composable(
         route = LEAGUE_DETAILS_ROUTE,
@@ -30,7 +31,8 @@ fun NavGraphBuilder.leagueDetailsScreen(
     ) {
         LeagueDetailsRoute(
             onTopBarTitleChange = onTopBarTitleChange,
-            onNavigateToTeams = onNavigateToTeams
+            onNavigateToTeams = onNavigateToTeams,
+            onNavigateToGames = onNavigateToGames
         )
     }
 }

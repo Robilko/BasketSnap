@@ -99,6 +99,7 @@ dependencies {
     implementation(projects.feature.leagueDetails)
     implementation(projects.feature.teams)
     implementation(projects.feature.teamDetails)
+    implementation(projects.feature.games)
 
     //    splashscreen
     implementation(libs.androidx.core.splashscreen)

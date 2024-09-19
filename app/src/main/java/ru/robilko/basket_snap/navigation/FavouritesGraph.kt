@@ -6,6 +6,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.navigation
 import ru.robilko.favourites.navigation.FAVOURITES_ROUTE
 import ru.robilko.favourites.navigation.favouritesScreen
+import ru.robilko.games.navigation.gamesScreen
+import ru.robilko.games.navigation.navigateToGames
 import ru.robilko.league_details.navigation.leagueDetailsScreen
 import ru.robilko.league_details.navigation.navigateToLeagueDetails
 import ru.robilko.leagues.navigation.navigateToLeagues
@@ -37,6 +39,9 @@ fun NavGraphBuilder.favouritesGraph(
             onTopBarTitleChange = onTopBarTitleChange,
             onNavigateToTeams = { leagueId, season ->
                 navHostController.navigateToTeams(leagueId = leagueId, season = season)
+            },
+            onNavigateToGames = { leagueId, season ->
+                navHostController.navigateToGames(leagueId = leagueId, season = season)
             }
         )
         teamsScreen(
@@ -51,6 +56,9 @@ fun NavGraphBuilder.favouritesGraph(
             onNavigateToLeagueDetails = { leagueId ->
                 navHostController.navigateToLeagueDetails(leagueId)
             }
+        )
+        gamesScreen(
+            onTopBarTitleChange = onTopBarTitleChange
         )
     }
 }

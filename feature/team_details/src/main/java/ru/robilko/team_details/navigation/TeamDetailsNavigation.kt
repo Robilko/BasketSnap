@@ -9,11 +9,11 @@ import androidx.navigation.navArgument
 import ru.robilko.model.data.TeamInfo
 import ru.robilko.team_details.presentation.TeamDetailsRoute
 
-const val TEAM_ID_ARG = "teamId"
-const val LEAGUE_ID_ARG = "leagueId"
-const val SEASON_ARG = "season"
-const val TEAM_DETAILS_ROUTE_BASE = "team_details"
-const val TEAM_DETAILS_ROUTE =
+internal const val TEAM_ID_ARG = "teamId"
+internal const val LEAGUE_ID_ARG = "leagueId"
+internal const val SEASON_ARG = "season"
+private const val TEAM_DETAILS_ROUTE_BASE = "team_details"
+private const val TEAM_DETAILS_ROUTE =
     "$TEAM_DETAILS_ROUTE_BASE/{$TEAM_ID_ARG}/{$LEAGUE_ID_ARG}/{$SEASON_ARG}"
 
 fun NavHostController.navigateToTeamDetails(

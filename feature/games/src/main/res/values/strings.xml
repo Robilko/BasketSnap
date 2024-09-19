@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="games_page_title">Games</string>
+    <string name="total_score">TOTAL SCORE</string>
+    <string name="no_games_message">No games</string>
+</resources>

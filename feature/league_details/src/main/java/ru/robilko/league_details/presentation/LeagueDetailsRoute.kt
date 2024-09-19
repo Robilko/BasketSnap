@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -57,6 +56,7 @@ import ru.robilko.core_ui.R as R_core_ui
 internal fun LeagueDetailsRoute(
     onTopBarTitleChange: (resId: Int) -> Unit,
     onNavigateToTeams: (leagueId: Int, season: String) -> Unit,
+    onNavigateToGames: (leagueId: Int, season: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LeagueDetailsViewModel = hiltViewModel<LeagueDetailsViewModel>()
 ) {
@@ -65,6 +65,7 @@ internal fun LeagueDetailsRoute(
         uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
         onEvent = viewModel::onEvent,
         onNavigateToTeams = onNavigateToTeams,
+        onNavigateToGames = onNavigateToGames,
         modifier = modifier.fillMaxSize()
     )
 }
@@ -74,6 +75,7 @@ private fun LeagueDetailsScreen(
     uiState: LeagueDetailsUiState,
     onEvent: (LeagueDetailsUiEvent) -> Unit,
     onNavigateToTeams: (leagueId: Int, season: String) -> Unit,
+    onNavigateToGames: (leagueId: Int, season: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -106,7 +108,7 @@ private fun LeagueDetailsScreen(
                         },
                         onGamesClick = {
                             onEvent(LeagueDetailsUiEvent.DismissSeasonDialog)
-                            //todo add games navigation
+                            onNavigateToGames(it.id, season)
                         }
                     )
                 }
@@ -241,9 +243,11 @@ private fun SeasonDialog(
     onGamesClick: () -> Unit
 ) {
     BasicAlertDialog(onDismissRequest = onDismissRequest) {
-        AppCard(modifier = Modifier
-            .padding(48.dp)
-            .testTag("SeasonDialog")) {
+        AppCard(
+            modifier = Modifier
+                .padding(48.dp)
+                .testTag("SeasonDialog")
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -260,9 +264,9 @@ private fun SeasonDialog(
                 AppText(
                     text = stringResource(id = R.string.games_dialog_title),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
-//                        .bounceClick { onGamesClick() } //todo add games
-                    color = Color.LightGray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .bounceClick { onGamesClick() }
                 )
             }
         }

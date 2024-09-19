@@ -1,7 +1,5 @@
 package ru.robilko.favourites.presentation
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -33,7 +30,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -47,6 +43,7 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.launch
 import ru.robilko.core_ui.presentation.components.AppCard
 import ru.robilko.core_ui.presentation.components.AppText
+import ru.robilko.core_ui.presentation.components.EmptyList
 import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.favourites.R
 import ru.robilko.model.data.League
@@ -117,6 +114,7 @@ private fun FavouritesScreen(
                         onDeleteIconClick = { onEvent(FavouritesUiEvent.DeleteTeamIconClick(it)) }
                     )
                 }
+
                 FavouritesTabs.LEAGUES.ordinal -> {
                     LeaguesPage(
                         isLoading = uiState.isLeaguesLoading,
@@ -139,7 +137,11 @@ private fun LeaguesPage(
 ) {
     when {
         isLoading -> LoadingIndicator()
-        data.isEmpty() -> EmptyList(textResId = R.string.empty_favourite_leagues)
+        data.isEmpty() -> EmptyList(
+            textResId = R.string.empty_favourite_leagues,
+            modifier = Modifier.fillMaxSize()
+        )
+
         else -> LeaguesList(data = data, onClick = onClick, onDeleteIconClick = onDeleteIconClick)
     }
 }
@@ -153,7 +155,11 @@ private fun TeamsPage(
 ) {
     when {
         isLoading -> LoadingIndicator()
-        data.isEmpty() -> EmptyList(textResId = R.string.empty_favourite_teams)
+        data.isEmpty() -> EmptyList(
+            textResId = R.string.empty_favourite_teams,
+            modifier = Modifier.fillMaxSize()
+        )
+
         else -> TeamsList(data = data, onClick = onClick, onDeleteIconClick = onDeleteIconClick)
     }
 }
@@ -164,27 +170,6 @@ private fun LoadingIndicator() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) { CircularProgressIndicator() }
-}
-
-@Composable
-private fun EmptyList(@StringRes textResId: Int) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                imageVector = Icons.AutoMirrored.Filled.List,
-                contentDescription = null,
-                modifier = Modifier.size(100.dp),
-                colorFilter = ColorFilter.tint(BasketSnapTheme.colors.primaryText)
-            )
-            AppText(text = stringResource(id = textResId))
-        }
-    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)

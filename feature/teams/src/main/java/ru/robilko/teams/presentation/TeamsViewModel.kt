@@ -21,7 +21,7 @@ import ru.robilko.core_ui.R
 import ru.robilko.core_ui.presentation.BaseAppViewModel
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.model.data.TeamInfo
-import ru.robilko.teams.domain.useaCases.GetTeamsInfoUseCase
+import ru.robilko.teams.domain.useCases.GetTeamsInfoUseCase
 import ru.robilko.teams.navigation.LEAGUE_ID_ARG
 import ru.robilko.teams.navigation.SEASON_ARG
 import javax.inject.Inject

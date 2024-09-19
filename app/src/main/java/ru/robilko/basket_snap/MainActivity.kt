@@ -1,5 +1,7 @@
 package ru.robilko.basket_snap
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,9 +22,11 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var appConfigRepository: AppConfigRepository
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContent {
             val appState = rememberBasketSnapAppState(appConfigRepository)
 

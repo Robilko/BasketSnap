@@ -1,4 +1,4 @@
-package ru.robilko.teams.domain.useaCases
+package ru.robilko.teams.domain.useCases
 
 import ru.robilko.base.util.Response
 import ru.robilko.model.data.TeamInfo

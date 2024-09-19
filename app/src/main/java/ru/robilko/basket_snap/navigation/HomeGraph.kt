@@ -4,6 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
+import ru.robilko.games.navigation.gamesScreen
+import ru.robilko.games.navigation.navigateToGames
 import ru.robilko.home.navigation.HOME_ROUTE
 import ru.robilko.home.navigation.homeScreen
 import ru.robilko.league_details.navigation.leagueDetailsScreen
@@ -40,6 +42,9 @@ fun NavGraphBuilder.homeGraph(
             onTopBarTitleChange = onTopBarTitleChange,
             onNavigateToTeams = { leagueId, season ->
                 navHostController.navigateToTeams(leagueId = leagueId, season = season)
+            },
+            onNavigateToGames = { leagueId, season ->
+                navHostController.navigateToGames(leagueId = leagueId, season = season)
             }
         )
         teamsScreen(
@@ -54,6 +59,9 @@ fun NavGraphBuilder.homeGraph(
             onNavigateToLeagueDetails = { leagueId ->
                 navHostController.navigateToLeagueDetails(leagueId)
             }
+        )
+        gamesScreen(
+            onTopBarTitleChange = onTopBarTitleChange
         )
     }
 }
