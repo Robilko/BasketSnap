@@ -6,8 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSizeIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,19 +34,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
+import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN
 import ru.robilko.base.util.HUMAN_DATE_PATTERN
 import ru.robilko.base.util.toStringDate
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.components.AppCard
+import ru.robilko.core_ui.presentation.components.AppSelectableOutlinedTextField
 import ru.robilko.core_ui.presentation.components.AppText
 import ru.robilko.core_ui.presentation.components.EmptyList
 import ru.robilko.core_ui.presentation.components.ErrorScreen
+import ru.robilko.core_ui.theme.BasketSnapTheme
+import ru.robilko.core_ui.utils.bounceClick
 import ru.robilko.games.R
 import ru.robilko.model.data.GameResults
 
 @Composable
 internal fun GamesRoute(
     onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GamesViewModel = hiltViewModel<GamesViewModel>()
 ) {
@@ -48,6 +59,7 @@ internal fun GamesRoute(
     GamesScreen(
         uiState = viewModel.uiState.collectAsStateWithLifecycle().value,
         onEvent = viewModel::onEvent,
+        onNavigateToTeamDetails = onNavigateToTeamDetails,
         modifier = modifier.fillMaxSize()
     )
 }
@@ -56,6 +68,7 @@ internal fun GamesRoute(
 private fun GamesScreen(
     uiState: GamesUiState,
     onEvent: (GamesUiEvent) -> Unit,
+    onNavigateToTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit,
     modifier: Modifier
 ) {
     Box(modifier = modifier) {
@@ -78,7 +91,23 @@ private fun GamesScreen(
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
-                    GamesList(games = uiState.gameResults)
+                    AppSelectableOutlinedTextField(
+                        title = stringResource(R.string.seasons_selectable_title),
+                        selected = uiState.selectedSeason,
+                        choices = uiState.seasons,
+                        onSelectionChange = { onEvent(GamesUiEvent.SeasonClick(it)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .align(Alignment.TopCenter)
+                    )
+                    GamesList(
+                        games = uiState.gameResults,
+                        onTeamClick = onNavigateToTeamDetails,
+                        modifier = Modifier
+                            .padding(top = 100.dp)
+                            .fillMaxSize()
+                    )
                 }
             }
         }
@@ -86,7 +115,11 @@ private fun GamesScreen(
 }
 
 @Composable
-private fun GamesList(games: PersistentList<GameResults>) {
+private fun GamesList(
+    games: PersistentList<GameResults>,
+    onTeamClick: (teamId: Int, leagueId: Int, season: String?) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val firstVisibleIndex = remember(games) {
         games.indexOfLast { it.statusLong != "Not Started" }.takeIf { it != -1 } ?: 0
     }
@@ -94,55 +127,69 @@ private fun GamesList(games: PersistentList<GameResults>) {
         rememberLazyListState(initialFirstVisibleItemIndex = firstVisibleIndex)
     LazyColumn(
         state = state,
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(games, key = { it.id }) { gameResults ->
-            GameCard(gameResults = gameResults)
+            GameCard(
+                gameResults = gameResults,
+                onTeamClick = { teamId ->
+                    onTeamClick(
+                        teamId,
+                        gameResults.league.id,
+                        gameResults.league.season
+                    )
+                }
+            )
         }
     }
 }
 
 @Composable
-private fun GameCard(gameResults: GameResults) {
+private fun GameCard(gameResults: GameResults, onTeamClick: (Int) -> Unit) {
     AppCard {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(
-                    8.dp,
-                    Alignment.CenterHorizontally
-                ),
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            if (gameResults.statusLong != GAME_NOT_STARTED) {
                 AppText(
                     text = gameResults.date?.toStringDate(HUMAN_DATE_PATTERN).orEmpty(),
+                    modifier = Modifier.fillMaxWidth(),
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center
                 )
-                AppText(
-                    text = gameResults.time,
-                    textAlign = TextAlign.Center,
-                    fontSize = 12.sp
-                )
             }
-            Row(modifier = Modifier.fillMaxWidth()) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Team(
                     name = gameResults.homeTeam.name,
-                    logoUrl = gameResults.homeTeam.logoUrl
+                    logoUrl = gameResults.homeTeam.logoUrl,
+                    onClick = { onTeamClick(gameResults.homeTeam.id) }
                 )
-                ScoreBox(
-                    total = "${gameResults.homeScore.total ?: "-"} : ${gameResults.awayScore.total ?: "-"}",
-                    status = gameResults.statusLong
-                )
+                if (gameResults.statusLong == GAME_NOT_STARTED) {
+                    GameDayInfo(
+                        date = gameResults.date?.toStringDate(HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN)
+                            .orEmpty(),
+                        venue = gameResults.venue
+                    )
+                } else {
+                    ScoreBox(
+                        total = "${gameResults.homeScore.total ?: "-"} : ${gameResults.awayScore.total ?: "-"}",
+                        status = gameResults.statusLong
+                    )
+                }
 
                 Team(
                     name = gameResults.awayTeam.name,
-                    logoUrl = gameResults.awayTeam.logoUrl
+                    logoUrl = gameResults.awayTeam.logoUrl,
+                    onClick = { onTeamClick(gameResults.awayTeam.id) }
                 )
             }
         }
@@ -150,9 +197,9 @@ private fun GameCard(gameResults: GameResults) {
 }
 
 @Composable
-private fun RowScope.Team(name: String, logoUrl: String) {
+private fun RowScope.Team(name: String, logoUrl: String, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.weight(0.7f),
+        modifier = Modifier.weight(0.4f),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -164,13 +211,46 @@ private fun RowScope.Team(name: String, logoUrl: String) {
                 .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
                 .build(),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .requiredSizeIn(
+                    minWidth = 80.dp,
+                    minHeight = 80.dp,
+                    maxWidth = 100.dp,
+                    maxHeight = 80.dp
+                )
+                .bounceClick { onClick() },
+            contentScale = ContentScale.Fit
         )
         AppText(
             text = name,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            fontSize = 14.sp
+            fontSize = 12.sp,
+            lineHeight = 14.sp
+        )
+    }
+}
+
+@Composable
+private fun RowScope.GameDayInfo(date: String, venue: String) {
+    Column(
+        modifier = Modifier
+            .weight(1f)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        AppText(
+            text = date,
+            modifier = Modifier.fillMaxWidth(),
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center
+        )
+        AppText(
+            text = venue,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -180,13 +260,16 @@ private fun RowScope.ScoreBox(total: String, status: String) {
     Column(
         modifier = Modifier.weight(1f),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         AppText(text = stringResource(R.string.total_score), fontSize = 12.sp)
+        AppText(text = total, fontSize = 30.sp, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.heightIn(16.dp))
         AppText(
-            text = total,
-            fontSize = 30.sp
+            text = status, fontSize = 13.sp, color = BasketSnapTheme.colors.secondaryText,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
-        AppText(text = status, fontSize = 12.sp)
     }
 }
+
+private const val GAME_NOT_STARTED = "Not Started"

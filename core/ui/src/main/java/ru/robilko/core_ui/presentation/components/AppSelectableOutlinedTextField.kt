@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +34,6 @@ import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.SelectableData
 import ru.robilko.core_ui.theme.BasketSnapTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AppSelectableOutlinedTextField(
     title: String,
@@ -83,7 +81,7 @@ fun AppSelectableOutlinedTextField(
                     scrollState = rememberScrollState(),
                     modifier = Modifier
                         .heightIn(max = 400.dp),
-                    properties = PopupProperties(focusable = true,usePlatformDefaultWidth = true)
+                    properties = PopupProperties(focusable = true, usePlatformDefaultWidth = true)
                 ) {
                     choices.forEach { choice ->
                         DropdownMenuItem(

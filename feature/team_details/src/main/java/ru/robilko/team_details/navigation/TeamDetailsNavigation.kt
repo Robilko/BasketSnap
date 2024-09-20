@@ -6,7 +6,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import ru.robilko.model.data.TeamInfo
 import ru.robilko.team_details.presentation.TeamDetailsRoute
 
 internal const val TEAM_ID_ARG = "teamId"
@@ -17,11 +16,12 @@ private const val TEAM_DETAILS_ROUTE =
     "$TEAM_DETAILS_ROUTE_BASE/{$TEAM_ID_ARG}/{$LEAGUE_ID_ARG}/{$SEASON_ARG}"
 
 fun NavHostController.navigateToTeamDetails(
-    teamInfo: TeamInfo,
+    teamId: Int,
+    leagueId: Int,
     season: String? = null,
     navOptions: NavOptions? = null
 ) {
-    navigate("$TEAM_DETAILS_ROUTE_BASE/${teamInfo.id}/${teamInfo.leagueId}/$season", navOptions)
+    navigate("$TEAM_DETAILS_ROUTE_BASE/${teamId}/${leagueId}/$season", navOptions)
 }
 
 fun NavGraphBuilder.teamDetailsScreen(

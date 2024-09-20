@@ -23,7 +23,8 @@ fun NavHostController.navigateToGames(
 }
 
 fun NavGraphBuilder.gamesScreen(
-    onTopBarTitleChange: (resId: Int) -> Unit
+    onTopBarTitleChange: (resId: Int) -> Unit,
+    onNavigateToTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit
 ) {
     composable(
         route = GAMES_ROUTE,
@@ -37,9 +38,10 @@ fun NavGraphBuilder.gamesScreen(
                 type = NavType.StringType
             }
         )
-    ) { backStackEntry ->
-        val season = backStackEntry.arguments?.getString(SEASON_ARG)
-
-        GamesRoute(onTopBarTitleChange = onTopBarTitleChange)
+    ) {
+        GamesRoute(
+            onTopBarTitleChange = onTopBarTitleChange,
+            onNavigateToTeamDetails = onNavigateToTeamDetails
+        )
     }
 }

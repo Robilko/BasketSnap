@@ -11,8 +11,14 @@ class GetGamesResultsUseCase @Inject constructor(
     suspend operator fun invoke(
         leagueId: Int,
         season: String,
-        date: String
+        date: String? = null,
+        teamId: Int? = null
     ): Response<List<GameResults>> {
-        return repo.getGamesResults(leagueId = leagueId, season = season, date = date)
+        return repo.getGamesResults(
+            leagueId = leagueId,
+            season = season,
+            date = date,
+            teamId = teamId
+        )
     }
 }

@@ -25,6 +25,7 @@ fun AppText(
     fontWeight: FontWeight? = null,
     textAlign: TextAlign? = null,
     fontFamily: FontFamily? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
     maxLines: Int = Int.MAX_VALUE,
     textDecoration: TextDecoration? = null
 ) {
@@ -38,6 +39,7 @@ fun AppText(
         fontStyle = fontStyle,
         textAlign = textAlign,
         fontFamily = fontFamily,
+        lineHeight = lineHeight,
         maxLines = maxLines,
         textDecoration = textDecoration
     )

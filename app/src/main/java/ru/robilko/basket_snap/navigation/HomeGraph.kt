@@ -50,7 +50,11 @@ fun NavGraphBuilder.homeGraph(
         teamsScreen(
             onTopBarTitleChange = onTopBarTitleChange,
             onNavigateToTeamDetails = { teamInfo, season ->
-                navHostController.navigateToTeamDetails(teamInfo = teamInfo, season = season)
+                navHostController.navigateToTeamDetails(
+                    teamId = teamInfo.id,
+                    leagueId = teamInfo.leagueId,
+                    season = season
+                )
             }
         )
         teamDetailsScreen(
@@ -61,7 +65,14 @@ fun NavGraphBuilder.homeGraph(
             }
         )
         gamesScreen(
-            onTopBarTitleChange = onTopBarTitleChange
+            onTopBarTitleChange = onTopBarTitleChange,
+            onNavigateToTeamDetails = { teamId, leagueId, season ->
+                navHostController.navigateToTeamDetails(
+                    teamId = teamId,
+                    leagueId = leagueId,
+                    season = season
+                )
+            }
         )
     }
 }
