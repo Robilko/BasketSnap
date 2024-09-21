@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -77,9 +78,10 @@ internal fun BasketSnapApp(
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primary,
-                        navigationIconContentColor = Color.White,
-                        titleContentColor = Color.White
-                    )
+                        navigationIconContentColor = Color.Black,
+                        titleContentColor = Color.Black.copy(alpha = 0.6f)
+                    ),
+                    expandedHeight = 40.dp
                 )
             }
         },
@@ -122,8 +124,7 @@ private fun AppBottomBar(
     onClick: (TopLevelDestination) -> Unit
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = Color.White
+        containerColor = MaterialTheme.colorScheme.primary
     ) {
         topLevelDestinations.forEach { topLevelDestination ->
             NavigationBarItem(
@@ -137,7 +138,14 @@ private fun AppBottomBar(
                 },
                 label = {
                     Text(text = stringResource(id = topLevelDestination.titleResId))
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.Black,
+                    selectedTextColor = Color.Black,
+                    indicatorColor = Color.LightGray,
+                    unselectedIconColor = Color.Black.copy(alpha = 0.6f),
+                    unselectedTextColor = Color.Black.copy(alpha = 0.6f)
+                )
             )
         }
     }
