@@ -21,6 +21,7 @@ import ru.robilko.games.domain.useCases.GetGamesResultsUseCase
 import ru.robilko.games.domain.useCases.GetLeagueSeasonsUseCase
 import ru.robilko.games.navigation.LEAGUE_ID_ARG
 import ru.robilko.games.navigation.SEASON_ARG
+import ru.robilko.model.data.GameResults
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,20 +37,17 @@ class GamesViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<GamesUiState> = MutableStateFlow(GamesUiState())
     override val uiState: StateFlow<GamesUiState> = _uiState
 
-    override fun onEvent(event: GamesUiEvent) {
-        when (event) {
-            is GamesUiEvent.SeasonClick -> makeActionOnSeasonClick(event.season)
-        }
-    }
-
-    private fun makeActionOnSeasonClick(season: Selectable) {
-        _uiState.update { it.copy(selectedSeason = season) }
-        getGamesResults(season.value)
-    }
-
     init {
         getGamesResults(initialSeason)
         getLeagueSeasons()
+    }
+
+    override fun onEvent(event: GamesUiEvent) {
+        when (event) {
+            is GamesUiEvent.SeasonClick -> makeActionOnSeasonClick(event.season)
+            is GamesUiEvent.GameCardClick -> showDetailsDialog(event.gameResults)
+            GamesUiEvent.DetailsDialogDismiss -> closeDetailsDialog()
+        }
     }
 
     private fun getGamesResults(season: String) {
@@ -117,5 +115,20 @@ class GamesViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun makeActionOnSeasonClick(season: Selectable) {
+        _uiState.update { it.copy(selectedSeason = season) }
+        getGamesResults(season.value)
+    }
+
+    private fun showDetailsDialog(gameResults: GameResults) {
+        _uiState.update {
+            it.copy(detailsDialogState = GameDetailsDialogState.ShowData(gameResults))
+        }
+    }
+
+    private fun closeDetailsDialog() {
+        _uiState.update { it.copy(detailsDialogState = GameDetailsDialogState.None) }
     }
 }

@@ -1,10 +1,13 @@
 package ru.robilko.core_ui.presentation
 
+import androidx.compose.runtime.Immutable
+
 interface Selectable {
     val value: String
     val name: String
 }
 
+@Immutable
 data class SelectableData(
     override val value: String,
     override val name: String

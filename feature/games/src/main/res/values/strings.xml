@@ -4,4 +4,7 @@
     <string name="total_score">TOTAL SCORE</string>
     <string name="no_games_message">No games</string>
     <string name="seasons_selectable_title">Choose a season</string>
+    <string name="season_dialog_title">Season:</string>
+    <string name="venue_dialog_title">Venue:</string>
+    <string name="date_dialog_title">Date:</string>
 </resources>

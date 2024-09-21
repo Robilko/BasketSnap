@@ -8,7 +8,8 @@ import java.util.TimeZone
 const val ISO_8601_WITH_TIMEZONE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssXXX"
 const val SERVER_DATE_PATTERN = "yyyy-MM-dd"
 const val HUMAN_DATE_PATTERN = "dd.MM.yyyy"
-const val HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN = "dd.MM.yyyy,\nEEE HH:mm"
+const val HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN = "dd.MM.yyyy, EEE HH:mm"
+const val HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2 = "dd.MM.yyyy,\nEEE HH:mm"
 
 fun String.toDate(pattern: String, timeZoneId: String = "UTC"): Date? {
     return try {

@@ -34,7 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
-import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN
+import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2
 import ru.robilko.base.util.HUMAN_DATE_PATTERN
 import ru.robilko.base.util.toStringDate
 import ru.robilko.core_ui.presentation.DataState
@@ -71,6 +71,17 @@ private fun GamesScreen(
     onNavigateToTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit,
     modifier: Modifier
 ) {
+    uiState.detailsDialogState.let {
+        if (it is GameDetailsDialogState.ShowData) {
+            GameDetailsDialog(
+                gameResults = it.gameResults,
+                onCountryClick = {},
+                onLeagueClick = {},
+                onDismiss = { onEvent(GamesUiEvent.DetailsDialogDismiss) }
+            )
+        }
+    }
+
     Box(modifier = modifier) {
         when (uiState.dataState) {
             DataState.Loading ->
@@ -103,6 +114,7 @@ private fun GamesScreen(
                     )
                     GamesList(
                         games = uiState.gameResults,
+                        onClick = { onEvent(GamesUiEvent.GameCardClick(it)) },
                         onTeamClick = onNavigateToTeamDetails,
                         modifier = Modifier
                             .padding(top = 100.dp)
@@ -117,6 +129,7 @@ private fun GamesScreen(
 @Composable
 private fun GamesList(
     games: PersistentList<GameResults>,
+    onClick: (GameResults) -> Unit,
     onTeamClick: (teamId: Int, leagueId: Int, season: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -134,6 +147,7 @@ private fun GamesList(
         items(games, key = { it.id }) { gameResults ->
             GameCard(
                 gameResults = gameResults,
+                onClick = { onClick(gameResults) },
                 onTeamClick = { teamId ->
                     onTeamClick(
                         teamId,
@@ -147,8 +161,8 @@ private fun GamesList(
 }
 
 @Composable
-private fun GameCard(gameResults: GameResults, onTeamClick: (Int) -> Unit) {
-    AppCard {
+private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick: (Int) -> Unit) {
+    AppCard(onClick = onClick) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
@@ -175,7 +189,7 @@ private fun GameCard(gameResults: GameResults, onTeamClick: (Int) -> Unit) {
                 )
                 if (gameResults.statusLong == GAME_NOT_STARTED) {
                     GameDayInfo(
-                        date = gameResults.date?.toStringDate(HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN)
+                        date = gameResults.date?.toStringDate(HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2)
                             .orEmpty(),
                         venue = gameResults.venue
                     )
