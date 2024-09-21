@@ -10,19 +10,21 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Orange600,
+    primary = Orange300,
     secondary = PurpleGrey80,
     tertiary = Pink80,
     error = Red900,
     background = Color(0xFF373737),
+    onPrimary = Color(0xFF373737)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Orange700,
+    primary = Orange500,
     secondary = PurpleGrey40,
     tertiary = Pink40,
     error = Red900,
     background = Color.White,
+    onPrimary = Color.White
 
     /* Other default colors to override
 

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.launch
@@ -199,6 +200,9 @@ private fun LeaguesList(
                             .data(league.logoUrl)
                             .error(R_core_ui.drawable.ic_no_image_placeholder)
                             .placeholder(R_core_ui.drawable.ic_image_loader)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .diskCachePolicy(CachePolicy.ENABLED)
+                            .networkCachePolicy(CachePolicy.ENABLED)
                             .build(),
                         contentDescription = null,
                         modifier = Modifier
@@ -261,6 +265,9 @@ private fun TeamsList(
                             .data(teamInfo.logoUrl)
                             .error(R_core_ui.drawable.ic_no_image_placeholder)
                             .placeholder(R_core_ui.drawable.ic_image_loader)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .diskCachePolicy(CachePolicy.ENABLED)
+                            .networkCachePolicy(CachePolicy.ENABLED)
                             .build(),
                         contentDescription = null,
                         modifier = Modifier

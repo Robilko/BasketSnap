@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
 import ru.robilko.core_ui.presentation.DataState
@@ -166,6 +167,9 @@ private fun LazyListScope.countriesList(
                             .decoderFactory(SvgDecoder.Factory())
                             .error(R_model.drawable.ic_flag_placeholder)
                             .placeholder(R_model.drawable.ic_flag_placeholder)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .diskCachePolicy(CachePolicy.ENABLED)
+                            .networkCachePolicy(CachePolicy.ENABLED)
                             .build(),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp),

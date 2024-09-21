@@ -46,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
 import ru.robilko.core_ui.presentation.DataState
@@ -245,6 +246,8 @@ private fun GeneralTeamInfoBlock(
                                 .decoderFactory(SvgDecoder.Factory())
                                 .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
                                 .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
+                                .diskCachePolicy(CachePolicy.ENABLED)
                                 .build(),
                             contentScale = ContentScale.Crop,
                             contentDescription = null,
@@ -277,6 +280,8 @@ private fun GeneralTeamInfoBlock(
                                 .data(teamLogoUrl)
                                 .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
                                 .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
+                                .diskCachePolicy(CachePolicy.ENABLED)
                                 .build(),
                             contentScale = ContentScale.Fit,
                             contentDescription = null,
@@ -320,6 +325,8 @@ private fun GeneralTeamInfoBlock(
                                 .data(leagueLogoUrl)
                                 .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
                                 .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
+                                .diskCachePolicy(CachePolicy.ENABLED)
                                 .build(),
                             contentScale = ContentScale.Inside,
                             contentDescription = null,

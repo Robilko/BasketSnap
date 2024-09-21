@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
 import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2
@@ -223,6 +224,8 @@ private fun RowScope.Team(name: String, logoUrl: String, onClick: () -> Unit) {
                 .data(logoUrl)
                 .error(ru.robilko.core_ui.R.drawable.ic_no_image_placeholder)
                 .placeholder(ru.robilko.core_ui.R.drawable.ic_image_loader)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .diskCachePolicy(CachePolicy.ENABLED)
                 .build(),
             contentDescription = null,
             modifier = Modifier

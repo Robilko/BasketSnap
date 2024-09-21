@@ -142,7 +142,7 @@ private fun AppBottomBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color.Black,
                     selectedTextColor = Color.Black,
-                    indicatorColor = Color.LightGray,
+                    indicatorColor = Color(0xFFE0E0E0),
                     unselectedIconColor = Color.Black.copy(alpha = 0.6f),
                     unselectedTextColor = Color.Black.copy(alpha = 0.6f)
                 )
