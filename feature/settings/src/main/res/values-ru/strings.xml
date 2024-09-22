@@ -7,4 +7,5 @@
     <string name="change_theme_setting_title">Изменить тему приложения</string>
     <string name="show_top_bar_title">Отобразить верхнее меню</string>
     <string name="app_version_title">Версия: %1$s</string>
+    <string name="enable_image_background">Включение изображения в качестве фона приложения</string>
 </resources>

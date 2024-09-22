@@ -38,6 +38,9 @@ class SettingsViewModel @Inject constructor(
 
             is SettingsUiEvent.SelectNewChoice -> onNewChoiceSelected(event.selectable)
             is SettingsUiEvent.CheckedChangeShowTopBar -> changeShowTopBarConfig(event.value)
+            is SettingsUiEvent.CheckedChangeEnableImageBackground -> changeImageBackgroundConfig(
+                event.value
+            )
         }
     }
 
@@ -51,7 +54,8 @@ class SettingsViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         darkThemeConfig = data.darkThemeConfig.asSelectable(),
-                        needToShowTopBar = data.needToShowTopBar
+                        needToShowTopBar = data.needToShowTopBar,
+                        enableImageBackground = data.enableImageBackground
                     )
                 }
             }
@@ -101,5 +105,10 @@ class SettingsViewModel @Inject constructor(
     private fun changeShowTopBarConfig(value: Boolean) {
         if (_uiState.value.needToShowTopBar == value) return
         appConfigRepository.setShowTopBar(value)
+    }
+
+    private fun changeImageBackgroundConfig(value: Boolean) {
+        if (_uiState.value.enableImageBackground == value) return
+        appConfigRepository.setEnableImageBackground(value)
     }
 }

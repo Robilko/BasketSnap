@@ -52,6 +52,9 @@ class BasketSnapAppState(
     val needToShowTopBar: Boolean
         @Composable get() = appConfigData.needToShowTopBar
 
+    val enableImageAppBackground: Boolean
+        @Composable get() = appConfigData.enableImageBackground
+
     private val navBackStackEntry: NavBackStackEntry?
         @Composable get() = navController.currentBackStackEntryAsState().value
 
@@ -72,7 +75,10 @@ class BasketSnapAppState(
         navController.popBackStack()
     }
 
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination, needRestoreState: Boolean) {
+    fun navigateToTopLevelDestination(
+        topLevelDestination: TopLevelDestination,
+        needRestoreState: Boolean
+    ) {
         Log.d("TAG", "navigateToTopLevelDestination: $topLevelDestination")
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {

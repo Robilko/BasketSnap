@@ -8,4 +8,5 @@ interface AppConfigRepository {
     fun getSettingsData(): StateFlow<AppConfigData>
     fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig)
     fun setShowTopBar(value: Boolean)
+    fun setEnableImageBackground(value: Boolean)
 }

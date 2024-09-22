@@ -85,6 +85,13 @@ private fun SettingsScreen(
             enabled = uiState.needToShowTopBar != null,
             onCheckedChange = { onEvent(SettingsUiEvent.CheckedChangeShowTopBar(it)) }
         )
+        SettingsItemWithSwitch(
+            iconResId = R.drawable.ic_image_background,
+            text = stringResource(R.string.enable_image_background),
+            checked = uiState.enableImageBackground == true,
+            enabled = uiState.enableImageBackground != null,
+            onCheckedChange = { onEvent(SettingsUiEvent.CheckedChangeEnableImageBackground(it)) }
+        )
         SettingsItem(
             iconResId = R.drawable.ic_theme_mode,
             text = stringResource(R.string.change_theme_setting_title),

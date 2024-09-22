@@ -17,7 +17,8 @@ class AppConfigRepositoryImpl @Inject constructor(
     private val appConfigData: MutableStateFlow<AppConfigData> = MutableStateFlow(
         AppConfigData(
             darkThemeConfig = getDarkThemeConfig(),
-            needToShowTopBar = preferences.getBoolean(SHOW_TOP_BAR_KEY, true)
+            needToShowTopBar = preferences.getBoolean(SHOW_TOP_BAR_KEY, true),
+            enableImageBackground = preferences.getBoolean(ENABLE_IMAGE_BACKGROUND_KEY, false)
         )
     )
 
@@ -42,8 +43,14 @@ class AppConfigRepositoryImpl @Inject constructor(
         appConfigData.update { it.copy(needToShowTopBar = value) }
     }
 
+    override fun setEnableImageBackground(value: Boolean) {
+        preferences.edit().putBoolean(ENABLE_IMAGE_BACKGROUND_KEY, value).apply()
+        appConfigData.update { it.copy(enableImageBackground = value) }
+    }
+
     private companion object {
         const val DARK_THEME_CONFIG_KEY = "dark_theme_config_key"
         const val SHOW_TOP_BAR_KEY = "show_top_bar_key"
+        const val ENABLE_IMAGE_BACKGROUND_KEY = "enable_image_background_key"
     }
 }
