@@ -1,7 +1,7 @@
 [versions]
 #app_configs
-versionCode = "5"
-versionName = "1.1.0"
+versionCode = "6"
+versionName = "1.1.1"
 jvmTarget = "17"
 
 #libs and plugins
