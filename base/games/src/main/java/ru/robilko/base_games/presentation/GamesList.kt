@@ -1,6 +1,8 @@
 package ru.robilko.base_games.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,16 +14,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSizeIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -34,6 +43,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.coroutines.delay
 import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2
 import ru.robilko.base.util.HUMAN_DATE_PATTERN
 import ru.robilko.base.util.toStringDate
@@ -117,12 +127,18 @@ private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick:
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
         ) {
             if (gameResults.statusLong != GAME_NOT_STARTED) {
-                AppText(
-                    text = gameResults.date?.toStringDate(HUMAN_DATE_PATTERN).orEmpty(),
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Center
-                )
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                ) {
+                    if (gameResults.isPlayingNow) FlashingDot()
+                    AppText(
+                        text = gameResults.date?.toStringDate(HUMAN_DATE_PATTERN).orEmpty(),
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
             Row(
@@ -157,6 +173,24 @@ private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick:
             }
         }
     }
+}
+
+@Composable
+fun FlashingDot() {
+    var visible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(800)
+            visible = !visible
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .size(10.dp)
+            .background(if (visible) Color.Red else Color.Transparent, shape = CircleShape)
+    )
 }
 
 @Composable

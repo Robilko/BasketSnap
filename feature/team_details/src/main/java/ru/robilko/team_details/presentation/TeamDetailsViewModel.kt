@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -114,9 +115,9 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun getGameResults() {
+    private fun getGameResults(isFetch: Boolean = false) {
         val selectedSeason = _uiState.value.selectedSeason ?: return
-        _uiState.update { it.copy(isLoadingGames = true) }
+        if (isFetch) _uiState.update { it.copy(isLoadingGames = true) }
 
         viewModelScope.launch {
             getGamesResultsUseCase(
@@ -144,8 +145,20 @@ class TeamDetailsViewModel @Inject constructor(
                             gameResults = response.data.toPersistentList()
                         )
                     }
+                    checkNeedToFetchGameResults()
                 }
             }
+        }
+    }
+
+    private fun checkNeedToFetchGameResults() {
+        viewModelScope.launch {
+            val hasGamesToCheck = _uiState.value.gameResults.any { it.isPlayingNow }
+
+            if (hasGamesToCheck) {
+                delay(60_000)
+                getGameResults(true)
+            } else return@launch
         }
     }
 
@@ -173,14 +186,6 @@ class TeamDetailsViewModel @Inject constructor(
                 }
                 onSuccess { response ->
                     val hasPlayedGames = response.data?.let { it.games.played.all > 0 } ?: false
-
-//                    with(_uiState.value) {
-//                        if (!hasPlayedGames && initialSeason == null && selectedSeason == seasons.firstOrNull()) {
-//                            val previousSeason = seasons.getOrNull(1) ?: return@with
-//                            makeActionOnSeasonClick(previousSeason)
-//                            return@onSuccess
-//                        }
-//                    }
 
                     val showDraws = response.data?.let { it.games.draws.all.total > 0 } ?: false
                     _uiState.update {

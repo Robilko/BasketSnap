@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -40,7 +41,7 @@ class GamesViewModel @Inject constructor(
 
     init {
         getGamesResults(initialSeason)
-        getLeagueSeasons()
+        getSeasons()
     }
 
     override fun onEvent(event: GamesUiEvent) {
@@ -51,9 +52,9 @@ class GamesViewModel @Inject constructor(
         }
     }
 
-    private fun getGamesResults(season: String) {
+    private fun getGamesResults(season: String, isFetching: Boolean = false) {
         viewModelScope.launch {
-            _uiState.update { it.copy(dataState = DataState.Loading) }
+            if (!isFetching) _uiState.update { it.copy(dataState = DataState.Loading) }
             getGamesResultsUseCase(
                 leagueId = leagueId,
                 season = season
@@ -67,6 +68,7 @@ class GamesViewModel @Inject constructor(
                             gameResults = gameResults
                         )
                     }
+                    checkNeedToFetchGameResults()
                 }
                 onFailure {
                     _uiState.update {
@@ -84,7 +86,7 @@ class GamesViewModel @Inject constructor(
         }
     }
 
-    private fun getLeagueSeasons() {
+    private fun getSeasons() {
         viewModelScope.launch {
             _uiState.update { it.copy(dataState = DataState.Loading) }
             getSeasonsUseCase(leagueId = leagueId).apply {
@@ -95,7 +97,7 @@ class GamesViewModel @Inject constructor(
                                 message = context.getString(
                                     R.string.getting_data_error
                                 ),
-                                onRetryAction = ::getLeagueSeasons
+                                onRetryAction = ::getSeasons
                             ),
                             showSeasons = false
                         )
@@ -115,6 +117,17 @@ class GamesViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun checkNeedToFetchGameResults() {
+        viewModelScope.launch {
+            val hasGamesToCheck = _uiState.value.gameResults.any { it.isPlayingNow }
+
+            if (hasGamesToCheck) {
+                delay(60_000)
+                getGamesResults(_uiState.value.selectedSeason?.value ?: return@launch, true)
+            } else return@launch
         }
     }
 

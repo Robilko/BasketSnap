@@ -215,6 +215,7 @@ private fun GameDetailsDialogPreview() {
                         season = "2024-2025",
                         logoUrl = "https:\\/\\/media.api-sports.io\\/basketball\\/leagues\\/12.png"
                     ),
+                    isPlayingNow = true,
                     country = Country(
                         id = 5,
                         name = "USA",

@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import ru.robilko.base.util.ISO_8601_WITH_TIMEZONE_PATTERN
+import ru.robilko.base.util.isToday
 import ru.robilko.base.util.toDate
 import ru.robilko.model.data.GameLeague
 import ru.robilko.model.data.GameResults
@@ -25,23 +26,27 @@ data class GameResultsDto(
     @SerialName("scores") val scores: GameScoresDto
 )
 
-fun GameResultsDto.asDomainModel() = GameResults(
-    id = id,
-    date = date.toDate(ISO_8601_WITH_TIMEZONE_PATTERN, timeZoneId = timezone),
-    time = time,
-    timestamp = timestamp,
-    timezone = timezone,
-    venue = venue.orEmpty(),
-    statusLong = status.long,
-    statusShort = status.short,
-    timer = status.timer,
-    league = league.asDomainModel(),
-    country = country.asDomainModel(),
-    homeTeam = teams.homeTeam.asDomainModel(),
-    awayTeam = teams.awayTeam.asDomainModel(),
-    homeScore = scores.homeScore.asDomainModel(),
-    awayScore = scores.awayScore.asDomainModel()
-)
+fun GameResultsDto.asDomainModel(): GameResults {
+    val date = date.toDate(ISO_8601_WITH_TIMEZONE_PATTERN, timeZoneId = timezone)
+    return GameResults(
+        id = id,
+        date = date,
+        time = time,
+        timestamp = timestamp,
+        timezone = timezone,
+        venue = venue.orEmpty(),
+        statusLong = status.long,
+        statusShort = status.short,
+        timer = status.timer,
+        league = league.asDomainModel(),
+        country = country.asDomainModel(),
+        homeTeam = teams.homeTeam.asDomainModel(),
+        awayTeam = teams.awayTeam.asDomainModel(),
+        homeScore = scores.homeScore.asDomainModel(),
+        awayScore = scores.awayScore.asDomainModel(),
+        isPlayingNow = date?.isToday() == true && status.long != "Not Started" && status.long != "Game Finished"
+    )
+}
 
 @Serializable
 data class GameStatusDto(

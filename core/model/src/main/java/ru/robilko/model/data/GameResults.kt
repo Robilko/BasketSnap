@@ -17,7 +17,8 @@ data class GameResults(
     val homeTeam: GameTeamInfo,
     val awayTeam: GameTeamInfo,
     val homeScore: GameScore,
-    val awayScore: GameScore
+    val awayScore: GameScore,
+    val isPlayingNow: Boolean
 )
 
 data class GameLeague(
