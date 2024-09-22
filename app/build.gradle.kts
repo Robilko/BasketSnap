@@ -97,6 +97,8 @@ dependencies {
     implementation(projects.core.local)
     implementation(projects.core.model)
     implementation(projects.base.favourites)
+    implementation(projects.base.games)
+    implementation(projects.base.seasons)
     implementation(projects.feature.home)
     implementation(projects.feature.favourites)
     implementation(projects.feature.settings)

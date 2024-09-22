@@ -1,4 +1,4 @@
-package ru.robilko.games.presentation
+package ru.robilko.base_games.presentation
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
@@ -42,11 +42,11 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN
 import ru.robilko.base.util.toStringDate
+import ru.robilko.base_games.R
 import ru.robilko.core_ui.presentation.components.AppCard
 import ru.robilko.core_ui.presentation.components.AppText
 import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.core_ui.utils.bounceClick
-import ru.robilko.games.R
 import ru.robilko.model.data.Country
 import ru.robilko.model.data.GameLeague
 import ru.robilko.model.data.GameResults
@@ -56,7 +56,7 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-internal fun GameDetailsDialog(
+fun GameDetailsDialog(
     gameResults: GameResults,
     onCountryClick: () -> Unit,
     onLeagueClick: () -> Unit,

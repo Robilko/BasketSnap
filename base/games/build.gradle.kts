@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.robilko.team_details"
+    namespace = "ru.robilko.base_games"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -19,15 +19,11 @@ android {
 }
 
 dependencies {
-//    modules
+    //   Modules
     implementation(projects.core.base)
-    implementation(projects.core.ui)
     implementation(projects.core.remote)
-    implementation(projects.core.local)
     implementation(projects.core.model)
-    implementation(projects.base.favourites)
-    implementation(projects.base.games)
-    implementation(projects.base.seasons)
+    implementation(projects.core.ui)
 
     //    di
     implementation(libs.dagger.hilt.android)

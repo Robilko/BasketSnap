@@ -1,10 +1,8 @@
-package ru.robilko.games.data.remote
+package ru.robilko.base_games.data.remote
 
 import ru.robilko.remote.data.model.GameResultsDto
-import ru.robilko.remote.data.model.SeasonDto
 
-interface GamesRemoteDataSource {
-    suspend fun getLeagueSeasons(leagueId: Int): List<SeasonDto>
+interface BaseGamesRemoteDataSource {
     suspend fun getGamesResults(
         leagueId: Int,
         season: String,

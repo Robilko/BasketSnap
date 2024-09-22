@@ -32,6 +32,7 @@ hiltCompose = "1.2.0"
 splashscreen = "1.0.1"
 navigation = "2.8.0"
 room = "2.6.1"
+espressoCore = "3.6.1"
 
 [libraries]
 #core
@@ -72,6 +73,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coilSvg" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

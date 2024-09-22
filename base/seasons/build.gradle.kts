@@ -3,11 +3,10 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt.android)
-    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "ru.robilko.team_details"
+    namespace = "ru.robilko.base_seasons"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -19,15 +18,10 @@ android {
 }
 
 dependencies {
-//    modules
+    //   Modules
     implementation(projects.core.base)
-    implementation(projects.core.ui)
     implementation(projects.core.remote)
-    implementation(projects.core.local)
     implementation(projects.core.model)
-    implementation(projects.base.favourites)
-    implementation(projects.base.games)
-    implementation(projects.base.seasons)
 
     //    di
     implementation(libs.dagger.hilt.android)

@@ -16,13 +16,13 @@ import ru.robilko.base.util.onSuccess
 import ru.robilko.base_favourites.domain.useCases.AddTeamToFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.DeleteTeamFromFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.GetFavouriteTeamsUseCase
+import ru.robilko.base_seasons.domain.useCases.GetSeasonsUseCase
 import ru.robilko.core_ui.R
 import ru.robilko.core_ui.presentation.BaseAppViewModel
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.asSelectableData
 import ru.robilko.model.data.TeamInfo
-import ru.robilko.team_details.domain.useCases.GetLeagueSeasonsUseCase
 import ru.robilko.team_details.domain.useCases.GetTeamStatisticsUseCase
 import ru.robilko.team_details.navigation.LEAGUE_ID_ARG
 import ru.robilko.team_details.navigation.SEASON_ARG
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class TeamDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
-    private val getLeagueSeasonsUseCase: GetLeagueSeasonsUseCase,
+    private val getSeasonsUseCase: GetSeasonsUseCase,
     private val getTeamStatisticsUseCase: GetTeamStatisticsUseCase,
     private val getFavouriteTeamsUseCase: GetFavouriteTeamsUseCase,
     private val addTeamToFavouritesUseCase: AddTeamToFavouritesUseCase,
@@ -75,7 +75,7 @@ class TeamDetailsViewModel @Inject constructor(
     private fun getLeagueSeasons() {
         viewModelScope.launch {
             _uiState.update { it.copy(dataState = DataState.Loading) }
-            getLeagueSeasonsUseCase(leagueId = leagueId).apply {
+            getSeasonsUseCase(leagueId = leagueId).apply {
                 onFailure {
                     _uiState.update {
                         it.copy(
@@ -130,7 +130,7 @@ class TeamDetailsViewModel @Inject constructor(
                 onSuccess { response ->
                     val hasPlayedGames = response.data?.let { it.games.played.all > 0 } ?: false
 
-                    with(_uiState.value){
+                    with(_uiState.value) {
                         if (!hasPlayedGames && initialSeason == null && selectedSeason == seasons.firstOrNull()) {
                             val previousSeason = seasons.getOrNull(1) ?: return@with
                             makeActionOnSeasonClick(previousSeason)

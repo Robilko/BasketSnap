@@ -28,6 +28,8 @@ dependencies {
     implementation(projects.core.remote)
     implementation(projects.core.local)
     implementation(projects.core.model)
+    implementation(projects.base.games)
+    implementation(projects.base.seasons)
 
     //    di
     implementation(libs.dagger.hilt.android)

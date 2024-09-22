@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.robilko.base.util.onFailure
 import ru.robilko.base.util.onSuccess
+import ru.robilko.base_games.domain.useCases.GetGamesResultsUseCase
+import ru.robilko.base_seasons.domain.useCases.GetSeasonsUseCase
 import ru.robilko.core_ui.R
 import ru.robilko.core_ui.presentation.BaseAppViewModel
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.asSelectableData
-import ru.robilko.games.domain.useCases.GetGamesResultsUseCase
-import ru.robilko.games.domain.useCases.GetLeagueSeasonsUseCase
 import ru.robilko.games.navigation.LEAGUE_ID_ARG
 import ru.robilko.games.navigation.SEASON_ARG
 import ru.robilko.model.data.GameResults
@@ -29,7 +29,7 @@ class GamesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val getGamesResultsUseCase: GetGamesResultsUseCase,
-    private val getLeagueSeasonsUseCase: GetLeagueSeasonsUseCase
+    private val getSeasonsUseCase: GetSeasonsUseCase,
 ) : BaseAppViewModel<GamesUiState, GamesUiEvent>() {
     private val leagueId = checkNotNull<Int>(savedStateHandle[LEAGUE_ID_ARG])
     private val initialSeason = checkNotNull<String>(savedStateHandle[SEASON_ARG])
@@ -86,7 +86,7 @@ class GamesViewModel @Inject constructor(
     private fun getLeagueSeasons() {
         viewModelScope.launch {
             _uiState.update { it.copy(dataState = DataState.Loading) }
-            getLeagueSeasonsUseCase(leagueId = leagueId).apply {
+            getSeasonsUseCase(leagueId = leagueId).apply {
                 onFailure {
                     _uiState.update {
                         it.copy(
