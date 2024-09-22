@@ -72,13 +72,14 @@ class BasketSnapAppState(
         navController.popBackStack()
     }
 
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination, needRestoreState: Boolean) {
+        Log.d("TAG", "navigateToTopLevelDestination: $topLevelDestination")
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
             launchSingleTop = true
-            restoreState = true
+            restoreState = needRestoreState
         }
         when (topLevelDestination) {
             TopLevelDestination.HOME -> navController.navigateToHomeGraph(navOptions)

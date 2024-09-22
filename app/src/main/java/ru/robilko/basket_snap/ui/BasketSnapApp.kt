@@ -89,12 +89,10 @@ internal fun BasketSnapApp(
             AppBottomBar(
                 topLevelDestinations = appState.topLevelDestinations,
                 currentTopLevelDestination = appState.currentTopLevelDestination,
-                onClick = { appState.navigateToTopLevelDestination(it) }
+                onClick = appState::navigateToTopLevelDestination
             )
         },
-        snackbarHost = {
-
-        },
+        snackbarHost = {},
         content = { innerPadding ->
             Box(
                 modifier = Modifier
@@ -121,15 +119,16 @@ internal fun BasketSnapApp(
 private fun AppBottomBar(
     topLevelDestinations: List<TopLevelDestination>,
     currentTopLevelDestination: TopLevelDestination?,
-    onClick: (TopLevelDestination) -> Unit
+    onClick: (TopLevelDestination, needRestoreState: Boolean) -> Unit
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.primary
     ) {
         topLevelDestinations.forEach { topLevelDestination ->
+            val selected = currentTopLevelDestination == topLevelDestination
             NavigationBarItem(
-                selected = currentTopLevelDestination == topLevelDestination,
-                onClick = { onClick(topLevelDestination) },
+                selected = selected,
+                onClick = { onClick(topLevelDestination, !selected) },
                 icon = {
                     Icon(
                         imageVector = topLevelDestination.menuIcon,
