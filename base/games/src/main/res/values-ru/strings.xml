@@ -18,4 +18,5 @@
     <string name="quarter4_dialog_title">4 четверть:</string>
     <string name="overtime_dialog_title">Овертайм:</string>
     <string name="total_dialog_title">Итого:</string>
+    <string name="teams_dialog_title">Команды:</string>
 </resources>

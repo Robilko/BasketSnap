@@ -306,7 +306,15 @@ private fun TeamsScoreHeader(
             .height(IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.weight(PRIMARY_SCORE_CELL))
+        AppText(
+            text = stringResource(id = R.string.teams_dialog_title),
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp,
+            color = BasketSnapTheme.colors.secondaryText,
+            modifier = Modifier
+                .weight(PRIMARY_SCORE_CELL)
+                .padding(end = 8.dp)
+        )
         VerticalDivider(
             modifier = Modifier.fillMaxHeight(),
             color = MaterialTheme.colorScheme.secondary
