@@ -1,6 +1,5 @@
 package ru.robilko.base_games.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,14 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSizeIn
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,8 +33,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -46,6 +48,7 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.delay
 import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2
 import ru.robilko.base.util.HUMAN_DATE_PATTERN
+import ru.robilko.base.util.isTodayOrAfter
 import ru.robilko.base.util.toStringDate
 import ru.robilko.base_games.R
 import ru.robilko.core_ui.presentation.components.AppCard
@@ -64,43 +67,48 @@ fun GamesList(
     onTeamClick: (teamId: Int, leagueId: Int, season: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (isLoading) {
-        Column(
-            modifier = modifier
-                .padding(horizontal = 16.dp)
-                .verticalScroll(state = rememberScrollState(), enabled = false),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            repeat(5) {
-                ShimmerCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    } else {
-        val firstVisibleIndex = remember(games) {
-            games.indexOfLast { it.statusLong != GAME_NOT_STARTED }.takeIf { it != -1 } ?: 0
-        }
-        val state =
-            rememberLazyListState(initialFirstVisibleItemIndex = firstVisibleIndex)
-        LazyColumn(
-            state = state,
-            modifier = modifier.testTag("GamesList"),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (games.isEmpty()) {
-                item {
-                    EmptyList(
-                        textResId = R.string.no_games_message,
-                        modifier = Modifier.fillMaxSize()
+
+    when {
+        isLoading -> {
+            Column(
+                modifier = modifier
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(state = rememberScrollState(), enabled = false),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                repeat(5) {
+                    ShimmerCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
                     )
                 }
-            } else {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        games.isEmpty() -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                EmptyList(
+                    textResId = R.string.no_games_message,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
+        else -> {
+            val firstVisibleIndex = remember(games) {
+                games.indexOfFirst { it.date?.isTodayOrAfter() == true }
+                    .takeIf { index -> index != -1 } ?: 0
+            }
+            val state = rememberLazyListState(initialFirstVisibleItemIndex = firstVisibleIndex)
+            LazyColumn(
+                state = state,
+                modifier = modifier.testTag("GamesList"),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(games, key = { it.id }) { gameResults ->
                     GameCard(
                         gameResults = gameResults,
@@ -132,12 +140,12 @@ private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick:
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
-                    if (gameResults.isPlayingNow) FlashingDot()
                     AppText(
                         text = gameResults.date?.toStringDate(HUMAN_DATE_PATTERN).orEmpty(),
                         fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center
                     )
+                    if (gameResults.isPlayingNow) FlashingLiveDot()
                 }
             }
 
@@ -176,7 +184,7 @@ private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick:
 }
 
 @Composable
-fun FlashingDot() {
+private fun FlashingLiveDot() {
     var visible by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
@@ -186,10 +194,17 @@ fun FlashingDot() {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .size(10.dp)
-            .background(if (visible) Color.Red else Color.Transparent, shape = CircleShape)
+    Text(
+        text = buildAnnotatedString {
+            withStyle(SpanStyle(fontSize = 14.sp)) {
+                append("● ")
+            }
+            withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+                append(stringResource(R.string.live_game))
+            }
+        },
+        color = if (visible) Color.Red else Color.Transparent,
+        fontSize = 12.sp
     )
 }
 

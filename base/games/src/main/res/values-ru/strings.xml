@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="games_page_title">Игры</string>
+    <string name="live_game">СЕЙЧАС</string>
     <string name="total_score">СЧЁТ</string>
     <string name="no_games_message">Нет игр</string>
-    <string name="seasons_selectable_title">Выберите сезон</string>
     <string name="season_dialog_title">Сезон:</string>
     <string name="venue_dialog_title">Место проведения:</string>
     <string name="date_dialog_title">Дата матча:</string>

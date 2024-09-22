@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,8 +13,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.robilko.base.util.Response
+import ru.robilko.base.util.SERVER_DATE_PATTERN
 import ru.robilko.base.util.onFailure
 import ru.robilko.base.util.onSuccess
+import ru.robilko.base.util.toStringDate
 import ru.robilko.base_favourites.domain.useCases.AddTeamToFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.DeleteTeamFromFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.GetFavouriteTeamsUseCase
@@ -25,11 +28,13 @@ import ru.robilko.core_ui.presentation.BaseAppViewModel
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.asSelectableData
+import ru.robilko.model.data.GameResults
 import ru.robilko.model.data.TeamInfo
 import ru.robilko.team_details.domain.useCases.GetTeamStatisticsUseCase
 import ru.robilko.team_details.navigation.LEAGUE_ID_ARG
 import ru.robilko.team_details.navigation.SEASON_ARG
 import ru.robilko.team_details.navigation.TEAM_ID_ARG
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -115,15 +120,16 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun getGameResults(isFetch: Boolean = false) {
+    private fun getGameResults(date: String? = null, isFetching: Boolean = false) {
         val selectedSeason = _uiState.value.selectedSeason ?: return
-        if (isFetch) _uiState.update { it.copy(isLoadingGames = true) }
+        if (isFetching) _uiState.update { it.copy(isLoadingGames = true) }
 
         viewModelScope.launch {
             getGamesResultsUseCase(
                 leagueId = leagueId,
                 season = selectedSeason.value,
-                teamId = teamId
+                teamId = teamId,
+                date = date
             ).apply {
                 onFailure {
                     _uiState.update {
@@ -142,7 +148,10 @@ class TeamDetailsViewModel @Inject constructor(
                         it.copy(
                             dataState = DataState.Success,
                             isLoadingGames = false,
-                            gameResults = response.data.toPersistentList()
+                            gameResults = getFinalGamesResults(
+                                newResults = response.data.sortedBy { game -> game.date },
+                                isFetching = isFetching
+                            )
                         )
                     }
                     checkNeedToFetchGameResults()
@@ -151,13 +160,28 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun getFinalGamesResults(
+        newResults: List<GameResults>,
+        isFetching: Boolean
+    ): PersistentList<GameResults> {
+        if (!isFetching) return newResults.toPersistentList()
+
+        val currentList = _uiState.value.gameResults.toMutableList()
+        newResults.forEach { game ->
+            val index = currentList.indexOfFirst { game.id == it.id }
+            if (index != -1) currentList[index] = game
+        }
+
+        return currentList.toPersistentList()
+    }
+
     private fun checkNeedToFetchGameResults() {
         viewModelScope.launch {
             val hasGamesToCheck = _uiState.value.gameResults.any { it.isPlayingNow }
 
             if (hasGamesToCheck) {
-                delay(60_000)
-                getGameResults(true)
+                delay(GAMES_FETCH_TIMEOUT)
+                getGameResults(date = Date().toStringDate(SERVER_DATE_PATTERN), isFetching = true)
             } else return@launch
         }
     }
@@ -224,5 +248,9 @@ class TeamDetailsViewModel @Inject constructor(
                 addTeamToFavouritesUseCase(teamInfo)
             }
         }
+    }
+
+    private companion object {
+        const val GAMES_FETCH_TIMEOUT = 60_000L
     }
 }

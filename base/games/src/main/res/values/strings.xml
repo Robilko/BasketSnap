@@ -5,4 +5,5 @@
     <string name="season_dialog_title">Season:</string>
     <string name="venue_dialog_title">Venue:</string>
     <string name="date_dialog_title">Date:</string>
+    <string name="live_game">LIVE</string>
 </resources>

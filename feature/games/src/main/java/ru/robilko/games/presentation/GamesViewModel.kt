@@ -5,14 +5,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.robilko.base.util.SERVER_DATE_PATTERN
 import ru.robilko.base.util.onFailure
 import ru.robilko.base.util.onSuccess
+import ru.robilko.base.util.toStringDate
 import ru.robilko.base_games.domain.useCases.GetGamesResultsUseCase
 import ru.robilko.base_games.presentation.GameDetailsDialogState
 import ru.robilko.base_seasons.domain.useCases.GetSeasonsUseCase
@@ -24,6 +27,7 @@ import ru.robilko.core_ui.presentation.asSelectableData
 import ru.robilko.games.navigation.LEAGUE_ID_ARG
 import ru.robilko.games.navigation.SEASON_ARG
 import ru.robilko.model.data.GameResults
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,7 +44,7 @@ class GamesViewModel @Inject constructor(
     override val uiState: StateFlow<GamesUiState> = _uiState
 
     init {
-        getGamesResults(initialSeason)
+        getGamesResults(season = initialSeason)
         getSeasons()
     }
 
@@ -52,20 +56,22 @@ class GamesViewModel @Inject constructor(
         }
     }
 
-    private fun getGamesResults(season: String, isFetching: Boolean = false) {
+    private fun getGamesResults(season: String, date: String? = null, isFetching: Boolean = false) {
         viewModelScope.launch {
             if (!isFetching) _uiState.update { it.copy(dataState = DataState.Loading) }
             getGamesResultsUseCase(
                 leagueId = leagueId,
-                season = season
+                season = season,
+                date = date
             ).apply {
                 onSuccess { response ->
-                    val gameResults =
-                        response.data.sortedBy { it.date }.toPersistentList()
                     _uiState.update {
                         it.copy(
                             dataState = DataState.Success,
-                            gameResults = gameResults
+                            gameResults = getFinalGamesResults(
+                                newResults = response.data.sortedBy { game -> game.date },
+                                isFetching = isFetching
+                            )
                         )
                     }
                     checkNeedToFetchGameResults()
@@ -77,13 +83,33 @@ class GamesViewModel @Inject constructor(
                                 message = context.getString(
                                     R.string.getting_data_error
                                 ),
-                                onRetryAction = { getGamesResults(season) }
+                                onRetryAction = {
+                                    getGamesResults(
+                                        season = season,
+                                        isFetching = isFetching
+                                    )
+                                }
                             )
                         )
                     }
                 }
             }
         }
+    }
+
+    private fun getFinalGamesResults(
+        newResults: List<GameResults>,
+        isFetching: Boolean
+    ): PersistentList<GameResults> {
+        if (!isFetching) return newResults.toPersistentList()
+
+        val currentList = _uiState.value.gameResults.toMutableList()
+        newResults.forEach { game ->
+            val index = currentList.indexOfFirst { game.id == it.id }
+            if (index != -1) currentList[index] = game
+        }
+
+        return currentList.toPersistentList()
     }
 
     private fun getSeasons() {
@@ -125,15 +151,19 @@ class GamesViewModel @Inject constructor(
             val hasGamesToCheck = _uiState.value.gameResults.any { it.isPlayingNow }
 
             if (hasGamesToCheck) {
-                delay(60_000)
-                getGamesResults(_uiState.value.selectedSeason?.value ?: return@launch, true)
+                delay(GAMES_FETCH_TIMEOUT)
+                getGamesResults(
+                    season = _uiState.value.selectedSeason?.value ?: return@launch,
+                    date = Date().toStringDate(SERVER_DATE_PATTERN),
+                    isFetching = true
+                )
             } else return@launch
         }
     }
 
     private fun makeActionOnSeasonClick(season: Selectable) {
         _uiState.update { it.copy(selectedSeason = season) }
-        getGamesResults(season.value)
+        getGamesResults(season = season.value)
     }
 
     private fun showDetailsDialog(gameResults: GameResults) {
@@ -144,5 +174,9 @@ class GamesViewModel @Inject constructor(
 
     private fun closeDetailsDialog() {
         _uiState.update { it.copy(detailsDialogState = GameDetailsDialogState.None) }
+    }
+
+    private companion object {
+        const val GAMES_FETCH_TIMEOUT = 60_000L
     }
 }

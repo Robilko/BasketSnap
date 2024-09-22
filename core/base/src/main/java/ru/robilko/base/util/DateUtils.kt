@@ -22,9 +22,13 @@ fun String.toDate(pattern: String, timeZoneId: String = "UTC"): Date? {
     }
 }
 
-fun Date.toStringDate(pattern: String): String {
-    return SimpleDateFormat(pattern, Locale.getDefault())
-        .format(this).toString()
+fun Date.toStringDate(pattern: String): String? {
+    return try {
+        SimpleDateFormat(pattern, Locale.getDefault())
+            .format(this).toString()
+    } catch (e: Exception) {
+        null
+    }
 }
 
 fun Date.isSameDay(anotherDate: Date): Boolean {
@@ -36,3 +40,14 @@ fun Date.isSameDay(anotherDate: Date): Boolean {
 }
 
 fun Date.isToday(): Boolean = this.isSameDay(Date())
+
+fun Date.isTodayOrAfter(): Boolean {
+    val today = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.time
+
+    return this.after(today) || this == today
+}
