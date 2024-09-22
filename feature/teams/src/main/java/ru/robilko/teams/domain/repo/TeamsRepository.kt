@@ -4,5 +4,5 @@ import ru.robilko.base.util.Response
 import ru.robilko.model.data.TeamInfo
 
 interface TeamsRepository {
-    suspend fun getTeamsInfo(leagueId: Int, season: String): Response<List<TeamInfo>>
+    suspend fun getTeamsInfo(leagueId: Int, leagueName: String, season: String): Response<List<TeamInfo>>
 }

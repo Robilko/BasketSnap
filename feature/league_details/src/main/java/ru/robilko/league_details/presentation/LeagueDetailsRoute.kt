@@ -56,7 +56,7 @@ import ru.robilko.core_ui.R as R_core_ui
 @Composable
 internal fun LeagueDetailsRoute(
     onTopBarTitleChange: (resId: Int) -> Unit,
-    onNavigateToTeams: (leagueId: Int, season: String) -> Unit,
+    onNavigateToTeams: (leagueId: Int, leagueName: String, season: String) -> Unit,
     onNavigateToGames: (leagueId: Int, season: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LeagueDetailsViewModel = hiltViewModel<LeagueDetailsViewModel>()
@@ -75,7 +75,7 @@ internal fun LeagueDetailsRoute(
 private fun LeagueDetailsScreen(
     uiState: LeagueDetailsUiState,
     onEvent: (LeagueDetailsUiEvent) -> Unit,
-    onNavigateToTeams: (leagueId: Int, season: String) -> Unit,
+    onNavigateToTeams: (leagueId: Int, leagueName: String, season: String) -> Unit,
     onNavigateToGames: (leagueId: Int, season: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -105,7 +105,7 @@ private fun LeagueDetailsScreen(
                         onDismissRequest = { onEvent(LeagueDetailsUiEvent.DismissSeasonDialog) },
                         onTeamsClick = {
                             onEvent(LeagueDetailsUiEvent.DismissSeasonDialog)
-                            onNavigateToTeams(it.id, season)
+                            onNavigateToTeams(it.id, it.name, season)
                         },
                         onGamesClick = {
                             onEvent(LeagueDetailsUiEvent.DismissSeasonDialog)

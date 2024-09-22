@@ -23,6 +23,7 @@ import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.model.data.TeamInfo
 import ru.robilko.teams.domain.useCases.GetTeamsInfoUseCase
 import ru.robilko.teams.navigation.LEAGUE_ID_ARG
+import ru.robilko.teams.navigation.LEAGUE_NAME_ARG
 import ru.robilko.teams.navigation.SEASON_ARG
 import javax.inject.Inject
 
@@ -36,6 +37,7 @@ class TeamsViewModel @Inject constructor(
     private val getFavouriteTeamsUseCase: GetFavouriteTeamsUseCase
 ) : BaseAppViewModel<TeamsUiState, TeamsUiEvent>() {
     private val leagueId = checkNotNull<Int>(savedStateHandle[LEAGUE_ID_ARG])
+    private val leagueName = checkNotNull<String>(savedStateHandle[LEAGUE_NAME_ARG])
     private val season = checkNotNull<String>(savedStateHandle[SEASON_ARG])
 
     private val _uiState: MutableStateFlow<TeamsUiState> = MutableStateFlow(TeamsUiState())
@@ -57,7 +59,8 @@ class TeamsViewModel @Inject constructor(
         viewModelScope.launch {
             getFavouriteTeamsUseCase().collectLatest { response ->
                 if (response is Response.Success) {
-                    val ids = response.data.map { it.id }.toPersistentList()
+                    val ids = response.data.filter { it.leagueId == leagueId }.map { it.id }
+                        .toPersistentList()
                     _uiState.update { it.copy(favouriteTeamsIds = ids) }
                 }
             }
@@ -66,7 +69,11 @@ class TeamsViewModel @Inject constructor(
 
     private fun getTeams(leagueId: Int, season: String) {
         viewModelScope.launch {
-            getTeamsInfoUseCase(leagueId = leagueId, season = season).apply {
+            getTeamsInfoUseCase(
+                leagueId = leagueId,
+                leagueName = leagueName,
+                season = season
+            ).apply {
                 onFailure {
                     _uiState.update {
                         it.copy(dataState = DataState.Error(
@@ -91,7 +98,7 @@ class TeamsViewModel @Inject constructor(
 
     private fun makeActionOnStarIconClick(team: TeamInfo, isFavourite: Boolean) {
         viewModelScope.launch {
-            if (isFavourite) deleteTeamFromFavouritesUseCase(team.id)
+            if (isFavourite) deleteTeamFromFavouritesUseCase(team.id, team.leagueId)
             else addTeamToFavouritesUseCase(team)
         }
     }

@@ -52,8 +52,8 @@ class BasketSnapUiTests {
         onNodeWithTag("TeamsList").performScrollToNode(hasText("Los Angeles Lakers"))
         onNode(hasTestTag("TeamCard") and hasText("Los Angeles Lakers")).performClick()
         waitUntil(timeoutMillis = 3000) {
-            onAllNodesWithTag("GamesStatisticsSchedule").fetchSemanticsNodes().isNotEmpty()
+            onAllNodesWithTag("GamesList").fetchSemanticsNodes().isNotEmpty()
         }
-        onNodeWithTag("GamesStatisticsSchedule").isDisplayed()
+        onNodeWithTag("GamesList").isDisplayed()
     }
 }

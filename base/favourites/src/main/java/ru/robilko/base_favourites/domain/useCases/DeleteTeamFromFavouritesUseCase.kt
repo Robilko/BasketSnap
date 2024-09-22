@@ -6,7 +6,7 @@ import javax.inject.Inject
 class DeleteTeamFromFavouritesUseCase @Inject constructor(
     private val repo: BaseFavouritesRepository
 ) {
-    suspend operator fun invoke(id: Int) {
-        repo.deleteTeamInfoFromFavourites(id)
+    suspend operator fun invoke(teamId: Int, leagueId: Int) {
+        repo.deleteTeamInfoFromFavourites(teamId, leagueId)
     }
 }

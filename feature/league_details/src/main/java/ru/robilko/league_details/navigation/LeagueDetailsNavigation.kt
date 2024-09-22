@@ -18,7 +18,7 @@ fun NavHostController.navigateToLeagueDetails(leagueId: Int, navOptions: NavOpti
 
 fun NavGraphBuilder.leagueDetailsScreen(
     onTopBarTitleChange: (resId: Int) -> Unit,
-    onNavigateToTeams: (leagueId: Int, season: String) -> Unit,
+    onNavigateToTeams: (leagueId: Int, leagueName: String, season: String) -> Unit,
     onNavigateToGames: (leagueId: Int, season: String) -> Unit
 ) {
     composable(

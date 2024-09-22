@@ -11,5 +11,5 @@ interface BaseFavouritesRepository {
 
     suspend fun addTeamInfoToFavourites(teamInfo: TeamInfo)
     fun getFavouritesTeamInfos(): Flow<List<TeamInfo>>
-    suspend fun deleteTeamInfoFromFavourites(id: Int)
+    suspend fun deleteTeamInfoFromFavourites(teamId: Int, leagueId: Int)
 }

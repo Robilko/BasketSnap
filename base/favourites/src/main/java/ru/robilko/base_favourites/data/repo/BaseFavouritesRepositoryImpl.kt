@@ -40,7 +40,7 @@ class BaseFavouritesRepositoryImpl @Inject constructor(
         return localDataSource.getAllTeamsInfo().map { it.map { entity -> entity.asDomainModel() } }
     }
 
-    override suspend fun deleteTeamInfoFromFavourites(id: Int) {
-        localDataSource.deleteTeamInfoById(id)
+    override suspend fun deleteTeamInfoFromFavourites(teamId: Int, leagueId: Int) {
+        localDataSource.deleteTeamInfoById(teamId, leagueId)
     }
 }

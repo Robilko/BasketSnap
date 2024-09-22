@@ -13,10 +13,11 @@ data class TeamInfoDto(
     @SerialName("country") val country: CountryDto
 )
 
-fun TeamInfoDto.asDomainModel(leagueId: Int) = TeamInfo(
+fun TeamInfoDto.asDomainModel(leagueId: Int, leagueName: String) = TeamInfo(
     id = id,
     name = name,
     logoUrl = logoUrl,
     country = country.asDomainModel(),
-    leagueId = leagueId
+    leagueId = leagueId,
+    leagueName = leagueName
 )

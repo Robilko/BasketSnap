@@ -11,9 +11,13 @@ import javax.inject.Inject
 class TeamsRepositoryImpl @Inject constructor(
     private val remoteDataSource: TeamsRemoteDataSource,
 ) : TeamsRepository, SafeApiCall {
-    override suspend fun getTeamsInfo(leagueId: Int, season: String): Response<List<TeamInfo>> =
+    override suspend fun getTeamsInfo(
+        leagueId: Int,
+        leagueName: String,
+        season: String
+    ): Response<List<TeamInfo>> =
         safeApiCall {
             remoteDataSource.getTeamsInfo(leagueId = leagueId, season = season)
-                .map { it.asDomainModel(leagueId) }
+                .map { it.asDomainModel(leagueId = leagueId, leagueName = leagueName) }
         }
 }

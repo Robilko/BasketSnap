@@ -5,5 +5,6 @@ data class TeamInfo(
     val name: String,
     val logoUrl: String,
     val country: Country,
-    val leagueId: Int
+    val leagueId: Int,
+    val leagueName: String
 )

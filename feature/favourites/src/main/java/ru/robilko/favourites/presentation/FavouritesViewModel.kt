@@ -36,7 +36,7 @@ class FavouritesViewModel @Inject constructor(
                 viewModelScope.launch { deleteLeagueFromFavouritesUseCase(event.league.id) }
 
             is FavouritesUiEvent.DeleteTeamIconClick ->
-                viewModelScope.launch { deleteTeamFromFavouritesUseCase(event.teamInfo.id) }
+                viewModelScope.launch { deleteTeamFromFavouritesUseCase(event.teamInfo.id, event.teamInfo.leagueId) }
         }
     }
 

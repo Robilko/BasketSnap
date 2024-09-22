@@ -31,7 +31,7 @@ data class BaseFavouritesLocalDataSourceImpl @Inject constructor(
         return teamInfoDao.getAllTeamInfos()
     }
 
-    override suspend fun deleteTeamInfoById(id: Int) {
-        teamInfoDao.deleteTeamInfoById(id)
+    override suspend fun deleteTeamInfoById(teamId: Int, leagueId: Int) {
+        teamInfoDao.deleteTeamInfoById(teamId, leagueId)
     }
 }

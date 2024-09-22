@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import ru.robilko.base.util.onFailure
 import ru.robilko.base.util.onSuccess
 import ru.robilko.base_games.domain.useCases.GetGamesResultsUseCase
+import ru.robilko.base_games.presentation.GameDetailsDialogState
 import ru.robilko.base_seasons.domain.useCases.GetSeasonsUseCase
 import ru.robilko.core_ui.R
 import ru.robilko.core_ui.presentation.BaseAppViewModel

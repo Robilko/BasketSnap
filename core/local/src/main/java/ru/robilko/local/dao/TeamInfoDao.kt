@@ -15,6 +15,6 @@ interface TeamInfoDao {
     @Query("SELECT * FROM teams")
     fun getAllTeamInfos(): Flow<List<TeamInfoEntity>>
 
-    @Query("DELETE FROM teams WHERE id = :id")
-    suspend fun deleteTeamInfoById(id: Int)
+    @Query("DELETE FROM teams WHERE team_id = :teamId AND league_id = :leagueId")
+    suspend fun deleteTeamInfoById(teamId: Int, leagueId: Int)
 }

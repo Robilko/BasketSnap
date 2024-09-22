@@ -16,6 +16,8 @@ import ru.robilko.base.util.onSuccess
 import ru.robilko.base_favourites.domain.useCases.AddTeamToFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.DeleteTeamFromFavouritesUseCase
 import ru.robilko.base_favourites.domain.useCases.GetFavouriteTeamsUseCase
+import ru.robilko.base_games.domain.useCases.GetGamesResultsUseCase
+import ru.robilko.base_games.presentation.GameDetailsDialogState
 import ru.robilko.base_seasons.domain.useCases.GetSeasonsUseCase
 import ru.robilko.core_ui.R
 import ru.robilko.core_ui.presentation.BaseAppViewModel
@@ -34,6 +36,7 @@ class TeamDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val getSeasonsUseCase: GetSeasonsUseCase,
+    private val getGamesResultsUseCase: GetGamesResultsUseCase,
     private val getTeamStatisticsUseCase: GetTeamStatisticsUseCase,
     private val getFavouriteTeamsUseCase: GetFavouriteTeamsUseCase,
     private val addTeamToFavouritesUseCase: AddTeamToFavouritesUseCase,
@@ -50,6 +53,11 @@ class TeamDetailsViewModel @Inject constructor(
         when (event) {
             is TeamDetailsUiEvent.SeasonClick -> makeActionOnSeasonClick(event.season)
             TeamDetailsUiEvent.StarIconClick -> makeActionOnStarIconClick()
+            TeamDetailsUiEvent.DetailsDialogDismiss ->
+                _uiState.update { it.copy(detailsDialogState = GameDetailsDialogState.None) }
+
+            is TeamDetailsUiEvent.GameCardClick ->
+                _uiState.update { it.copy(detailsDialogState = GameDetailsDialogState.ShowData(event.gameResults)) }
         }
     }
 
@@ -64,7 +72,7 @@ class TeamDetailsViewModel @Inject constructor(
                 if (response is Response.Success) {
                     _uiState.update {
                         it.copy(
-                            isFavourite = response.data.any { team -> team.id == teamId }
+                            isFavourite = response.data.any { team -> team.id == teamId && team.leagueId == leagueId }
                         )
                     }
                 }
@@ -99,7 +107,43 @@ class TeamDetailsViewModel @Inject constructor(
                             selectedSeason = selectedSeason?.asSelectableData()
                         )
                     }
+                    getGameResults()
                     getTeamStatistics()
+                }
+            }
+        }
+    }
+
+    private fun getGameResults() {
+        val selectedSeason = _uiState.value.selectedSeason ?: return
+        _uiState.update { it.copy(isLoadingGames = true) }
+
+        viewModelScope.launch {
+            getGamesResultsUseCase(
+                leagueId = leagueId,
+                season = selectedSeason.value,
+                teamId = teamId
+            ).apply {
+                onFailure {
+                    _uiState.update {
+                        it.copy(
+                            dataState = DataState.Error(
+                                message = context.getString(
+                                    R.string.getting_data_error
+                                ),
+                                onRetryAction = ::getGameResults
+                            )
+                        )
+                    }
+                }
+                onSuccess { response ->
+                    _uiState.update {
+                        it.copy(
+                            dataState = DataState.Success,
+                            isLoadingGames = false,
+                            gameResults = response.data.toPersistentList()
+                        )
+                    }
                 }
             }
         }
@@ -130,13 +174,13 @@ class TeamDetailsViewModel @Inject constructor(
                 onSuccess { response ->
                     val hasPlayedGames = response.data?.let { it.games.played.all > 0 } ?: false
 
-                    with(_uiState.value) {
-                        if (!hasPlayedGames && initialSeason == null && selectedSeason == seasons.firstOrNull()) {
-                            val previousSeason = seasons.getOrNull(1) ?: return@with
-                            makeActionOnSeasonClick(previousSeason)
-                            return@onSuccess
-                        }
-                    }
+//                    with(_uiState.value) {
+//                        if (!hasPlayedGames && initialSeason == null && selectedSeason == seasons.firstOrNull()) {
+//                            val previousSeason = seasons.getOrNull(1) ?: return@with
+//                            makeActionOnSeasonClick(previousSeason)
+//                            return@onSuccess
+//                        }
+//                    }
 
                     val showDraws = response.data?.let { it.games.draws.all.total > 0 } ?: false
                     _uiState.update {
@@ -156,12 +200,13 @@ class TeamDetailsViewModel @Inject constructor(
     private fun makeActionOnSeasonClick(season: Selectable) {
         if (initialSeason == null) initialSeason = season.value
         _uiState.update { it.copy(selectedSeason = season) }
+        getGameResults()
         getTeamStatistics()
     }
 
     private fun makeActionOnStarIconClick() {
         viewModelScope.launch {
-            if (_uiState.value.isFavourite) deleteTeamFromFavouritesUseCase(teamId)
+            if (_uiState.value.isFavourite) deleteTeamFromFavouritesUseCase(teamId, leagueId)
             else _uiState.value.teamStatistics?.let {
                 val teamInfo = TeamInfo(
                     id = it.id,
@@ -169,6 +214,7 @@ class TeamDetailsViewModel @Inject constructor(
                     logoUrl = it.logoUrl,
                     country = it.country,
                     leagueId = it.league.id,
+                    leagueName = it.league.name
                 )
                 addTeamToFavouritesUseCase(teamInfo)
             }

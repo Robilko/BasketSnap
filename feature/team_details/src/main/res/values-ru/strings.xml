@@ -13,6 +13,8 @@
     <string name="average_cell_title">В среднем</string>
     <string name="points_against_header_title">Пропущено очков</string>
     <string name="total_cell_title">Всего</string>
-    <string name="the_team_has_not_played_this_season_yet">Команда не играла в этом сезоне</string>
+    <string name="the_team_has_not_played_this_season_yet">Статистики за сезон пока нет</string>
     <string name="seasons_selectable_title">Выберите сезон</string>
+    <string name="games_tab_title">Игры</string>
+    <string name="statistics_tab_title">Статистика</string>
 </resources>

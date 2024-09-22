@@ -251,7 +251,7 @@ private fun TeamsList(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(data, key = { it.id }) { teamInfo ->
+        items(data, key = { "${it.id}${it.leagueId}" }) { teamInfo ->
             AppCard(
                 contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp),
                 onClick = { onClick(teamInfo) }) {
@@ -277,16 +277,23 @@ private fun TeamsList(
                     Column(modifier = Modifier.weight(1f)) {
                         AppText(text = teamInfo.name)
                         HorizontalDivider(Modifier.padding(vertical = 4.dp))
-                        if (teamInfo.country.name.isNotEmpty()) {
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                AppText(
-                                    text = stringResource(id = R.string.country_title),
-                                    color = BasketSnapTheme.colors.secondaryText,
-                                    fontSize = 12.sp,
-                                    fontStyle = FontStyle.Italic
-                                )
-                                AppText(text = teamInfo.country.name, fontSize = 12.sp)
-                            }
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            AppText(
+                                text = stringResource(id = R.string.country_title),
+                                color = BasketSnapTheme.colors.secondaryText,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                            AppText(text = teamInfo.country.name.ifBlank { "-" }, fontSize = 12.sp)
+                        }
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            AppText(
+                                text = stringResource(id = R.string.league_title),
+                                color = BasketSnapTheme.colors.secondaryText,
+                                fontSize = 12.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                            AppText(text = teamInfo.leagueName.ifBlank { "-" }, fontSize = 12.sp)
                         }
                     }
 

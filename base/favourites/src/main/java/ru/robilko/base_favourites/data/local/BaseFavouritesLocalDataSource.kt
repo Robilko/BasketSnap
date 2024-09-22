@@ -11,5 +11,5 @@ interface BaseFavouritesLocalDataSource {
 
     suspend fun insertTeamInfo(teamInfo: TeamInfoEntity)
     fun getAllTeamsInfo(): Flow<List<TeamInfoEntity>>
-    suspend fun deleteTeamInfoById(id: Int)
+    suspend fun deleteTeamInfoById(teamId: Int, leagueId: Int)
 }

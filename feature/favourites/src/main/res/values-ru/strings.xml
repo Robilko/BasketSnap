@@ -6,4 +6,5 @@
     <string name="empty_favourite_leagues">У Вас нет избранных лиг</string>
     <string name="empty_favourite_teams">У Вас нет избранных команд</string>
     <string name="country_title">Страна:</string>
+    <string name="league_title">Лига:</string>
 </resources>

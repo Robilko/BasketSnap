@@ -8,26 +8,29 @@ import ru.robilko.model.data.TeamInfo
 
 @Entity(tableName = "teams")
 data class TeamInfoEntity(
-    @PrimaryKey val id: Int,
-    val name: String,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo("team_id") val teamId: Int,
+    @ColumnInfo("team_name") val teamName: String,
     @ColumnInfo("logo_url") val logoUrl: String,
     @ColumnInfo("country_id") val countryId: Int,
     @ColumnInfo("country_name") val countryName: String,
-    @ColumnInfo("league_id") val leagueId: Int
+    @ColumnInfo("league_id") val leagueId: Int,
+    @ColumnInfo("league_name") val leagueName: String
 )
 
 fun TeamInfo.toEntity() = TeamInfoEntity(
-    id = id,
-    name = name,
+    teamId = id,
+    teamName = name,
     logoUrl = logoUrl,
     countryId = country.id,
     countryName = country.name,
-    leagueId = leagueId
+    leagueId = leagueId,
+    leagueName = leagueName
 )
 
 fun TeamInfoEntity.asDomainModel() = TeamInfo(
-    id = id,
-    name = name,
+    id = teamId,
+    name = teamName,
     logoUrl = logoUrl,
     country = Country(
         id = countryId,
@@ -35,5 +38,6 @@ fun TeamInfoEntity.asDomainModel() = TeamInfo(
         code = "",
         flagUrl = "",
     ),
-    leagueId = leagueId
+    leagueId = leagueId,
+    leagueName = leagueName
 )

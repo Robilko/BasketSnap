@@ -1,8 +1,8 @@
 package ru.robilko.games.presentation
 
-import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import ru.robilko.base_games.presentation.GameDetailsDialogState
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.UiState
@@ -16,9 +16,3 @@ data class GamesUiState(
     val selectedSeason: Selectable? = null,
     val detailsDialogState: GameDetailsDialogState = GameDetailsDialogState.None
 ) : UiState
-
-@Immutable
-sealed class GameDetailsDialogState {
-    data object None : GameDetailsDialogState()
-    data class ShowData(val gameResults: GameResults) : GameDetailsDialogState()
-}

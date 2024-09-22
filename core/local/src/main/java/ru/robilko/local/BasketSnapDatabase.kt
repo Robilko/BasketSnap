@@ -13,7 +13,7 @@ import ru.robilko.local.model.TeamInfoEntity
 
 @Database(
     entities = [CountryEntity::class, LeagueEntity::class, SeasonEntity::class, TeamInfoEntity::class],
-    version = 1
+    version = 2
 )
 internal abstract class BasketSnapDatabase : RoomDatabase() {
     abstract fun countryDao(): CountryDao

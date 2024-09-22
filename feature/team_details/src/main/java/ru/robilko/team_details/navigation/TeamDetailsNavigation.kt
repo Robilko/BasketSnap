@@ -28,6 +28,7 @@ fun NavGraphBuilder.teamDetailsScreen(
     onTopBarTitleChange: (resId: Int) -> Unit,
     onNavigateToLeagueDetails: (leagueId: Int) -> Unit,
     onNavigateToLeagues: (countryId: Int) -> Unit,
+    onNavigateToAnotherTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit,
 ) {
     composable(
         route = TEAM_DETAILS_ROUTE,
@@ -48,7 +49,8 @@ fun NavGraphBuilder.teamDetailsScreen(
         TeamDetailsRoute(
             onTopBarTitleChange = onTopBarTitleChange,
             onNavigateToLeagues = onNavigateToLeagues,
-            onNavigateToLeagueDetails = onNavigateToLeagueDetails
+            onNavigateToLeagueDetails = onNavigateToLeagueDetails,
+            onNavigateToAnotherTeamDetails = onNavigateToAnotherTeamDetails
         )
     }
 }

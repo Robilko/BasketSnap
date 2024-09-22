@@ -6,4 +6,5 @@
     <string name="empty_favourite_leagues">Your favourite leagues list is empty</string>
     <string name="empty_favourite_teams">Your favourite teams list is empty</string>
     <string name="country_title">Country:</string>
+    <string name="league_title">League:</string>
 </resources>

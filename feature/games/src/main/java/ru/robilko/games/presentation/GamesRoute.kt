@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -14,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.robilko.base_games.presentation.GameDetailsDialog
+import ru.robilko.base_games.presentation.GameDetailsDialogState
 import ru.robilko.base_games.presentation.GamesList
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.components.AppSelectableOutlinedTextField
-import ru.robilko.core_ui.presentation.components.EmptyList
 import ru.robilko.core_ui.presentation.components.ErrorScreen
 import ru.robilko.games.R
 
@@ -57,9 +56,6 @@ private fun GamesScreen(
 
     Box(modifier = modifier) {
         when (uiState.dataState) {
-            DataState.Loading ->
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-
             is DataState.Error -> {
                 ErrorScreen(
                     text = uiState.dataState.message,
@@ -68,32 +64,26 @@ private fun GamesScreen(
                 )
             }
 
-            DataState.Success -> {
-                if (uiState.gameResults.isEmpty()) {
-                    EmptyList(
-                        textResId = R.string.no_games_message,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    AppSelectableOutlinedTextField(
-                        title = stringResource(R.string.seasons_selectable_title),
-                        selected = uiState.selectedSeason,
-                        choices = uiState.seasons,
-                        onSelectionChange = { onEvent(GamesUiEvent.SeasonClick(it)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .align(Alignment.TopCenter)
-                    )
-                    GamesList(
-                        games = uiState.gameResults,
-                        onClick = { onEvent(GamesUiEvent.GameCardClick(it)) },
-                        onTeamClick = onNavigateToTeamDetails,
-                        modifier = Modifier
-                            .padding(top = 100.dp)
-                            .fillMaxSize()
-                    )
-                }
+            else -> {
+                AppSelectableOutlinedTextField(
+                    title = stringResource(R.string.seasons_selectable_title),
+                    selected = uiState.selectedSeason,
+                    choices = uiState.seasons,
+                    onSelectionChange = { onEvent(GamesUiEvent.SeasonClick(it)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .align(Alignment.TopCenter)
+                )
+                GamesList(
+                    isLoading = uiState.dataState is DataState.Loading,
+                    games = uiState.gameResults,
+                    onClick = { onEvent(GamesUiEvent.GameCardClick(it)) },
+                    onTeamClick = onNavigateToTeamDetails,
+                    modifier = Modifier
+                        .padding(top = 100.dp)
+                        .fillMaxSize()
+                )
             }
         }
     }

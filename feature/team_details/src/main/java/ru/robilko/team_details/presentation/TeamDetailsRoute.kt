@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,8 +27,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +56,10 @@ import coil.decode.SvgDecoder
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.coroutines.launch
+import ru.robilko.base_games.presentation.GameDetailsDialog
+import ru.robilko.base_games.presentation.GameDetailsDialogState
+import ru.robilko.base_games.presentation.GamesList
 import ru.robilko.core_ui.presentation.DataState
 import ru.robilko.core_ui.presentation.Selectable
 import ru.robilko.core_ui.presentation.components.AppCard
@@ -59,6 +70,7 @@ import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.core_ui.utils.ShimmerCard
 import ru.robilko.core_ui.utils.bounceClick
 import ru.robilko.model.data.Country
+import ru.robilko.model.data.GameResults
 import ru.robilko.model.data.GamesInfo
 import ru.robilko.model.data.LeagueShortInfo
 import ru.robilko.model.data.Points
@@ -70,6 +82,7 @@ internal fun TeamDetailsRoute(
     onTopBarTitleChange: (resId: Int) -> Unit,
     onNavigateToLeagueDetails: (leagueId: Int) -> Unit,
     onNavigateToLeagues: (countryId: Int) -> Unit,
+    onNavigateToAnotherTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TeamDetailsViewModel = hiltViewModel<TeamDetailsViewModel>()
 ) {
@@ -79,6 +92,7 @@ internal fun TeamDetailsRoute(
         onEvent = viewModel::onEvent,
         onFlagClick = { onNavigateToLeagues(it.id) },
         onLeagueClick = { onNavigateToLeagueDetails(it.id) },
+        onNavigateToAnotherTeamDetails = onNavigateToAnotherTeamDetails,
         modifier = modifier.fillMaxSize(),
     )
 }
@@ -89,6 +103,7 @@ private fun TeamDetailsScreen(
     onEvent: (TeamDetailsUiEvent) -> Unit,
     onFlagClick: (Country) -> Unit,
     onLeagueClick: (LeagueShortInfo) -> Unit,
+    onNavigateToAnotherTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -105,19 +120,25 @@ private fun TeamDetailsScreen(
             }
 
             DataState.Success -> {
-                uiState.teamStatistics?.let { statistics ->
+                uiState.teamStatistics?.let { teamStatistics ->
                     Details(
+                        isLoadingGames = uiState.isLoadingGames,
+                        games = uiState.gameResults,
                         isLoadingStatistics = uiState.isLoadingStatistics,
                         showStatistics = uiState.showStatistics,
                         showDraws = uiState.showDraws,
-                        teamStatistics = statistics,
+                        teamStatistics = teamStatistics,
                         selectedSeason = uiState.selectedSeason,
                         seasons = uiState.seasons,
+                        detailsDialogState = uiState.detailsDialogState,
                         isFavourite = uiState.isFavourite,
                         onSeasonClick = { onEvent(TeamDetailsUiEvent.SeasonClick(it)) },
                         onStarIconClick = { onEvent(TeamDetailsUiEvent.StarIconClick) },
                         onFlagClick = onFlagClick,
-                        onLeagueClick = onLeagueClick
+                        onLeagueClick = onLeagueClick,
+                        onGameCardClick = { onEvent(TeamDetailsUiEvent.GameCardClick(it)) },
+                        onAnotherTeamClick = onNavigateToAnotherTeamDetails,
+                        onDetailsDialogDismiss = { onEvent(TeamDetailsUiEvent.DetailsDialogDismiss) }
                     )
                 }
             }
@@ -127,23 +148,25 @@ private fun TeamDetailsScreen(
 
 @Composable
 private fun Details(
+    isLoadingGames: Boolean,
+    games: PersistentList<GameResults>,
     isLoadingStatistics: Boolean,
     showStatistics: Boolean,
     showDraws: Boolean,
     teamStatistics: TeamStatistics,
     selectedSeason: Selectable?,
     seasons: PersistentList<Selectable>,
+    detailsDialogState: GameDetailsDialogState,
     isFavourite: Boolean,
     onSeasonClick: (Selectable) -> Unit,
     onStarIconClick: () -> Unit,
     onFlagClick: (Country) -> Unit,
-    onLeagueClick: (LeagueShortInfo) -> Unit
+    onLeagueClick: (LeagueShortInfo) -> Unit,
+    onGameCardClick: (GameResults) -> Unit,
+    onAnotherTeamClick: (teamId: Int, leagueId: Int, season: String?) -> Unit,
+    onDetailsDialogDismiss: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         GeneralTeamInfoBlock(
             teamName = teamStatistics.name,
             teamLogoUrl = teamStatistics.logoUrl,
@@ -157,17 +180,117 @@ private fun Details(
             onLeagueClick = { onLeagueClick(teamStatistics.league) }
         )
 
-        AppSelectableOutlinedTextField(
-            title = stringResource(R.string.seasons_selectable_title),
-            selected = selectedSeason,
-            choices = seasons,
-            onSelectionChange = onSeasonClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
+        val pagerState = rememberPagerState { TeamDetailsTabs.entries.size }
+        val scope = rememberCoroutineScope()
 
-        if (isLoadingStatistics || showStatistics) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                containerColor = Color.Transparent,
+                indicator = { tabPositions ->
+                    SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                        color = BasketSnapTheme.colors.primaryText
+                    )
+                }
+            ) {
+                TeamDetailsTabs.entries.forEachIndexed { index, tabItem ->
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                        content = {
+                            AppText(
+                                text = stringResource(id = tabItem.titleResId),
+                                modifier = Modifier.padding(4.dp)
+                            )
+                        }
+                    )
+                }
+            }
+
+            AppSelectableOutlinedTextField(
+                title = stringResource(R.string.seasons_selectable_title),
+                selected = selectedSeason,
+                choices = seasons,
+                onSelectionChange = onSeasonClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+
+            HorizontalPager(state = pagerState, userScrollEnabled = true) { pageIndex ->
+                when (pageIndex) {
+                    TeamDetailsTabs.GAMES.ordinal -> {
+                        GamesTab(
+                            isLoading = isLoadingGames,
+                            games = games,
+                            detailsDialogState = detailsDialogState,
+                            onClick = onGameCardClick,
+                            onTeamClick = { teamId, leagueId, season ->
+                                if (teamId != teamStatistics.id) {
+                                    onAnotherTeamClick(teamId, leagueId, season)
+                                }
+                            },
+                            onDetailsDialogDismiss = onDetailsDialogDismiss
+                        )
+                    }
+
+                    TeamDetailsTabs.STATISTICS.ordinal -> {
+                        StatisticsTab(
+                            isLoadingStatistics = isLoadingStatistics,
+                            showStatistics = showStatistics,
+                            showDraws = showDraws,
+                            teamStatistics = teamStatistics
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GamesTab(
+    isLoading: Boolean,
+    games: PersistentList<GameResults>,
+    detailsDialogState: GameDetailsDialogState,
+    onClick: (GameResults) -> Unit,
+    onTeamClick: (teamId: Int, leagueId: Int, season: String?) -> Unit,
+    onDetailsDialogDismiss: () -> Unit
+) {
+    detailsDialogState.let {
+        if (it is GameDetailsDialogState.ShowData) {
+            GameDetailsDialog(
+                gameResults = it.gameResults,
+                onCountryClick = {},
+                onLeagueClick = {},
+                onDismiss = onDetailsDialogDismiss
+            )
+        }
+    }
+
+    GamesList(
+        isLoading = isLoading,
+        games = games,
+        onClick = onClick,
+        onTeamClick = onTeamClick,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun StatisticsTab(
+    isLoadingStatistics: Boolean,
+    showStatistics: Boolean,
+    showDraws: Boolean,
+    teamStatistics: TeamStatistics
+) {
+    if (isLoadingStatistics || showStatistics) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
             GamesStatisticsSchedule(
                 isLoading = isLoadingStatistics,
                 games = teamStatistics.games,
@@ -178,8 +301,8 @@ private fun Details(
                 isLoading = isLoadingStatistics,
                 points = teamStatistics.points
             )
-        } else NoPlayedGamesInfo()
-    }
+        }
+    } else NoPlayedGamesInfo()
 }
 
 @Composable
@@ -639,19 +762,19 @@ private fun ScheduleCell(
 
 @Composable
 private fun NoPlayedGamesInfo() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            imageVector = ImageVector.vectorResource(id = R.drawable.ic_no_games),
-            contentDescription = null,
-            modifier = Modifier.size(100.dp),
-            colorFilter = ColorFilter.tint(BasketSnapTheme.colors.primaryText)
-        )
-        AppText(text = stringResource(R.string.the_team_has_not_played_this_season_yet))
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_no_games),
+                contentDescription = null,
+                modifier = Modifier.size(100.dp),
+                colorFilter = ColorFilter.tint(BasketSnapTheme.colors.primaryText)
+            )
+            AppText(text = stringResource(R.string.the_team_has_not_played_this_season_yet))
+        }
     }
 }

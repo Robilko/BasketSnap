@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetTeamsInfoUseCase @Inject constructor(
     private val repo: TeamsRepository
 ) {
-    suspend operator fun invoke(leagueId: Int, season: String): Response<List<TeamInfo>> {
-        return repo.getTeamsInfo(leagueId, season)
+    suspend operator fun invoke(leagueId: Int, leagueName: String, season: String): Response<List<TeamInfo>> {
+        return repo.getTeamsInfo(leagueId,leagueName, season)
     }
 }

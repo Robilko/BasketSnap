@@ -42,8 +42,12 @@ fun NavGraphBuilder.favouritesGraph(
         )
         leagueDetailsScreen(
             onTopBarTitleChange = onTopBarTitleChange,
-            onNavigateToTeams = { leagueId, season ->
-                navHostController.navigateToTeams(leagueId = leagueId, season = season)
+            onNavigateToTeams = { leagueId, leagueName, season ->
+                navHostController.navigateToTeams(
+                    leagueId = leagueId,
+                    leagueName = leagueName,
+                    season = season
+                )
             },
             onNavigateToGames = { leagueId, season ->
                 navHostController.navigateToGames(leagueId = leagueId, season = season)
@@ -64,6 +68,9 @@ fun NavGraphBuilder.favouritesGraph(
             onNavigateToLeagues = { countryId -> navHostController.navigateToLeagues(countryId) },
             onNavigateToLeagueDetails = { leagueId ->
                 navHostController.navigateToLeagueDetails(leagueId)
+            },
+            onNavigateToAnotherTeamDetails = { teamId, leagueId, season ->
+                navHostController.navigateToTeamDetails(teamId, leagueId, season)
             }
         )
         gamesScreen(
