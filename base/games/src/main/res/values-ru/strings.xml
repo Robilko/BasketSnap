@@ -6,4 +6,16 @@
     <string name="season_dialog_title">Сезон:</string>
     <string name="venue_dialog_title">Место проведения:</string>
     <string name="date_dialog_title">Дата матча:</string>
+    <string name="details_dialog_title">Подробности</string>
+    <string name="game_timer_title">Таймер:</string>
+    <string name="game_status_title">Статус игры:</string>
+    <string name="country_dialog_title">Страна:</string>
+    <string name="league_dialog_title">Лига:</string>
+    <string name="score_dialog_title">Счет игры:</string>
+    <string name="quarter1_dialog_title">1 четверть:</string>
+    <string name="quarter2_dialog_title">2 четверть:</string>
+    <string name="quarter3_dialog_title">3 четверть:</string>
+    <string name="quarter4_dialog_title">4 четверть:</string>
+    <string name="overtime_dialog_title">Овертайм:</string>
+    <string name="total_dialog_title">Итого:</string>
 </resources>

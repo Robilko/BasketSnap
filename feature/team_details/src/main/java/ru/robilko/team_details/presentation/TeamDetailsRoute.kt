@@ -262,8 +262,6 @@ private fun GamesTab(
         if (it is GameDetailsDialogState.ShowData) {
             GameDetailsDialog(
                 gameResults = it.gameResults,
-                onCountryClick = {},
-                onLeagueClick = {},
                 onDismiss = onDetailsDialogDismiss
             )
         }

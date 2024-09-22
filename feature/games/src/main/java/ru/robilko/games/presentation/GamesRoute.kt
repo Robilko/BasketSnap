@@ -47,8 +47,6 @@ private fun GamesScreen(
         if (it is GameDetailsDialogState.ShowData) {
             GameDetailsDialog(
                 gameResults = it.gameResults,
-                onCountryClick = {},
-                onLeagueClick = {},
                 onDismiss = { onEvent(GamesUiEvent.DetailsDialogDismiss) }
             )
         }
