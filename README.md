@@ -32,8 +32,7 @@ Basket Snap — это мобильное приложение для фанат
 
 ## Ссылки на приложение
 
-- ![google-play-badge-logo-black-and-white (1)](https://github.com/user-attachments/assets/1f000594-370e-469e-ba65-edcc028255a9) [Google Play](https://avatars.mds.yandex.net/i?id=b08e77c493bb4c89ce133fc9a107a13b242292c0-7043984-images-thumbs&n=13)
-- ![white (1)](https://github.com/user-attachments/assets/a89ea365-db98-4ecf-a220-9d3fdc8f4453) [Rustore](https://avatars.mds.yandex.net/i?id=b08e77c493bb4c89ce133fc9a107a13b242292c0-7043984-images-thumbs&n=13)
+- ![google-play-badge-logo-black-and-white (1)](https://github.com/user-attachments/assets/1f000594-370e-469e-ba65-edcc028255a9) [Google Play](https://play.google.com/store/apps/details?id=ru.robilko.basket_snap)
 
 ## Мои контакты
 ![telegramma_cxyzka2if3cr_16](https://github.com/user-attachments/assets/3bb13e90-b3b2-4813-8da9-e745bb6e22b2) **@robivan88**
