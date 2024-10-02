@@ -45,9 +45,9 @@ interface BasketballApi {
 
     @GET("games/")
     suspend fun getGames(
-        @Query("season") season: String,
-        @Query("league") leagueId: Int,
-        @Query("date") date: String?,
+        @Query("season") season: String? = null,
+        @Query("league") leagueId: Int? = null,
+        @Query("date") date: String? = null,
         @Query("id") id: Int? = null,
         @Query("team") teamId: Int? = null,
         @Query("timezone") timezone: String = "UTC",

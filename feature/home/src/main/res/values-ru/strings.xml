@@ -4,4 +4,9 @@
     <string name="continents_title">Континенты:</string>
     <string name="search_field_title">Поиск</string>
     <string name="home_page_title">Главная</string>
+    <string name="today_tab_title">Сегодня</string>
+    <string name="search_tab_title">Поиск</string>
+    <string name="only_favorites_switch_text">Только матчи из избранного</string>
+    <string name="empty_favourites_games">Сегодня нет игр из списка избранных</string>
+    <string name="empty_today_games">Сегодня нет игр</string>
 </resources>

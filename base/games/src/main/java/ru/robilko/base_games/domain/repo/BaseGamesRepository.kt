@@ -5,8 +5,8 @@ import ru.robilko.model.data.GameResults
 
 interface BaseGamesRepository {
     suspend fun getGamesResults(
-        leagueId: Int,
-        season: String,
+        leagueId: Int?,
+        season: String?,
         date: String?,
         teamId: Int?
     ): Response<List<GameResults>>

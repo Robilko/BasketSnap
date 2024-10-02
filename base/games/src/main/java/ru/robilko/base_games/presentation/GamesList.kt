@@ -1,5 +1,7 @@
 package ru.robilko.base_games.presentation
 
+import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +21,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +53,7 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.robilko.base.util.HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2
 import ru.robilko.base.util.HUMAN_DATE_PATTERN
 import ru.robilko.base.util.isTodayOrAfter
@@ -65,7 +73,8 @@ fun GamesList(
     games: PersistentList<GameResults>,
     onClick: (GameResults) -> Unit,
     onTeamClick: (teamId: Int, leagueId: Int, season: String?) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @StringRes emptyMessageResId: Int = R.string.no_games_message
 ) {
 
     when {
@@ -91,36 +100,63 @@ fun GamesList(
         games.isEmpty() -> {
             Box(modifier = Modifier.fillMaxSize()) {
                 EmptyList(
-                    textResId = R.string.no_games_message,
+                    textResId = emptyMessageResId,
                     modifier = Modifier.fillMaxSize()
                 )
             }
         }
 
         else -> {
-            val firstVisibleIndex = remember(games) {
-                games.indexOfFirst { it.date?.isTodayOrAfter() == true }
-                    .takeIf { index -> index != -1 } ?: 0
-            }
-            val state = rememberLazyListState(initialFirstVisibleItemIndex = firstVisibleIndex)
-            LazyColumn(
-                state = state,
-                modifier = modifier.testTag("GamesList"),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(games, key = { it.id }) { gameResults ->
-                    GameCard(
-                        gameResults = gameResults,
-                        onClick = { onClick(gameResults) },
-                        onTeamClick = { teamId ->
-                            onTeamClick(
-                                teamId,
-                                gameResults.league.id,
-                                gameResults.league.season
+            Column(modifier = modifier.testTag("GamesList")) {
+                val initialFirstVisibleItemIndex = remember(games) {
+                    games.indexOfFirst { it.date?.isTodayOrAfter() == true }
+                        .takeIf { index -> index != -1 } ?: 0
+                }
+                val scope = rememberCoroutineScope()
+                val state =
+                    rememberLazyListState(initialFirstVisibleItemIndex = initialFirstVisibleItemIndex)
+                val firstVisibleItemIndex by remember { derivedStateOf { state.firstVisibleItemIndex } }
+                val hasHiddenItems = firstVisibleItemIndex > 0
+
+                if (hasHiddenItems) {
+                    AppCard(
+                        modifier = Modifier
+                            .animateContentSize()
+                            .padding(start = 16.dp, end = 16.dp, bottom = 2.dp),
+                        contentPadding = PaddingValues(),
+                        onClick = { scope.launch { state.scrollToItem(0) } }
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowUp,
+                                contentDescription = null,
+                                tint = BasketSnapTheme.colors.primaryText
                             )
                         }
-                    )
+                    }
+                }
+
+                LazyColumn(
+                    state = state,
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(games, key = { it.id }) { gameResults ->
+                        GameCard(
+                            gameResults = gameResults,
+                            onClick = { onClick(gameResults) },
+                            onTeamClick = { teamId ->
+                                onTeamClick(
+                                    teamId,
+                                    gameResults.league.id,
+                                    gameResults.league.season
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

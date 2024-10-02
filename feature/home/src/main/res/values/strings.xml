@@ -4,4 +4,9 @@
     <string name="continents_title">Continents:</string>
     <string name="search_field_title">Search</string>
     <string name="home_page_title">Home page</string>
+    <string name="today_tab_title">Today</string>
+    <string name="search_tab_title">Search</string>
+    <string name="only_favorites_switch_text">Only matches from favorite</string>
+    <string name="empty_favourites_games">No games from favourite list today</string>
+    <string name="empty_today_games">No games today</string>
 </resources>

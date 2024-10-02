@@ -33,7 +33,11 @@ fun NavGraphBuilder.homeGraph(
     ) {
         homeScreen(
             onTopBarTitleChange = onTopBarTitleChange,
-            onNavigateToLeagues = { navHostController.navigateToLeagues(it.id) })
+            onNavigateToLeagues = { navHostController.navigateToLeagues(it.id) },
+            onNavigateToTeamDetails = { teamId, leagueId, season ->
+                navHostController.navigateToTeamDetails(teamId, leagueId, season)
+            }
+        )
         leaguesScreen(
             onTopBarTitleChange = onTopBarTitleChange,
             onNavigateToLeagueDetails = { navHostController.navigateToLeagueDetails(it.id) }

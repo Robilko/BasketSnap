@@ -15,12 +15,14 @@ fun NavHostController.navigateToHome(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.homeScreen(
     onTopBarTitleChange: (resId: Int) -> Unit,
-    onNavigateToLeagues: (Country) -> Unit
+    onNavigateToLeagues: (Country) -> Unit,
+    onNavigateToTeamDetails: (teamId: Int, leagueId: Int, season: String?) -> Unit
 ) {
     composable(HOME_ROUTE) {
         HomeRoute(
             onTopBarTitleChange = onTopBarTitleChange,
-            onNavigateToLeagues = onNavigateToLeagues
+            onNavigateToLeagues = onNavigateToLeagues,
+            onNavigateToTeamDetails = onNavigateToTeamDetails
         )
     }
 }

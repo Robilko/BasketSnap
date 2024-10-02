@@ -12,8 +12,8 @@ class BaseGamesRepositoryImpl @Inject constructor(
     private val remoteDataSource: BaseGamesRemoteDataSource
 ) : BaseGamesRepository, SafeApiCall {
     override suspend fun getGamesResults(
-        leagueId: Int,
-        season: String,
+        leagueId: Int?,
+        season: String?,
         date: String?,
         teamId: Int?
     ): Response<List<GameResults>> = safeApiCall {

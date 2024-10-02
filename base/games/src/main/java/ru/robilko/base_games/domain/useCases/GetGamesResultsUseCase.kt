@@ -9,8 +9,8 @@ class GetGamesResultsUseCase @Inject constructor(
     private val repo: BaseGamesRepository
 ) {
     suspend operator fun invoke(
-        leagueId: Int,
-        season: String,
+        leagueId: Int? = null,
+        season: String? = null,
         date: String? = null,
         teamId: Int? = null
     ): Response<List<GameResults>> {

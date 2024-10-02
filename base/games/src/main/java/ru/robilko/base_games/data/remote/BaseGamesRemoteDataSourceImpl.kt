@@ -8,8 +8,8 @@ class BaseGamesRemoteDataSourceImpl @Inject constructor(
     private val basketballApi: BasketballApi
 ) : BaseGamesRemoteDataSource {
     override suspend fun getGamesResults(
-        leagueId: Int,
-        season: String,
+        leagueId: Int?,
+        season: String?,
         date: String?,
         teamId: Int?
     ): List<GameResultsDto> {

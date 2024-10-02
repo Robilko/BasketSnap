@@ -44,7 +44,7 @@ fun GameResultsDto.asDomainModel(): GameResults {
         awayTeam = teams.awayTeam.asDomainModel(),
         homeScore = scores.homeScore.asDomainModel(),
         awayScore = scores.awayScore.asDomainModel(),
-        isPlayingNow = date?.isToday() == true && status.long != "Not Started" && status.long != "Game Finished"
+        isPlayingNow = date?.isToday() == true && status.long != "Not Started" && status.long != "Game Finished" && status.long != "Game Cancelled"
     )
 }
 
