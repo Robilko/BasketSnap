@@ -66,6 +66,7 @@ import ru.robilko.core_ui.theme.BasketSnapTheme
 import ru.robilko.core_ui.utils.ShimmerCard
 import ru.robilko.core_ui.utils.bounceClick
 import ru.robilko.model.data.GameResults
+import ru.robilko.model.data.GameStatus
 
 @Composable
 fun GamesList(
@@ -170,7 +171,7 @@ private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick:
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
         ) {
-            if (gameResults.statusLong != GAME_NOT_STARTED) {
+            if (gameResults.status != GameStatus.NS) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -196,7 +197,7 @@ private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick:
                     logoUrl = gameResults.homeTeam.logoUrl,
                     onClick = { onTeamClick(gameResults.homeTeam.id) }
                 )
-                if (gameResults.statusLong == GAME_NOT_STARTED) {
+                if (gameResults.status == GameStatus.NS) {
                     GameDayInfo(
                         date = gameResults.date?.toStringDate(HUMAN_DATE_DAY_OF_WEEK_TIME_PATTERN_2)
                             .orEmpty(),
@@ -205,7 +206,7 @@ private fun GameCard(gameResults: GameResults, onClick: () -> Unit, onTeamClick:
                 } else {
                     ScoreBox(
                         total = "${gameResults.homeScore.total ?: "-"} : ${gameResults.awayScore.total ?: "-"}",
-                        status = gameResults.statusLong
+                        status = gameResults.status
                     )
                 }
 
@@ -306,7 +307,7 @@ private fun RowScope.GameDayInfo(date: String, venue: String) {
 }
 
 @Composable
-private fun RowScope.ScoreBox(total: String, status: String) {
+private fun RowScope.ScoreBox(total: String, status: GameStatus) {
     Column(
         modifier = Modifier.weight(1f),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -315,11 +316,11 @@ private fun RowScope.ScoreBox(total: String, status: String) {
         AppText(text = total, fontSize = 30.sp, fontWeight = FontWeight.SemiBold)
         Spacer(modifier = Modifier.heightIn(16.dp))
         AppText(
-            text = status, fontSize = 13.sp, color = BasketSnapTheme.colors.secondaryText,
+            text = stringResource(status.titleResId),
+            fontSize = 13.sp,
+            color = BasketSnapTheme.colors.secondaryText,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
     }
 }
-
-private const val GAME_NOT_STARTED = "Not Started"

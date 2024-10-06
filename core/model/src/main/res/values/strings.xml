@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_started_status">Not Started</string>
+    <string name="quarter_1_status">Quarter 1</string>
+    <string name="quarter_2_status">Quarter 2</string>
+    <string name="quarter_3_status">Quarter 3</string>
+    <string name="quarter_4_status">Quarter 4</string>
+    <string name="over_time_status">Over Time</string>
+    <string name="break_time_status">Break Time</string>
+    <string name="halftime_status">Halftime</string>
+    <string name="game_finished_status">Game Finished</string>
+    <string name="after_over_time_status">After Over Time</string>
+    <string name="game_postponed_status">Game Postponed</string>
+    <string name="game_cancelled_status">Game Cancelled</string>
+    <string name="game_suspended_status">Game Suspended</string>
+    <string name="game_awarded_status">Game Awarded</string>
+    <string name="game_abandoned_status">Game Abandoned</string>
+    <string name="unknown_game_status">Unknown</string>
+</resources>

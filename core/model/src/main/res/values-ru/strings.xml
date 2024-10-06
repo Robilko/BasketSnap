@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="not_started_status">Матч не начался</string>
+    <string name="quarter_1_status">1 четверть</string>
+    <string name="quarter_2_status">2 четверть</string>
+    <string name="quarter_3_status">3 четверть</string>
+    <string name="quarter_4_status">4 четверть</string>
+    <string name="over_time_status">Овертайм</string>
+    <string name="break_time_status">Перерыв</string>
+    <string name="halftime_status">Большой перерыв</string>
+    <string name="game_finished_status">Игра окончена</string>
+    <string name="after_over_time_status">Игра окончена после овертайма</string>
+    <string name="game_postponed_status">Игра отложена</string>
+    <string name="game_cancelled_status">Игра отменена</string>
+    <string name="game_suspended_status">Игра приостановлена</string>
+    <string name="game_awarded_status">Игра засчитана</string>
+    <string name="game_abandoned_status">Игра завершена досрочно</string>
+    <string name="unknown_game_status">Неизвестно</string>
+</resources>

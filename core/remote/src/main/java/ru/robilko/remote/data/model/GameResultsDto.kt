@@ -4,11 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import ru.robilko.base.util.ISO_8601_WITH_TIMEZONE_PATTERN
-import ru.robilko.base.util.isToday
 import ru.robilko.base.util.toDate
 import ru.robilko.model.data.GameLeague
 import ru.robilko.model.data.GameResults
 import ru.robilko.model.data.GameScore
+import ru.robilko.model.data.GameStatus
+import ru.robilko.model.data.GameStatus.Companion.isPlayingNow
 import ru.robilko.remote.util.asString
 
 @Serializable
@@ -28,6 +29,8 @@ data class GameResultsDto(
 
 fun GameResultsDto.asDomainModel(): GameResults {
     val date = date.toDate(ISO_8601_WITH_TIMEZONE_PATTERN, timeZoneId = timezone)
+    val gameStatus =
+        GameStatus.entries.firstOrNull { status.short == it.name } ?: GameStatus.UNKNOWN
     return GameResults(
         id = id,
         date = date,
@@ -35,8 +38,7 @@ fun GameResultsDto.asDomainModel(): GameResults {
         timestamp = timestamp,
         timezone = timezone,
         venue = venue.orEmpty(),
-        statusLong = status.long,
-        statusShort = status.short,
+        status = gameStatus,
         timer = status.timer,
         league = league.asDomainModel(),
         country = country.asDomainModel(),
@@ -44,7 +46,7 @@ fun GameResultsDto.asDomainModel(): GameResults {
         awayTeam = teams.awayTeam.asDomainModel(),
         homeScore = scores.homeScore.asDomainModel(),
         awayScore = scores.awayScore.asDomainModel(),
-        isPlayingNow = date?.isToday() == true && status.long != "Not Started" && status.long != "Game Finished" && status.long != "Game Cancelled"
+        isPlayingNow = gameStatus.isPlayingNow()
     )
 }
 

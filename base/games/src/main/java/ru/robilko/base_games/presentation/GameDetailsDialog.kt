@@ -57,11 +57,12 @@ import ru.robilko.model.data.Country
 import ru.robilko.model.data.GameLeague
 import ru.robilko.model.data.GameResults
 import ru.robilko.model.data.GameScore
+import ru.robilko.model.data.GameStatus
 import ru.robilko.model.data.GameTeamInfo
 import java.util.Date
 
-private const val NOT_STARTED_STATUS = "Not Started"
 private const val EMPTY_VALUE = "-"
+private const val EMPTY_TIMER = "-:-"
 private const val PRIMARY_SCORE_CELL = 0.40f
 private const val SECONDARY_SCORE_CELL = 0.30f
 
@@ -208,16 +209,18 @@ fun GameDetailsDialog(
                         .orEmpty()
                 )
                 TitleItem(titleResId = R.string.venue_dialog_title, value = gameResults.venue)
-                gameResults.timer?.let {
+
+                TitleItem(
+                    titleResId = R.string.game_status_title,
+                    value = stringResource(gameResults.status.titleResId)
+                )
+
+                if (gameResults.status != GameStatus.NS) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     TitleItem(
                         titleResId = R.string.game_timer_title,
-                        value = it
+                        value = gameResults.timer ?: EMPTY_TIMER
                     )
-                }
-                TitleItem(titleResId = R.string.game_status_title, value = gameResults.statusLong)
-
-                if (gameResults.statusLong != NOT_STARTED_STATUS) {
-                    Spacer(modifier = Modifier.height(16.dp))
                     AppText(
                         text = stringResource(R.string.score_dialog_title),
                         modifier = Modifier.fillMaxWidth(),
@@ -436,8 +439,7 @@ private fun GameDetailsDialogPreview() {
                     timestamp = 1729648800,
                     timezone = "UTC",
                     venue = "Crypto.com Arena",
-                    statusLong = "Not Started",
-                    statusShort = "NS",
+                    status = GameStatus.BT,
                     timer = null,
                     league = GameLeague(
                         id = 12,
